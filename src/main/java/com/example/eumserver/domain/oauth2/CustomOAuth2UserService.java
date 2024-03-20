@@ -1,6 +1,8 @@
 package com.example.eumserver.domain.oauth2;
 
-import com.example.eumserver.domain.user.Account;
+import com.example.eumserver.domain.jwt.PrincipleDetails;
+import com.example.eumserver.domain.oauth2.attributes.AbstractOAuth2Attributes;
+import com.example.eumserver.domain.oauth2.attributes.OAuth2AttributesFactory;
 import com.example.eumserver.domain.user.User;
 import com.example.eumserver.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,16 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -27,39 +25,43 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
 
     @Override
-    public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
-        OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        OAuth2User oAuth2User = super.loadUser(userRequest);
+
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        String userNameAttributeName = userRequest.getClientRegistration()
+                .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
         Map<String, Object> attributes = oAuth2User.getAttributes();
-        String registrationId = oAuth2UserRequest.getClientRegistration().getRegistrationId();
+        AbstractOAuth2Attributes abstractOAuth2Attributes = OAuth2AttributesFactory.getOauth2Attributes(registrationId, attributes, userNameAttributeName);
 
-        registerUser(attributes, registrationId);
-        return oAuth2User;
-    }
-
-    private void registerUser(Map<String, Object> attributes, String registrationId) {
-        String email = attributes.get("email").toString();
-        String name = attributes.get("name").toString();
-        String picture = attributes.get("picture").toString();
-        String provider = registrationId.toUpperCase();
-
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-
-        if (optionalUser.isPresent()) {
-            User _user = optionalUser.get();
-            _user.updateDefaultInfo(email, name, picture);
-            userRepository.save(_user);
+        User user = userRepository.findByEmail(abstractOAuth2Attributes.getEmail()).orElse(null);
+        if (user != null) {
+            user = updateUser(user, abstractOAuth2Attributes);
+        } else {
+            user = registerUser(registrationId, abstractOAuth2Attributes);
         }
 
-        Account account = Account.builder()
-                .provider(provider)
-                .build();
+        return new PrincipleDetails(
+                user.getEmail(),
+                user.getName(),
+                Collections.singleton(new SimpleGrantedAuthority(user.getRole()))
+        );
+    }
+
+    private User registerUser(String registrationId, AbstractOAuth2Attributes abstractOAuth2Attributes) {
         User user = User.builder()
-                .email(email)
-                .name(name)
-                .avatar(picture)
-                .account(account)
+                .email(abstractOAuth2Attributes.getEmail())
+                .name(abstractOAuth2Attributes.getName())
+                .avatar(abstractOAuth2Attributes.getAvatar())
+                .provider(registrationId)
+                .oAuth2Id(abstractOAuth2Attributes.getOAuth2Id())
                 .build();
-        userRepository.save(user);
+        return userRepository.save(user);
+    }
+
+    private User updateUser(User user, AbstractOAuth2Attributes abstractOAuth2Attributes) {
+        user.updateDefaultInfo(abstractOAuth2Attributes);
+        return userRepository.save(user);
     }
 }

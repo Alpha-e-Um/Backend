@@ -1,21 +1,26 @@
 package com.example.eumserver.domain.user;
 
+import com.example.eumserver.domain.jwt.PrincipleDetails;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
 
-    @GetMapping("/")
-    public String home() {
-        return "Hello, home!";
-    }
+    private final UserService userService;
 
-    @GetMapping("/user")
-    public OAuth2User user(@AuthenticationPrincipal OAuth2User user) {
-        return user;
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getMyInfo(@AuthenticationPrincipal PrincipleDetails principleDetails) {
+        String email = principleDetails.getEmail();
+        User user = userService.findByEmail(email);
+        UserResponse userResponse = UserMapper.INSTANCE.userToUserResponse(user);
+        return ResponseEntity.ok(userResponse);
     }
 
 }
