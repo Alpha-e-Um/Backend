@@ -4,10 +4,14 @@ import java.util.Map;
 
 public class OAuth2AttributesFactory {
 
-    public static AbstractOAuth2Attributes getOauth2Attributes(String registrationId, Map<String, Object> attributes, String userNameAttributeName) {
+    public static OAuth2Attributes getOauth2Attributes(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
         switch (registrationId) {
             case "google":
-                return GoogleOAuth2Attributes.builder().attributes(attributes).userNameAttributeName(userNameAttributeName).build();
+                return GoogleOAuth2Attributes.builder()
+                        .provider(registrationId)
+                        .userNameAttributeName(userNameAttributeName)
+                        .attributes(attributes)
+                        .build();
             default:
                 throw new IllegalArgumentException();
         }

@@ -5,13 +5,14 @@ import lombok.Getter;
 import java.util.Map;
 
 @Getter
-public abstract class AbstractOAuth2Attributes {
+public abstract class OAuth2Attributes {
 
     protected Map<String, Object> attributes;
+    protected String provider;
     protected String userNameAttributeName;
 
     public abstract String getName();
     public abstract String getEmail();
     public abstract String getAvatar();
-    public abstract String getOAuth2Id();
+    public abstract String getProviderId();
 }

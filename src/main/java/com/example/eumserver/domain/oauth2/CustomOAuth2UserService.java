@@ -1,7 +1,7 @@
 package com.example.eumserver.domain.oauth2;
 
 import com.example.eumserver.domain.jwt.PrincipleDetails;
-import com.example.eumserver.domain.oauth2.attributes.AbstractOAuth2Attributes;
+import com.example.eumserver.domain.oauth2.attributes.OAuth2Attributes;
 import com.example.eumserver.domain.oauth2.attributes.OAuth2AttributesFactory;
 import com.example.eumserver.domain.user.User;
 import com.example.eumserver.domain.user.UserRepository;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -33,35 +34,35 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
         Map<String, Object> attributes = oAuth2User.getAttributes();
-        AbstractOAuth2Attributes abstractOAuth2Attributes = OAuth2AttributesFactory.getOauth2Attributes(registrationId, attributes, userNameAttributeName);
+        OAuth2Attributes oAuth2Attributes = OAuth2AttributesFactory.getOauth2Attributes(registrationId, userNameAttributeName, attributes);
 
-        User user = userRepository.findByEmail(abstractOAuth2Attributes.getEmail()).orElse(null);
-        if (user != null) {
-            user = updateUser(user, abstractOAuth2Attributes);
+        Optional<User> _user = userRepository.findByEmail(oAuth2Attributes.getEmail());
+        if (_user.isPresent()) {
+            updateUser(_user.get(), oAuth2Attributes);
         } else {
-            user = registerUser(registrationId, abstractOAuth2Attributes);
+            registerUser(oAuth2Attributes);
         }
 
         return new PrincipleDetails(
-                user.getEmail(),
-                user.getName(),
-                Collections.singleton(new SimpleGrantedAuthority(user.getRole()))
+                oAuth2Attributes.getEmail(),
+                oAuth2Attributes.getName(),
+                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))
         );
     }
 
-    private User registerUser(String registrationId, AbstractOAuth2Attributes abstractOAuth2Attributes) {
+    private void registerUser(OAuth2Attributes oAuth2Attributes) {
         User user = User.builder()
-                .email(abstractOAuth2Attributes.getEmail())
-                .name(abstractOAuth2Attributes.getName())
-                .avatar(abstractOAuth2Attributes.getAvatar())
-                .provider(registrationId)
-                .oAuth2Id(abstractOAuth2Attributes.getOAuth2Id())
+                .email(oAuth2Attributes.getEmail())
+                .name(oAuth2Attributes.getName())
+                .avatar(oAuth2Attributes.getAvatar())
+                .provider(oAuth2Attributes.getProvider())
+                .providerId(oAuth2Attributes.getProviderId())
                 .build();
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
-    private User updateUser(User user, AbstractOAuth2Attributes abstractOAuth2Attributes) {
-        user.updateDefaultInfo(abstractOAuth2Attributes);
-        return userRepository.save(user);
+    private void updateUser(User user, OAuth2Attributes OAuth2Attributes) {
+        user.updateDefaultInfo(OAuth2Attributes);
+        userRepository.save(user);
     }
 }

@@ -1,6 +1,6 @@
 package com.example.eumserver.domain.user;
 
-import com.example.eumserver.domain.oauth2.attributes.AbstractOAuth2Attributes;
+import com.example.eumserver.domain.oauth2.attributes.OAuth2Attributes;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,15 +34,15 @@ public class User implements UserDetails {
   private String role = "ROLE_USER";
 
   @Column(nullable = false)
-  private String oAuth2Id;
-
-  @Column(nullable = false)
   private String provider;
 
-  public void updateDefaultInfo(AbstractOAuth2Attributes abstractOAuth2Attributes) {
-    this.email = abstractOAuth2Attributes.getEmail();
-    this.name = abstractOAuth2Attributes.getName();
-    this.avatar = abstractOAuth2Attributes.getAvatar();
+  @Column(nullable = false)
+  private String providerId;
+
+  public void updateDefaultInfo(OAuth2Attributes OAuth2Attributes) {
+    this.email = OAuth2Attributes.getEmail();
+    this.name = OAuth2Attributes.getName();
+    this.avatar = OAuth2Attributes.getAvatar();
   }
 
   @Override

@@ -4,16 +4,17 @@ import lombok.Builder;
 
 import java.util.Map;
 
-public class GoogleOAuth2Attributes extends AbstractOAuth2Attributes {
+public class GoogleOAuth2Attributes extends OAuth2Attributes {
 
     @Builder
-    public GoogleOAuth2Attributes(Map<String, Object> attributes, String userNameAttributeName) {
-        this.attributes = attributes;
+    public GoogleOAuth2Attributes(String provider, String userNameAttributeName, Map<String, Object> attributes) {
+        this.provider = provider;
         this.userNameAttributeName = userNameAttributeName;
+        this.attributes = attributes;
     }
 
     @Override
-    public String getOAuth2Id() {
+    public String getProviderId() {
         return attributes.get(this.userNameAttributeName).toString();
     }
 
