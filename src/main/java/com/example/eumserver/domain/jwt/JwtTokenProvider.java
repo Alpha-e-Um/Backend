@@ -72,7 +72,7 @@ public class JwtTokenProvider {
             Jwts.parserBuilder().setSigningKey(jwtSecret).build().parseClaimsJws(token);
             return true;
         } catch (JwtException e) {
-            return false;
+            throw JwtTokenInvalidException.INSTANCE;
         }
     }
 
