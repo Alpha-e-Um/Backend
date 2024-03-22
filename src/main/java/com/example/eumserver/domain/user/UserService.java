@@ -16,4 +16,7 @@ public class UserService {
         return userRepository.findByEmail(email).orElseThrow(() -> new CustomException(500, "User not found."));
     }
 
+    public User updateInfo(String email){
+        return userRepository.findByEmail(email).orElseThrow(() -> new CustomException(500, "User not found."));
+    }
 }
