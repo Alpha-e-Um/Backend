@@ -12,7 +12,7 @@ import lombok.*;
 @ToString(of = {"first", "last"})
 public class Name {
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false)
     private String first;
 
     @Column(name = "last_name")

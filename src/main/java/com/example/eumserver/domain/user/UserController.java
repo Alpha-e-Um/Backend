@@ -29,7 +29,7 @@ public class UserController {
     @PutMapping("/me")
     public ResponseEntity<UserResponse> updateMyInfo(@AuthenticationPrincipal PrincipleDetails principleDetails, @RequestBody @Valid final UserUpdateRequest request){
         String email = principleDetails.getEmail();
-        User user = userService.findByEmail(email);
+        User user = userService.updateInfo(email, request);
         UserResponse userResponse = UserMapper.INSTANCE.userToUserResponse(user);
         return ResponseEntity.ok(userResponse);
     }
