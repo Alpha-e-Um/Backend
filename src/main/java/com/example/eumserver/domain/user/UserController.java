@@ -1,6 +1,8 @@
 package com.example.eumserver.domain.user;
 
 import com.example.eumserver.domain.jwt.PrincipleDetails;
+import com.example.eumserver.domain.user.dto.UserResponse;
+import com.example.eumserver.domain.user.dto.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +34,10 @@ public class UserController {
         return ResponseEntity.ok(userResponse);
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<UserResponse> getUserInfo(@PathVariable String id){
-//
-//    }
+    @GetMapping("/{email:.+}")
+    public ResponseEntity<UserResponse> getUserInfo(@PathVariable String email){
+        User user = userService.findByEmail(email);
+        UserResponse userResponse = UserMapper.INSTANCE.userToUserResponse(user);
+        return ResponseEntity.ok(userResponse);
+    }
 }
