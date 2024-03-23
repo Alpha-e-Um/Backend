@@ -1,5 +1,6 @@
 package com.example.eumserver.domain.user;
 
+import com.example.eumserver.domain.model.Name;
 import com.example.eumserver.domain.oauth2.attributes.OAuth2Attributes;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,7 +28,12 @@ public class User implements UserDetails {
   @Column(nullable = false, unique = true)
   private String email;
 
-  private String name;
+  @Embedded
+  @AttributeOverrides({
+          @AttributeOverride(name = "first", column = @Column(name = "first_name")),
+          @AttributeOverride(name = "last", column = @Column(name = "last_name"))
+  })
+  private Name name;
   private String avatar;
 
   @Builder.Default
@@ -41,7 +47,7 @@ public class User implements UserDetails {
 
   public void updateDefaultInfo(OAuth2Attributes OAuth2Attributes) {
     this.email = OAuth2Attributes.getEmail();
-    this.name = OAuth2Attributes.getName();
+    this.name = new Name(OAuth2Attributes.getName(), "");
     this.avatar = OAuth2Attributes.getAvatar();
   }
 
