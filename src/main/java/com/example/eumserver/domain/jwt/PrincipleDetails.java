@@ -1,5 +1,6 @@
 package com.example.eumserver.domain.jwt;
 
+import com.example.eumserver.domain.model.Name;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,7 +14,7 @@ import java.util.Map;
 public class PrincipleDetails implements OAuth2User {
 
     private String email;
-    private String name;
+    private Name name;
     private Collection<? extends GrantedAuthority> authorities;
 
     @Override
@@ -28,7 +29,7 @@ public class PrincipleDetails implements OAuth2User {
 
     @Override
     public String getName() {
-        return this.name;
+        return this.name.getFullName();
     }
 
 }

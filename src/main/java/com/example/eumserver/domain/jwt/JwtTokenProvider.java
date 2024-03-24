@@ -1,5 +1,6 @@
 package com.example.eumserver.domain.jwt;
 
+import com.example.eumserver.domain.model.Name;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -85,7 +86,7 @@ public class JwtTokenProvider {
                 .getBody();
 
         String email = claims.get(CLAIM_EMAIL, String.class);
-        String name = claims.get(CLAIM_NAME, String.class);
+        Name name = new Name(claims.get(CLAIM_NAME, String.class), "");
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(CLAIM_AUTHORITIES).toString().split(DELIMITER))
                         .map(SimpleGrantedAuthority::new)

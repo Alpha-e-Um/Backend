@@ -1,6 +1,7 @@
 package com.example.eumserver.domain.oauth2;
 
 import com.example.eumserver.domain.jwt.PrincipleDetails;
+import com.example.eumserver.domain.model.Name;
 import com.example.eumserver.domain.oauth2.attributes.OAuth2Attributes;
 import com.example.eumserver.domain.oauth2.attributes.OAuth2AttributesFactory;
 import com.example.eumserver.domain.user.User;
@@ -45,7 +46,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         return new PrincipleDetails(
                 oAuth2Attributes.getEmail(),
-                oAuth2Attributes.getName(),
+                new Name(oAuth2Attributes.getName(), ""),
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))
         );
     }
@@ -53,7 +54,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private void registerUser(OAuth2Attributes oAuth2Attributes) {
         User user = User.builder()
                 .email(oAuth2Attributes.getEmail())
-                .name(oAuth2Attributes.getName())
+                .name(new Name(oAuth2Attributes.getName(), ""))
                 .avatar(oAuth2Attributes.getAvatar())
                 .provider(oAuth2Attributes.getProvider())
                 .providerId(oAuth2Attributes.getProviderId())
