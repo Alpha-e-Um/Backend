@@ -1,4 +1,4 @@
-package com.example.eumserver.domain.model;
+package com.example.eumserver.domain.user;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -9,7 +9,6 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@ToString(of = {"first", "last"})
 public class Name {
 
     @Column(name = "first_name", nullable = false)
