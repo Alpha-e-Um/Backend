@@ -17,5 +17,6 @@ public interface UserMapper {
     @Mapping(target = "name", source = "nameObject")
     UserResponse principalDetailsToUserResponse(PrincipalDetails principalDetails);
 
+    @Mapping(target = "userId", source = "id")
     UserResponse userToUserResponse(User user);
 }
