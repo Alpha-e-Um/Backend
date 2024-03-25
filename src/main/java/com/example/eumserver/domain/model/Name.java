@@ -22,3 +22,4 @@ public class Name {
         return String.format("%s %s", this.first, this.last);
     }
 }
+
