@@ -2,6 +2,7 @@ package com.example.eumserver.domain.user;
 
 import com.example.eumserver.domain.model.Name;
 import com.example.eumserver.domain.oauth2.attributes.OAuth2Attributes;
+import com.example.eumserver.domain.team.participant.Participant;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 
 @Entity
@@ -59,6 +61,9 @@ public class User implements UserDetails {
 
   @Column
   private LocalDate birthday;
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+  private List<Participant> participants;
 
   @CreationTimestamp
   @Column(name = "create_date", nullable = false, updatable = false)
@@ -115,6 +120,10 @@ public class User implements UserDetails {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+
+  public void addTeam(Participant participant) {
+    this.participants.add(participant);
   }
 }
 
