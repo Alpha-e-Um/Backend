@@ -1,6 +1,5 @@
 package com.example.eumserver.domain.user;
 
-import com.example.eumserver.domain.model.Name;
 import com.example.eumserver.domain.oauth2.attributes.OAuth2Attributes;
 import com.example.eumserver.domain.team.participant.Participant;
 import jakarta.persistence.*;
