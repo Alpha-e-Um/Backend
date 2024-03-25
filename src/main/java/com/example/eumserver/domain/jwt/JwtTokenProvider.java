@@ -1,6 +1,6 @@
 package com.example.eumserver.domain.jwt;
 
-import com.example.eumserver.domain.model.Name;
+import com.example.eumserver.domain.user.Name;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -29,6 +29,7 @@ public class JwtTokenProvider {
 
     private static final String CLAIM_EMAIL = "email";
     private static final String CLAIM_NAME = "name";
+    private static final String CLAIM_AVATAR = "avatar";
     private static final String CLAIM_AUTHORITIES = "authorities";
     private static final String DELIMITER = ",";
 
@@ -38,15 +39,17 @@ public class JwtTokenProvider {
         this.jwtSecret = Keys.hmacShaKeyFor(jwtSecretStr.getBytes());
     }
 
-    public String generateAccessToken(PrincipleDetails principleDetails) {
-        String authorities = principleDetails.getAuthorities().stream()
+    public String generateAccessToken(PrincipalDetails principalDetails) {
+        String authorities = principalDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(DELIMITER));
         long now = System.currentTimeMillis();
 
         return Jwts.builder()
-                .claim(CLAIM_EMAIL, principleDetails.getEmail())
-                .claim(CLAIM_NAME, principleDetails.getName())
+                .setSubject(String.valueOf(principalDetails.getUserId()))
+                .claim(CLAIM_EMAIL, principalDetails.getEmail())
+                .claim(CLAIM_NAME, principalDetails.getName())
+                .claim(CLAIM_AVATAR, principalDetails.getAvatar())
                 .claim(CLAIM_AUTHORITIES, authorities)
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + AC_EXPIRATION_IN_MS))
@@ -76,8 +79,9 @@ public class JwtTokenProvider {
 
     /**
      * DB 조회가 이뤄진다면 JWT 토큰의 장점을 얻어가지 못한다.
+     *
      * @link https://velog.io/@tlatldms/%EC%84%9C%EB%B2%84%EA%B0%9C%EB%B0%9C%EC%BA%A0%ED%94%84-Spring-security-refreshing-JWT-DB%EC%A0%91%EA%B7%BC%EC%97%86%EC%9D%B4-%EC%9D%B8%EC%A6%9D%EA%B3%BC-%ED%8C%8C%EC%8B%B1%ED%95%98%EA%B8%B0
-    */
+     */
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(jwtSecret)
@@ -85,14 +89,16 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token)
                 .getBody();
 
+        long userId = Long.parseLong(claims.getSubject());
         String email = claims.get(CLAIM_EMAIL, String.class);
         Name name = new Name(claims.get(CLAIM_NAME, String.class), "");
+        String avatar = claims.get(CLAIM_AVATAR, String.class);
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(CLAIM_AUTHORITIES).toString().split(DELIMITER))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        PrincipleDetails principleDetails = new PrincipleDetails(email, name, authorities);
-        return new UsernamePasswordAuthenticationToken(principleDetails, null, authorities);
+        PrincipalDetails principalDetails = new PrincipalDetails(userId, email, name, avatar, authorities);
+        return new UsernamePasswordAuthenticationToken(principalDetails, null, authorities);
     }
 }

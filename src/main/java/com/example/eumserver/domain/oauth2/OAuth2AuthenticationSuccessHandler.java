@@ -1,7 +1,7 @@
 package com.example.eumserver.domain.oauth2;
 
 import com.example.eumserver.domain.jwt.JwtTokenProvider;
-import com.example.eumserver.domain.jwt.PrincipleDetails;
+import com.example.eumserver.domain.jwt.PrincipalDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +25,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        PrincipleDetails principleDetails = (PrincipleDetails) authentication.getPrincipal();
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
 
         // TODO: save refresh token
-        String token = jwtTokenProvider.generateAccessToken(principleDetails);
+        String token = jwtTokenProvider.generateAccessToken(principalDetails);
 
         String redirectUrlWithToken = UriComponentsBuilder.fromUriString(DEFAULT_REDIRECT_URI)
                 .queryParam(PARAM_TOKEN, token)

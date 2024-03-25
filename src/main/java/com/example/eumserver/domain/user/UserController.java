@@ -1,6 +1,6 @@
 package com.example.eumserver.domain.user;
 
-import com.example.eumserver.domain.jwt.PrincipleDetails;
+import com.example.eumserver.domain.jwt.PrincipalDetails;
 import com.example.eumserver.domain.user.dto.UserResponse;
 import com.example.eumserver.domain.user.dto.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
@@ -19,24 +19,22 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/me")
-    public ResponseEntity<UserResponse> getMyInfo(@AuthenticationPrincipal PrincipleDetails principleDetails) {
-        String email = principleDetails.getEmail();
-        User user = userService.findByEmail(email);
-        UserResponse userResponse = UserMapper.INSTANCE.userToUserResponse(user);
+    public ResponseEntity<UserResponse> getMyInfo(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        UserResponse userResponse = UserMapper.INSTANCE.principalDetailsToUserResponse(principalDetails);
         return ResponseEntity.ok(userResponse);
     }
 
     @PutMapping("/me")
-    public ResponseEntity<UserResponse> updateMyInfo(@AuthenticationPrincipal PrincipleDetails principleDetails, @RequestBody @Valid final UserUpdateRequest request){
-        String email = principleDetails.getEmail();
-        User user = userService.updateInfo(email, request);
+    public ResponseEntity<UserResponse> updateMyInfo(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody @Valid final UserUpdateRequest request){
+        long userId = principalDetails.getUserId();
+        User user = userService.updateInfo(userId, request);
         UserResponse userResponse = UserMapper.INSTANCE.userToUserResponse(user);
         return ResponseEntity.ok(userResponse);
     }
 
-    @GetMapping("/{email:.+}")
-    public ResponseEntity<UserResponse> getUserInfo(@PathVariable String email){
-        User user = userService.findByEmail(email);
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserResponse> getUserInfo(@PathVariable long userId){
+        User user = userService.findById(userId);
         UserResponse userResponse = UserMapper.INSTANCE.userToUserResponse(user);
         return ResponseEntity.ok(userResponse);
     }

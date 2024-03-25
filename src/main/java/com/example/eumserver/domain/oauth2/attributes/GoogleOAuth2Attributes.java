@@ -1,6 +1,5 @@
 package com.example.eumserver.domain.oauth2.attributes;
 
-import com.example.eumserver.domain.model.Name;
 import lombok.Builder;
 
 import java.util.Map;
