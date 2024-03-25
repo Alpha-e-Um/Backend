@@ -20,7 +20,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    private static final String DEFAULT_REDIRECT_URI = "http://localhost:3000/social-login/success";
+    private static final String DEFAULT_REDIRECT_URI = "http://localhost:3000/login/success";
     private static final String PARAM_TOKEN = "token";
 
     @Override
