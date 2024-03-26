@@ -8,9 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.DelegatingAccessDeniedHandler;
 import org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 /**
  * Controller단과 Filter단에서 발생하는 모든 Exception을 Handling합니다.
@@ -57,6 +58,17 @@ public class CustomExceptionHandler {
                 .status(e.getStatus())
                 .body(ErrorResponse.builder()
                         .status(e.getStatus())
+                        .message(e.getMessage())
+                        .build());
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorResponse> handle404(NoHandlerFoundException e){
+        return ResponseEntity
+                .status(e.getStatusCode())
+                .body(ErrorResponse.builder()
+                        .status(e.getStatusCode().value())
                         .message(e.getMessage())
                         .build());
     }
