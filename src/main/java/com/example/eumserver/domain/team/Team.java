@@ -1,11 +1,13 @@
 package com.example.eumserver.domain.team;
 
 import com.example.eumserver.domain.team.participant.Participant;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,15 +34,17 @@ public class Team {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE)
-    private List<Participant> participants;
-
     @CreationTimestamp
     @Column(name = "formation_date", nullable = false, updatable = false)
     private LocalDateTime formationDate;
 
     @Column(columnDefinition = "TEXT")
     private String introduction;
+
+    @JsonIgnore
+    @Builder.Default
+    @OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE)
+    private List<Participant> participants = new ArrayList<>();
 
     public void addTeam(Participant participant) {
         this.participants.add(participant);

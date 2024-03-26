@@ -15,4 +15,5 @@ public interface TeamMapper {
     @Mapping(target = "participants", ignore = true)
     @Mapping(target = "formationDate", ignore = true)
     Team teamRequestToTeam(TeamRequest teamRequest);
+
 }

@@ -16,10 +16,10 @@ public class ParticipantId implements Serializable {
     public static final String COLUMN_PARTICIPANT_USER_ID = "participant_user_id";
     public static final String COLUMN_PARTICIPANT_TEAM_ID = "participant_team_id";
 
-    @Column(name = COLUMN_PARTICIPANT_USER_ID)
-    private long userId;
-
     @Column(name = COLUMN_PARTICIPANT_TEAM_ID)
-    private long teamId;
+    private Long teamId;
+
+    @Column(name = COLUMN_PARTICIPANT_USER_ID)
+    private Long userId;
 
 }

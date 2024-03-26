@@ -4,6 +4,10 @@ import com.example.eumserver.domain.team.Team;
 import com.example.eumserver.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.domain.Persistable;
+
+import java.time.LocalDateTime;
 
 import static com.example.eumserver.domain.team.participant.ParticipantId.COLUMN_PARTICIPANT_TEAM_ID;
 import static com.example.eumserver.domain.team.participant.ParticipantId.COLUMN_PARTICIPANT_USER_ID;
@@ -13,7 +17,7 @@ import static com.example.eumserver.domain.team.participant.ParticipantId.COLUMN
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Participant {
+public class Participant implements Persistable<ParticipantId> {
 
     @EmbeddedId
     private ParticipantId participantId;
@@ -31,7 +35,9 @@ public class Participant {
     private User user;
 
     @Builder
-    public Participant(Team team, User user) {
+    public Participant(Team team, User user, ParticipantRole role) {
+        this.participantId = new ParticipantId(team.getId(), user.getId());
+        this.role = role;
         setTeam(team);
         setUser(user);
     }
@@ -44,5 +50,18 @@ public class Participant {
     public void setUser(User user) {
         this.user = user;
         user.addTeam(this);
+    }
+
+    @CreatedDate
+    private LocalDateTime createdDate;
+
+    @Override
+    public ParticipantId getId() {
+        return this.participantId;
+    }
+
+    @Override
+    public boolean isNew() {
+        return createdDate == null;
     }
 }

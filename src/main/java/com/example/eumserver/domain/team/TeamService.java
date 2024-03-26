@@ -4,14 +4,17 @@ import com.example.eumserver.domain.team.dto.TeamRequest;
 import com.example.eumserver.domain.team.participant.Participant;
 import com.example.eumserver.domain.team.participant.ParticipantId;
 import com.example.eumserver.domain.team.participant.ParticipantRepository;
+import com.example.eumserver.domain.team.participant.ParticipantRole;
 import com.example.eumserver.domain.user.User;
 import com.example.eumserver.domain.user.UserRepository;
+import com.example.eumserver.global.error.exception.CustomException;
 import com.example.eumserver.global.error.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +26,10 @@ public class TeamService {
     private final ParticipantRepository participantRepository;
 
     @Transactional
-    public void createTeam(
-            String email,
+    public Team createTeam(
+            long userId,
             TeamRequest teamRequest) {
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findById(userId)
             .orElseThrow(() -> new EntityNotFoundException("User not found."));
 
         Team team = TeamMapper.INSTANCE.teamRequestToTeam(teamRequest);
@@ -34,12 +37,18 @@ public class TeamService {
         Participant participant = Participant.builder()
                 .user(user)
                 .team(team)
+                .role(ParticipantRole.OWNER)
                 .build();
         participantRepository.save(participant);
+        return team;
     }
 
     @Transactional
     public void deleteTeam(long userId, long teamId) {
+        Optional<Participant> _participant = participantRepository.findById(new ParticipantId(userId, teamId));
+        if (_participant.isEmpty() || _participant.get().getRole() != ParticipantRole.OWNER) {
+            throw new CustomException(403, "You do not have permission to delete a team.");
+        }
         participantRepository.deleteById(new ParticipantId(userId, teamId));
     }
 

@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -61,8 +62,9 @@ public class User implements UserDetails {
   @Column
   private LocalDate birthday;
 
+  @Builder.Default
   @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-  private List<Participant> participants;
+  private List<Participant> participants = new ArrayList<>();
 
   @CreationTimestamp
   @Column(name = "create_date", nullable = false, updatable = false)
