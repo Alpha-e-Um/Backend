@@ -7,7 +7,7 @@ import com.example.eumserver.domain.team.participant.ParticipantRepository;
 import com.example.eumserver.domain.team.participant.ParticipantRole;
 import com.example.eumserver.domain.user.User;
 import com.example.eumserver.domain.user.UserRepository;
-import com.example.eumserver.global.error.exception.CustomException;
+import com.example.eumserver.global.error.CustomException;
 import com.example.eumserver.global.error.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
