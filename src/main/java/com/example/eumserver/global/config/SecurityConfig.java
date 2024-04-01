@@ -49,10 +49,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/team/**").authenticated()
                         .anyRequest().permitAll())
                 .oauth2Login(oauth2 ->
-                                oauth2.userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(customOauth2UserService))
-                                        .successHandler(oAuth2AuthenticationSuccessHandler)
-                                        .failureHandler(oAuth2AuthenticationFailureHandler)
-                                        .permitAll()
+                        oauth2.userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(customOauth2UserService))
+                                .successHandler(oAuth2AuthenticationSuccessHandler)
+                                .failureHandler(oAuth2AuthenticationFailureHandler)
+                                .permitAll()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
