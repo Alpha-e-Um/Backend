@@ -14,4 +14,8 @@ public class Resume {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "resume_id")
     private Long id;
+
+    @ManyToOne()
+
+
 }

@@ -1,6 +1,7 @@
 package com.example.eumserver.domain.user;
 
 import com.example.eumserver.domain.oauth2.attributes.OAuth2Attributes;
+import com.example.eumserver.domain.resume.Resume;
 import com.example.eumserver.domain.team.participant.Participant;
 import jakarta.persistence.*;
 import lombok.*;
@@ -65,6 +66,10 @@ public class User implements UserDetails {
   @Builder.Default
   @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
   private List<Participant> participants = new ArrayList<>();
+
+  @Builder.Default
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Resume> resumes = new ArrayList<>();
 
   @CreationTimestamp
   @Column(name = "create_date", nullable = false, updatable = false)
