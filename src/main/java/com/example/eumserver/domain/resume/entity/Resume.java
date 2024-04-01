@@ -4,10 +4,7 @@ import com.example.eumserver.domain.user.User;
 import com.example.eumserver.global.entity.TimeStamp;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +21,7 @@ public class Resume {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column
@@ -60,4 +57,8 @@ public class Resume {
     @Embedded
     private TimeStamp timeStamp;
 
+    public void setUser(User user) {
+        this.user = user;
+        user.addResume(this);
+    }
 }

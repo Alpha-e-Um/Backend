@@ -46,5 +46,4 @@ public class ResumeCareer {
     @Column(columnDefinition = "TEXT")
     private String achievement;
 
-
 }

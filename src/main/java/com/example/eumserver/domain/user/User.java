@@ -68,9 +68,9 @@ public class User implements UserDetails {
   @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
   private List<Participant> participants = new ArrayList<>();
 
-//  @Builder.Default
-//  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//  private List<Resume> resumes = new ArrayList<>();
+  @Builder.Default
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Resume> resumes = new ArrayList<>();
 
   @Embedded
   private TimeStamp timeStamp;
@@ -127,5 +127,7 @@ public class User implements UserDetails {
   public void addTeam(Participant participant) {
     this.participants.add(participant);
   }
+
+  public void addResume(Resume resume) {this.resumes.add(resume);}
 }
 
