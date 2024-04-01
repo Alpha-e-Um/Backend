@@ -3,6 +3,7 @@ package com.example.eumserver.domain.user;
 import com.example.eumserver.domain.oauth2.attributes.OAuth2Attributes;
 import com.example.eumserver.domain.resume.entity.Resume;
 import com.example.eumserver.domain.team.participant.Participant;
+import com.example.eumserver.global.entity.TimeStamp;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -67,17 +68,12 @@ public class User implements UserDetails {
   @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
   private List<Participant> participants = new ArrayList<>();
 
-  @Builder.Default
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Resume> resumes = new ArrayList<>();
+//  @Builder.Default
+//  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//  private List<Resume> resumes = new ArrayList<>();
 
-  @CreationTimestamp
-  @Column(name = "create_date", nullable = false, updatable = false)
-  private LocalDateTime createDate;
-
-  @UpdateTimestamp
-  @Column(name = "update_at", nullable = false)
-  private LocalDateTime updateAt;
+  @Embedded
+  private TimeStamp timeStamp;
 
   public void updateDefaultInfo(OAuth2Attributes OAuth2Attributes) {
     this.email = OAuth2Attributes.getEmail();
