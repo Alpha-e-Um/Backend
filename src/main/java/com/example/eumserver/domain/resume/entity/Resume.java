@@ -1,6 +1,7 @@
 package com.example.eumserver.domain.resume.entity;
 
 import com.example.eumserver.domain.user.User;
+import com.example.eumserver.global.entity.TimeStamp;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -56,13 +57,7 @@ public class Resume {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String introduction;
 
-    @CreationTimestamp
-    @Column(name = "create_date", nullable = false, updatable = false)
-    private LocalDateTime createDate;
-
-    @UpdateTimestamp
-    @Column(name = "update_at", nullable = false)
-    private LocalDateTime updateAt;
-
+    @Embedded
+    private TimeStamp timeStamp;
 
 }
