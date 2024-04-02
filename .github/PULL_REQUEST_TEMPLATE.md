@@ -9,7 +9,7 @@ Issue Number :
 
 ## Test Scope & Checklist (Optional)
 
-- [ ] Test Task #1
-- [ ] Test Task #2
+- [ ] Test Task 1
+- [ ] Test Task 2
 
 ## Review Requirements
