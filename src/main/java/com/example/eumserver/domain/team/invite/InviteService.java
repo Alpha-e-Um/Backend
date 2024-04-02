@@ -8,7 +8,11 @@ import com.example.eumserver.domain.user.User;
 import com.example.eumserver.domain.user.UserRepository;
 import com.example.eumserver.global.error.CustomException;
 import com.example.eumserver.global.error.exception.EntityNotFoundException;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +26,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class InviteService {
 
-//    private final JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
     private final UserRepository userRepository;
     private final InviteRepository inviteRepository;
     private final TeamRepository teamRepository;
@@ -44,16 +48,16 @@ public class InviteService {
 
         Invite invite = new Invite(team, token, calendar.getTime());
 
-//        try {
-//            MimeMessage message = mailSender.createMimeMessage();
-//            MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
-//            messageHelper.setTo(emails.toArray(String[]::new));
-//            messageHelper.setSubject(getSubjectForTeam(team.getName()));
-//            messageHelper.setText(token);
-//            mailSender.send(message);
-//        } catch (MessagingException e) {
-//            throw new CustomException(500, "이메일 전송 실패");
-//        }
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+            messageHelper.setTo(emails.toArray(String[]::new));
+            messageHelper.setSubject(getSubjectForTeam(team.getName()));
+            messageHelper.setText(token);
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            throw new CustomException(500, "이메일 전송 실패");
+        }
         return inviteRepository.save(invite);
     }
 
