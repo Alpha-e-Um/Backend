@@ -37,7 +37,7 @@ public class Participant implements Persistable<ParticipantId> {
     @Builder
     public Participant(Team team, User user, ParticipantRole role) {
         this.participantId = new ParticipantId(team.getId(), user.getId());
-        this.role = role;
+        this.role = role == null ? ParticipantRole.MEMBER : role;
         setTeam(team);
         setUser(user);
     }
