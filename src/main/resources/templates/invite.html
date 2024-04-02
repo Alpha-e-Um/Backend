@@ -1,0 +1,12 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+</head>
+<body>
+    <h1><span th:text="${team_name}"></span>에서 당신을 팀원으로 초대했습니다.</h1>
+    <a th:href="@{http://localhost:3000/invite/callback(token=${token})}">
+        <input type="button" style="width:10em; height:5em" value="Click me to accept" />
+    </a>
+</body>
+</html>
