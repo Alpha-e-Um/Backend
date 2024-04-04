@@ -11,6 +11,7 @@ public record ResumeRequest(
         Double gpa,
         Double totalScore,
         @NotBlank String introduction,
+        Boolean isPublic,
         List<ResumeCareerRequest> careers,
         List<ResumeCertificateRequest> certificates,
         List<ResumeProjectRequest> projects,

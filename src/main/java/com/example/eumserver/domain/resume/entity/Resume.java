@@ -64,6 +64,10 @@ public class Resume {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String introduction;
 
+    @Builder.Default
+    @Column(name = "is_public", nullable = false)
+    private Boolean isPublic = true;
+
     @Embedded
     private TimeStamp timeStamp;
 
@@ -74,7 +78,7 @@ public class Resume {
 
     public void updateResume(String title, String jobCategory, String jobSubcategory, Double gpa, Double totalScore,
                              List<ResumeCareer> careers, List<ResumeActivity> activities, List<ResumeCertificate> certificates,
-                             List<ResumeProject> projects, List<ResumeHomepage> homepages) {
+                             List<ResumeProject> projects, List<ResumeHomepage> homepages, Boolean isPublic) {
         this.title = title;
         this.jobCategory = jobCategory;
         this.jobSubcategory = jobSubcategory;
@@ -90,5 +94,6 @@ public class Resume {
         this.projects.addAll(projects);
         this.homepages.clear();
         this.homepages.addAll(homepages);
+        this.isPublic = isPublic;
     }
 }

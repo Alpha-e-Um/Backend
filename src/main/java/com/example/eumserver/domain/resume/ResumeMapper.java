@@ -21,6 +21,7 @@ public interface ResumeMapper {
     @Mapping(source = "careers", target = "careers")
     @Mapping(source = "certificates", target = "certificates")
     @Mapping(source = "projects", target = "projects")
+    @Mapping(source = "isPublic", target = "isPublic")
     Resume resumeRequestToResume(ResumeRequest resumeRequest);
 
     @AfterMapping
