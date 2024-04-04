@@ -20,7 +20,6 @@ public class SwaggerConfig {
                 .scheme("bearer")
                 .bearerFormat("JWT")
         );
-
         return new OpenAPI()
                 .components(new Components())
                 .info(apiInfo())
