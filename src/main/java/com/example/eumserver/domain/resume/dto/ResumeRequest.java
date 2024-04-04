@@ -1,16 +1,21 @@
 package com.example.eumserver.domain.resume.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.List;
 
 public record ResumeRequest(
-        String jobCategory,
-        String jobSubcategory,
+        @NotBlank String title,
+        @NotBlank String jobCategory,
+        @NotBlank String jobSubcategory,
         Double gpa,
         Double totalScore,
-        String introduction,
+        @NotBlank String introduction,
         List<ResumeCareerRequest> careers,
-        List<ResumeCertificateRequest>certificates,
-        List<ResumeProjectRequest> projects)
-{
+        List<ResumeCertificateRequest> certificates,
+        List<ResumeProjectRequest> projects,
+        List<ResumeHomepageRequest> homepages,
+        List<ResumeActivityRequest> activities
+) {
     //TODO : Resume 직군이 제대로 들어갔는지 ValidCheck
 }

@@ -4,12 +4,11 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
 
-public record ResumeProjectRequest(
+public record ResumeActivityRequest(
         @NotBlank String title,
-        @NotBlank String projectRole,
         @NotBlank LocalDate startDate,
         LocalDate endDate,
-        String projectUrl,
+        String activityUrl,
         String introduction
 ) {
 }

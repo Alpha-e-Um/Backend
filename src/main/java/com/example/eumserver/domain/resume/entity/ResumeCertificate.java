@@ -1,5 +1,6 @@
 package com.example.eumserver.domain.resume.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,8 +18,9 @@ public class ResumeCertificate {
     @Column(name = "resume_certificate_id")
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "resume_id", nullable = false)
+    @JoinColumn(name = "resume_id")
     private Resume resume;
 
     @Column(name = "certiciate_title")
@@ -35,4 +37,8 @@ public class ResumeCertificate {
 
     @Column(columnDefinition = "TEXT")
     private String introduction;
+
+    public void setResume(Resume resume) {
+        this.resume = resume;
+    }
 }

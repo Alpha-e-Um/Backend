@@ -10,5 +10,5 @@ public record ResumeCertificateRequest(
         LocalDate endDate,
         String certificate_url,
         String introduction
-        )
-{ }
+) {
+}
