@@ -15,8 +15,8 @@ assignees: ''
 
 > If possible, describe in Given-When-Then format.
 
-## Expected Result
+## Occured Result
 
-> Describe what the expected normal result would have been.
+> Describe the occured result would have been.
 
 ## Reference Materials (Optional)
