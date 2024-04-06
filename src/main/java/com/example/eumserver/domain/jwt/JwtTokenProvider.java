@@ -6,7 +6,11 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,10 +21,15 @@ import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 public class JwtTokenProvider {
+    @Autowired
+    @Qualifier("redisTemplate")
+    private RedisTemplate<String, String> redisTemplate;
 
     private final Key jwtSecret;
 
@@ -57,15 +66,31 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String generateRefreshToken(Authentication authentication) {
+    public String generateRefreshToken(PrincipalDetails principalDetails) {
+        String authorities = principalDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(DELIMITER));
         long now = System.currentTimeMillis();
 
-        return Jwts.builder()
-                .setSubject(authentication.getName())
+        String refreshToken = Jwts.builder()
+                .setSubject(String.valueOf(principalDetails.getUserId()))
+                .claim(CLAIM_EMAIL, principalDetails.getEmail())
+                .claim(CLAIM_NAME, principalDetails.getName())
+                .claim(CLAIM_AVATAR, principalDetails.getAvatar())
+                .claim(CLAIM_AUTHORITIES, authorities)
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + RF_EXPIRATION_IN_MS))
                 .signWith(jwtSecret, SignatureAlgorithm.HS512)
                 .compact();
+
+        redisTemplate.opsForValue().set(
+                String.valueOf(principalDetails.getUserId()),
+                refreshToken,
+                RF_EXPIRATION_IN_MS,
+                TimeUnit.MICROSECONDS
+        );
+
+        return refreshToken;
     }
 
     public boolean validateToken(String token) {

@@ -21,20 +21,23 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final JwtTokenProvider jwtTokenProvider;
 
     private static final String DEFAULT_REDIRECT_URI = "http://localhost:3000/login/success";
-    private static final String PARAM_TOKEN = "token";
+    private static final String PARAM_ACCESS_TOKEN = "accesstoken";
+    private static final String PARAM_REFRESH_TOKEN = "refreshtoken";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
 
-        // TODO: save refresh token
-        String token = jwtTokenProvider.generateAccessToken(principalDetails);
+        String accessToken = jwtTokenProvider.generateAccessToken(principalDetails);
+        String refreshToken = jwtTokenProvider.generateRefreshToken(principalDetails);
 
         String redirectUrlWithToken = UriComponentsBuilder.fromUriString(DEFAULT_REDIRECT_URI)
-                .queryParam(PARAM_TOKEN, token)
+                .queryParam(PARAM_ACCESS_TOKEN, accessToken)
+                .queryParam(PARAM_REFRESH_TOKEN, refreshToken)
                 .build().toUriString();
 
-        log.debug("token: {}", token);
+        log.debug("accessToken: {}", accessToken);
+        log.debug("refreshToken: {}", refreshToken);
         log.debug("redirect_uri: {}", redirectUrlWithToken);
 
         getRedirectStrategy().sendRedirect(request, response, redirectUrlWithToken);
