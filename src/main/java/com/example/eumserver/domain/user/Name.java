@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@ToString(of = {"first", "last"})
 public class Name {
 
     @Column(name = "first_name", nullable = false)
