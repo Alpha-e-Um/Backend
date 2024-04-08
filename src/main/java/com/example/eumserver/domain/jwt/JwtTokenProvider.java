@@ -8,7 +8,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,13 +27,15 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenProvider {
     @Autowired
-    @Qualifier("redisTemplate")
     private RedisTemplate<String, String> redisTemplate;
 
     private final Key jwtSecret;
 
-    private final long AC_EXPIRATION_IN_MS = 1000 * 60 * 30;
-    private final long RF_EXPIRATION_IN_MS = 1000 * 60 * 60 * 30;
+    @Value("${JWT_ACCESS_EXPIRATION_TIME}")
+    private long AC_EXPIRATION_IN_MS;
+
+    @Value("${JWT_REFRESH_EXPIRATION_TIME}")
+    private long RF_EXPIRATION_IN_MS;
 
     private static final String CLAIM_EMAIL = "email";
     private static final String CLAIM_NAME = "name";
@@ -87,7 +88,7 @@ public class JwtTokenProvider {
                 String.valueOf(principalDetails.getUserId()),
                 refreshToken,
                 RF_EXPIRATION_IN_MS,
-                TimeUnit.MICROSECONDS
+                TimeUnit.MILLISECONDS
         );
 
         return refreshToken;
