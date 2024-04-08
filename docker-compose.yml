@@ -16,9 +16,7 @@ services:
   spring:
     container_name: spring
     restart: always
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    image: mclub4/eum-spring
     env_file:
       - .env
     ports:
@@ -26,18 +24,34 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+
   react:
     container_name: react
+    image: mclub4/eum-react:1.1
     expose:
       - 3000
 
   nginx:
     container_name: nginx
-    image: mclub4/eum-nginx:1.0
+    image: mclub4/eum-nginx:1.1
     restart: unless-stopped
     ports:
       - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
     depends_on:
       - "redis"
       - "spring"
       - "react"
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+  cerbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
