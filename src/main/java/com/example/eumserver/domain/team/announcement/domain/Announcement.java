@@ -1,10 +1,11 @@
-package com.example.eumserver.domain.team.announcement;
+package com.example.eumserver.domain.team.announcement.domain;
 
 import com.example.eumserver.global.entity.TimeStamp;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "team_announcements")
@@ -37,6 +38,10 @@ public class Announcement {
 
     @Embedded
     private TimeStamp timeStamp;
+
+    @ElementCollection(targetClass = OccupationClassifications.class)
+    @Enumerated(EnumType.STRING)
+    private List<OccupationClassifications> occupationClassifications;
 
     public boolean isExpired() {
         LocalDate now = LocalDate.now();
