@@ -52,7 +52,13 @@ public class SecurityConfig {
                         .requestMatchers("/api/resume/**").authenticated()
                         .anyRequest().permitAll())
                 .oauth2Login(oauth2 ->
-                                oauth2.userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(customOauth2UserService))
+                                oauth2
+                                        .authorizationEndpoint(authorizationEndpointConfig ->
+                                                authorizationEndpointConfig.baseUri("/api/oauth2"))
+                                        .redirectionEndpoint(redirectionEndpointConfig ->
+                                                redirectionEndpointConfig.baseUri("/api/oauth2/callback/**"))
+                                        .userInfoEndpoint(userInfoEndpointConfig ->
+                                                userInfoEndpointConfig.userService(customOauth2UserService))
                                         .successHandler(oAuth2AuthenticationSuccessHandler)
                                         .failureHandler(oAuth2AuthenticationFailureHandler)
                                         .permitAll()
