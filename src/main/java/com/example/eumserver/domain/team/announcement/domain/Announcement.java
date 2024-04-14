@@ -39,17 +39,8 @@ public class Announcement {
     @Embedded
     private TimeStamp timeStamp;
 
-    @ElementCollection(targetClass = OccupationClassifications.class)
+    @ElementCollection(targetClass = OccupationClassification.class)
     @Enumerated(EnumType.STRING)
-    private List<OccupationClassifications> occupationClassifications;
-
-    public boolean isExpired() {
-        LocalDate now = LocalDate.now();
-        return expiredDate.isBefore(now);
-    }
-
-    public boolean isPublished() {
-        return publishedDate != null;
-    }
+    private List<OccupationClassification> occupationClassifications;
 
 }
