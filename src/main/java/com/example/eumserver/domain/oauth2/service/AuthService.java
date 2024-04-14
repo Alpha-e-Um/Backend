@@ -4,17 +4,20 @@ import com.example.eumserver.domain.jwt.JwtTokenProvider;
 import com.example.eumserver.domain.jwt.PrincipalDetails;
 import com.example.eumserver.domain.oauth2.dto.TokenResponse;
 import com.example.eumserver.global.error.CustomException;
-import jakarta.servlet.http.Cookie;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.concurrent.TimeUnit;
+
+import static com.example.eumserver.domain.jwt.JwtTokenProvider.RF_EXPIRATION_IN_MS;
+import static com.example.eumserver.global.utils.CookieUtils.COOKIE_REFRESH_TOKEN;
 import static com.example.eumserver.global.utils.CookieUtils.addCookie;
 
 @Slf4j
@@ -22,20 +25,12 @@ import static com.example.eumserver.global.utils.CookieUtils.addCookie;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AuthService {
+
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate<String, String> redisTemplate;
 
-    @Value("${JWT_REFRESH_EXPIRATION_TIME}")
-    private long RF_EXPIRATION_IN_MS;
-
     public TokenResponse reissueToken(HttpServletRequest request, HttpServletResponse response) {
-        String refreshToken = "";
-        for (Cookie cookie : request.getCookies()) {
-            if ("refreshToken".equals(cookie.getName())) {
-                refreshToken = cookie.getValue();
-                break;
-            }
-        }
+        String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
         jwtTokenProvider.validateToken(refreshToken);
 
         Authentication authentication = jwtTokenProvider.getAuthentication(refreshToken);
@@ -50,13 +45,28 @@ public class AuthService {
             throw new CustomException(403, "Refresh Token is invalid");
         }
 
+        String newRefreshToken = jwtTokenProvider.generateRefreshToken(principalDetails);
+        addCookie(
+                response,
+                COOKIE_REFRESH_TOKEN,
+                newRefreshToken,
+                (int) TimeUnit.MILLISECONDS.toSeconds(RF_EXPIRATION_IN_MS));
 
-        refreshToken = jwtTokenProvider.generateRefreshToken(principalDetails);
-        addCookie(response, "refreshToken", refreshToken, (int) RF_EXPIRATION_IN_MS);
-        TokenResponse tokenResponse = new TokenResponse(
+        return new TokenResponse(
                 jwtTokenProvider.generateAccessToken(principalDetails)
         );
-
-        return tokenResponse;
     }
+
+    public void logout(String accessToken, String refreshToken) {
+        if (refreshToken == null) {
+            throw new CustomException(400, "Refresh Token not exists");
+        }
+
+        Claims claims = jwtTokenProvider.parseClaims(refreshToken);
+        String userId = claims.getSubject();
+        redisTemplate.opsForValue().getAndDelete(userId);
+
+        redisTemplate.opsForValue().set(accessToken, "logout");
+    }
+
 }
