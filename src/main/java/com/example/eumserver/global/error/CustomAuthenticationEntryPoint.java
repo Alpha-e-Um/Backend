@@ -1,6 +1,5 @@
 package com.example.eumserver.global.error;
 
-import com.example.eumserver.domain.jwt.JwtAuthenticationFilter;
 import com.example.eumserver.domain.jwt.JwtTokenInvalidException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
