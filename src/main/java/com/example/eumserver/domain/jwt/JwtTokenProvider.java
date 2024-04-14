@@ -156,6 +156,6 @@ public class JwtTokenProvider {
 
     public String resolveRefreshToken(HttpServletRequest request) {
         Optional<Cookie> cookie = CookieUtils.getCookie(request, CookieUtils.COOKIE_REFRESH_TOKEN);
-        return cookie.map(Cookie::getValue).orElse(null);
+        return cookie.map(Cookie::getValue).orElse("");
     }
 }
