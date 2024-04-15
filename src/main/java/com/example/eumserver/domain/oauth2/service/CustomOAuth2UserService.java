@@ -1,4 +1,4 @@
-package com.example.eumserver.domain.oauth2;
+package com.example.eumserver.domain.oauth2.service;
 
 import com.example.eumserver.domain.jwt.PrincipalDetails;
 import com.example.eumserver.domain.oauth2.attributes.OAuth2Attributes;

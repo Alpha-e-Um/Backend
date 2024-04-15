@@ -1,9 +1,9 @@
 package com.example.eumserver.global.config;
 
 import com.example.eumserver.domain.jwt.JwtAuthenticationFilter;
-import com.example.eumserver.domain.oauth2.CustomOAuth2UserService;
 import com.example.eumserver.domain.oauth2.OAuth2AuthenticationFailureHandler;
 import com.example.eumserver.domain.oauth2.OAuth2AuthenticationSuccessHandler;
+import com.example.eumserver.domain.oauth2.service.CustomOAuth2UserService;
 import com.example.eumserver.global.error.CustomAccessDeniedHandler;
 import com.example.eumserver.global.error.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,6 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/user/me").authenticated()
@@ -49,10 +48,17 @@ public class SecurityConfig {
                         .requestMatchers("/api/team/**").authenticated()
                         .requestMatchers("/api/resumes/user/{userId}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/resumes/{resumeId}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/reissue").permitAll()
                         .requestMatchers("/api/resume/**").authenticated()
                         .anyRequest().permitAll())
                 .oauth2Login(oauth2 ->
-                                oauth2.userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(customOauth2UserService))
+                                oauth2
+                                        .authorizationEndpoint(authorizationEndpointConfig ->
+                                                authorizationEndpointConfig.baseUri("/api/oauth2"))
+                                        .redirectionEndpoint(redirectionEndpointConfig ->
+                                                redirectionEndpointConfig.baseUri("/api/oauth2/callback/**"))
+                                        .userInfoEndpoint(userInfoEndpointConfig ->
+                                                userInfoEndpointConfig.userService(customOauth2UserService))
                                         .successHandler(oAuth2AuthenticationSuccessHandler)
                                         .failureHandler(oAuth2AuthenticationFailureHandler)
                                         .permitAll()
