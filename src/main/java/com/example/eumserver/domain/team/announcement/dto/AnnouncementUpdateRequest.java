@@ -7,8 +7,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record AnnouncementUpdateRequest(
-        Long announcementId,
-
         String title,
         String description,
         int vacancies,

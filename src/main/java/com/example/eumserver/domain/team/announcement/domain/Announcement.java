@@ -64,8 +64,7 @@ public class Announcement {
         this.description = announcementUpdateRequest.description();
         this.vacancies = announcementUpdateRequest.vacancies();
         this.expiredDate = announcementUpdateRequest.expiredDate();
-        this.occupationClassifications.clear();
-        this.occupationClassifications.addAll(announcementUpdateRequest.occupationClassifications());
+        this.occupationClassifications = announcementUpdateRequest.occupationClassifications();
         if (!isPublished() && announcementUpdateRequest.publish()) {
             this.publishedDate = LocalDateTime.now();
         } else if (!announcementUpdateRequest.publish()) {

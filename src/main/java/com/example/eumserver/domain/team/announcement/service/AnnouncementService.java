@@ -32,17 +32,19 @@ public class AnnouncementService {
     private final TeamService teamService;
 
     public Page<AnnouncementResponse> getFilteredAnnouncementsWithPaging(
-            AnnouncementFilter filter,
-            int page
+            Long teamId,
+            int page,
+            AnnouncementFilter filter
     ) {
         List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("create_data"));
+        sorts.add(Sort.Order.desc("date_created"));
         Pageable pageable = PageRequest.of(page, 12, Sort.by(sorts));
-        return announcementRepository.getFilteredAnnouncementsWithPaging(filter, pageable);
+        return announcementRepository.getFilteredAnnouncementsWithPaging(teamId, filter, pageable);
     }
 
-    public AnnouncementResponse createAnnouncement(AnnouncementRequest announcementRequest) {
-        Team team = teamService.findById(announcementRequest.teamId());
+    @Transactional
+    public AnnouncementResponse createAnnouncement(Long teamId, AnnouncementRequest announcementRequest) {
+        Team team = teamService.findById(teamId);
 
         Announcement announcement = AnnouncementMapper.INSTANCE.requestToEntity(announcementRequest);
         announcement.setTeam(team);
@@ -55,13 +57,15 @@ public class AnnouncementService {
         return AnnouncementMapper.INSTANCE.entityToResponse(announcement);
     }
 
-    public void updateAnnouncement(AnnouncementUpdateRequest announcementUpdateRequest) {
-        Announcement announcement = this.findAnnouncementById(announcementUpdateRequest.announcementId());
+    @Transactional
+    public void updateAnnouncement(Long announcementId, AnnouncementUpdateRequest announcementUpdateRequest) {
+        Announcement announcement = this.findAnnouncementById(announcementId);
         announcement.updateAnnouncement(announcementUpdateRequest);
         announcementRepository.save(announcement);
     }
 
 
+    @Transactional
     public void deleteAnnouncement(Long announcementId) {
         Announcement announcement = this.findAnnouncementById(announcementId);
         announcementRepository.delete(announcement);

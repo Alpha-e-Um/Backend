@@ -1,6 +1,5 @@
 package com.example.eumserver.domain.team.announcement.controller;
 
-import com.example.eumserver.domain.jwt.PrincipalDetails;
 import com.example.eumserver.domain.team.announcement.domain.Announcement;
 import com.example.eumserver.domain.team.announcement.dto.AnnouncementFilter;
 import com.example.eumserver.domain.team.announcement.dto.AnnouncementRequest;
@@ -9,14 +8,15 @@ import com.example.eumserver.domain.team.announcement.dto.AnnouncementUpdateRequ
 import com.example.eumserver.domain.team.announcement.mapper.AnnouncementMapper;
 import com.example.eumserver.domain.team.announcement.service.AnnouncementService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
-@RequestMapping("/api/team/announcement")
+@RequestMapping("/api/team/{teamId}/announcement")
 @RequiredArgsConstructor
 public class AnnouncementController {
 
@@ -24,8 +24,12 @@ public class AnnouncementController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<AnnouncementResponse> createAnnouncement(@RequestBody AnnouncementRequest announcementRequest) {
-        AnnouncementResponse announcementResponse = announcementService.createAnnouncement(announcementRequest);
+    public ResponseEntity<AnnouncementResponse> createAnnouncement(
+            @PathVariable(name = "teamId") Long teamId,
+            @RequestBody AnnouncementRequest announcementRequest
+    ) {
+        log.debug("announcement request: {}", announcementRequest);
+        AnnouncementResponse announcementResponse = announcementService.createAnnouncement(teamId, announcementRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(announcementResponse);
@@ -33,10 +37,11 @@ public class AnnouncementController {
 
     @GetMapping("")
     public ResponseEntity<Page<AnnouncementResponse>> getAnnouncements(
-            @RequestParam(name = "page") Integer page,
+            @PathVariable(name = "teamId") Long teamId,
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
             @RequestBody AnnouncementFilter announcementFilter
     ) {
-        Page<AnnouncementResponse> filteredAnnouncementsWithPaging = announcementService.getFilteredAnnouncementsWithPaging(announcementFilter, page);
+        Page<AnnouncementResponse> filteredAnnouncementsWithPaging = announcementService.getFilteredAnnouncementsWithPaging(teamId, page, announcementFilter);
         return ResponseEntity.ok(filteredAnnouncementsWithPaging);
     }
 
@@ -48,21 +53,22 @@ public class AnnouncementController {
     }
 
     @PutMapping("/{announcementId}")
-    public ResponseEntity<String> updateAnnouncement(
-            @AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<Void> updateAnnouncement(
             @PathVariable(name = "announcementId") Long announcementId,
             @RequestBody AnnouncementUpdateRequest announcementUpdateRequest
     ) {
-        announcementService.updateAnnouncement(announcementUpdateRequest);
-        return ResponseEntity.ok("Successfully updated announcement");
+        announcementService.updateAnnouncement(announcementId, announcementUpdateRequest);
+        return ResponseEntity.ok(null);
     }
 
     @DeleteMapping("/{announcementId}")
-    public ResponseEntity<String> deleteAnnouncement(
-            @AuthenticationPrincipal PrincipalDetails principalDetails,
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> deleteAnnouncement(
             @PathVariable(name = "announcementId") Long announcementId
     ) {
         announcementService.deleteAnnouncement(announcementId);
-        return ResponseEntity.ok("Successfully deleted announcement");
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .body(null);
     }
 }

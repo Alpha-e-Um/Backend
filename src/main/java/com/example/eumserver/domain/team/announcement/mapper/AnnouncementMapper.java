@@ -17,5 +17,6 @@ public interface AnnouncementMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "timeStamp", ignore = true)
     @Mapping(target = "publishedDate", ignore = true)
+    @Mapping(target = "team", ignore = true)
     Announcement requestToEntity(AnnouncementRequest announcementRequest);
 }

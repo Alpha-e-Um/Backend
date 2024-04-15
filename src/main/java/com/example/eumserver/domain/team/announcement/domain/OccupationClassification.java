@@ -1,6 +1,7 @@
 package com.example.eumserver.domain.team.announcement.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * 모집 공고의 직종 분류를 모아둔 Enum Class 입니다.
@@ -52,6 +53,7 @@ public enum OccupationClassification {
         this.value = value;
     }
 
+    @JsonValue
     public String getValue() {
         return value;
     }

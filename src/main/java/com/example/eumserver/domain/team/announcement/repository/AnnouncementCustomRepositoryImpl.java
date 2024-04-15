@@ -24,9 +24,11 @@ public class AnnouncementCustomRepositoryImpl implements AnnouncementCustomRepos
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<AnnouncementResponse> getFilteredAnnouncementsWithPaging(AnnouncementFilter filter, Pageable pageable) {
+    public Page<AnnouncementResponse> getFilteredAnnouncementsWithPaging(Long teamId, AnnouncementFilter filter, Pageable pageable) {
         QAnnouncement announcement = QAnnouncement.announcement;
         BooleanExpression predicate = announcement.isNotNull();
+
+        predicate = predicate.and(announcement.team.id.eq(teamId));
 
         if (filter.published()) {
             predicate = predicate.and(announcement.publishedDate.isNotNull());

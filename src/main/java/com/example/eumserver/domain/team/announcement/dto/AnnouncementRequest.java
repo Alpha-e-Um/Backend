@@ -7,10 +7,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record AnnouncementRequest(
-        Long teamId,
         String title,
-        int vacancies,
         String description,
+        int vacancies,
         List<OccupationClassification> occupationClassifications,
         boolean publish,
 
