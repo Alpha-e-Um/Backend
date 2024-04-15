@@ -13,7 +13,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
+import static com.example.eumserver.domain.jwt.JwtTokenProvider.RF_EXPIRATION_IN_MS;
+import static com.example.eumserver.global.utils.CookieUtils.COOKIE_REFRESH_TOKEN;
 import static com.example.eumserver.global.utils.CookieUtils.addCookie;
 
 @Slf4j
@@ -22,9 +25,6 @@ import static com.example.eumserver.global.utils.CookieUtils.addCookie;
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtTokenProvider jwtTokenProvider;
-
-    @Value("${JWT_REFRESH_EXPIRATION_TIME}")
-    private long RF_EXPIRATION_IN_MS;
 
     @Value("${oauth2.client.google.default.redirect-uri}")
     private String DEFAULT_REDIRECT_URI;
@@ -46,7 +46,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         log.debug("refreshToken: {}", refreshToken);
         log.debug("redirect_uri: {}", redirectUrlWithToken);
 
-        addCookie(response, "refreshToken", refreshToken, (int) RF_EXPIRATION_IN_MS);
+        addCookie(response, COOKIE_REFRESH_TOKEN, refreshToken, (int) TimeUnit.MILLISECONDS.toSeconds(RF_EXPIRATION_IN_MS));
         getRedirectStrategy().sendRedirect(request, response, redirectUrlWithToken);
     }
 

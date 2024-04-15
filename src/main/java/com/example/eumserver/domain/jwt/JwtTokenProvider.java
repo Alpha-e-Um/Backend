@@ -1,41 +1,44 @@
 package com.example.eumserver.domain.jwt;
 
 import com.example.eumserver.domain.user.Name;
+import com.example.eumserver.global.utils.CookieUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Component
 public class JwtTokenProvider {
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+
+    private final RedisTemplate<String, String> redisTemplate;
 
     private final Key jwtSecret;
 
-    @Value("${JWT_ACCESS_EXPIRATION_TIME}")
-    private long AC_EXPIRATION_IN_MS;
+    public static Long AC_EXPIRATION_IN_MS;
 
-    @Value("${JWT_REFRESH_EXPIRATION_TIME}")
-    private long RF_EXPIRATION_IN_MS;
+    public static Long RF_EXPIRATION_IN_MS;
 
     private static final String CLAIM_EMAIL = "email";
     private static final String CLAIM_NAME = "name";
@@ -44,9 +47,20 @@ public class JwtTokenProvider {
     private static final String DELIMITER = ",";
 
     public JwtTokenProvider(
-            @Value("${jwt.secret}") String jwtSecretStr
-    ) {
+            @Value("${jwt.secret}") String jwtSecretStr,
+            RedisTemplate<String, String> redisTemplate) {
         this.jwtSecret = Keys.hmacShaKeyFor(jwtSecretStr.getBytes());
+        this.redisTemplate = redisTemplate;
+    }
+
+    @Value("${jwt.token.access-expiration-time}")
+    public void setAcExpirationInMs(Long time) {
+        AC_EXPIRATION_IN_MS = time;
+    }
+
+    @Value("${jwt.token.refresh-expiration-time}")
+    public void setRfExpirationInMs(Long time) {
+        RF_EXPIRATION_IN_MS = time;
     }
 
     public String generateAccessToken(PrincipalDetails principalDetails) {
@@ -108,12 +122,8 @@ public class JwtTokenProvider {
      *
      * @link https://velog.io/@tlatldms/%EC%84%9C%EB%B2%84%EA%B0%9C%EB%B0%9C%EC%BA%A0%ED%94%84-Spring-security-refreshing-JWT-DB%EC%A0%91%EA%B7%BC%EC%97%86%EC%9D%B4-%EC%9D%B8%EC%A6%9D%EA%B3%BC-%ED%8C%8C%EC%8B%B1%ED%95%98%EA%B8%B0
      */
-    public Authentication getAuthentication(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(jwtSecret)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+    public Authentication getAuthentication(String accessToken) {
+        Claims claims = this.parseClaims(accessToken);
 
         long userId = Long.parseLong(claims.getSubject());
         String email = claims.get(CLAIM_EMAIL, String.class);
@@ -126,5 +136,26 @@ public class JwtTokenProvider {
 
         PrincipalDetails principalDetails = new PrincipalDetails(userId, email, name, avatar, authorities);
         return new UsernamePasswordAuthenticationToken(principalDetails, null, authorities);
+    }
+
+    public Claims parseClaims(String token) {
+       return Jwts.parserBuilder()
+                .setSigningKey(jwtSecret)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public String resolveAccessToken(HttpServletRequest request) {
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+            return token.substring(7);
+        }
+        return null;
+    }
+
+    public String resolveRefreshToken(HttpServletRequest request) {
+        Optional<Cookie> cookie = CookieUtils.getCookie(request, CookieUtils.COOKIE_REFRESH_TOKEN);
+        return cookie.map(Cookie::getValue).orElse("");
     }
 }
