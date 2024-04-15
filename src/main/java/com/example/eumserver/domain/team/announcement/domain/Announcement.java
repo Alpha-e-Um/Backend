@@ -1,10 +1,12 @@
 package com.example.eumserver.domain.team.announcement.domain;
 
+import com.example.eumserver.domain.team.Team;
+import com.example.eumserver.domain.team.announcement.dto.AnnouncementUpdateRequest;
 import com.example.eumserver.global.entity.TimeStamp;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -30,11 +32,16 @@ public class Announcement {
     @Column(nullable = false)
     private String description;
 
-    @Column(name = "date_expired", nullable = false)
-    private LocalDate expiredDate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Team team;
 
+    @Column(name = "date_expired", nullable = false)
+    private LocalDateTime expiredDate;
+
+    @Setter
     @Column(name = "date_published")
-    private LocalDate publishedDate;
+    private LocalDateTime publishedDate;
 
     @Embedded
     private TimeStamp timeStamp;
@@ -43,4 +50,26 @@ public class Announcement {
     @Enumerated(EnumType.STRING)
     private List<OccupationClassification> occupationClassifications;
 
+    public void setTeam(Team team) {
+        this.team = team;
+        team.addAnnouncement(this);
+    }
+
+    public boolean isPublished() {
+        return this.publishedDate != null;
+    }
+
+    public void updateAnnouncement(AnnouncementUpdateRequest announcementUpdateRequest) {
+        this.title = announcementUpdateRequest.title();
+        this.description = announcementUpdateRequest.description();
+        this.vacancies = announcementUpdateRequest.vacancies();
+        this.expiredDate = announcementUpdateRequest.expiredDate();
+        this.occupationClassifications.clear();
+        this.occupationClassifications.addAll(announcementUpdateRequest.occupationClassifications());
+        if (!isPublished() && announcementUpdateRequest.publish()) {
+            this.publishedDate = LocalDateTime.now();
+        } else if (!announcementUpdateRequest.publish()) {
+            this.publishedDate = null;
+        }
+    }
 }

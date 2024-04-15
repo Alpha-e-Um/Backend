@@ -16,4 +16,5 @@ public interface AnnouncementCustomRepository {
      * @return A {@link Page} of {@link Announcement} objects that match the specified filters.
      */
     Page<AnnouncementResponse> getFilteredAnnouncementsWithPaging(AnnouncementFilter filter, Pageable pageable);
+
 }

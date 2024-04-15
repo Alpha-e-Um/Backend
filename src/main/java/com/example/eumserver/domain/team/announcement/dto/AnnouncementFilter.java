@@ -5,6 +5,7 @@ import com.example.eumserver.domain.team.announcement.domain.OccupationClassific
 import java.util.List;
 
 public record AnnouncementFilter(
-       List<OccupationClassification> occupationClassifications
+        boolean published,
+        List<OccupationClassification> occupationClassifications
 ) {
 }

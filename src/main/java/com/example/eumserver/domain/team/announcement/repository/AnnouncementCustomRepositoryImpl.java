@@ -28,6 +28,10 @@ public class AnnouncementCustomRepositoryImpl implements AnnouncementCustomRepos
         QAnnouncement announcement = QAnnouncement.announcement;
         BooleanExpression predicate = announcement.isNotNull();
 
+        if (filter.published()) {
+            predicate = predicate.and(announcement.publishedDate.isNotNull());
+        }
+
         List<OccupationClassification> occupationClassifications = filter.occupationClassifications();
         if (occupationClassifications != null && !occupationClassifications.isEmpty()) {
             predicate = predicate.and(announcement.occupationClassifications.any().in(occupationClassifications));
