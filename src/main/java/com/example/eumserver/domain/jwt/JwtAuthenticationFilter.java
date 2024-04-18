@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -21,17 +21,19 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider tokenProvider;
+    private final RedisTemplate<String, String> redisTemplate;
 
     public static final String ATTRIBUTE_TOKEN_ERROR = "token_error";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String token = extractToken(request);
+        String accessToken = tokenProvider.resolveAccessToken(request);
+        log.debug("receive access token: {}", accessToken);
 
         try {
-            if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
-                Authentication authentication = tokenProvider.getAuthentication(token);
+            if (StringUtils.hasText(accessToken) && !isTokenBlacked(accessToken) && tokenProvider.validateToken(accessToken)) {
+                Authentication authentication = tokenProvider.getAuthentication(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (JwtTokenInvalidException jwtTokenInvalidException) {
@@ -41,11 +43,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String extractToken(HttpServletRequest request) {
-        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
-            return token.substring(7);
-        }
-        return null;
+    private boolean isTokenBlacked(String accessToken) {
+        String isLogout = redisTemplate.opsForValue().get(accessToken);
+        return isLogout != null && isLogout.equals("logout");
     }
 }
