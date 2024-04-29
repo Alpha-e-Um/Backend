@@ -4,8 +4,8 @@ import com.example.eumserver.domain.resume.dto.ResumeRequest;
 import com.example.eumserver.domain.resume.entity.Resume;
 import com.example.eumserver.domain.user.User;
 import com.example.eumserver.domain.user.UserRepository;
-import com.example.eumserver.global.error.CustomException;
-import com.example.eumserver.global.error.exception.EntityNotFoundException;
+import com.example.eumserver.global.error.exception.CustomException;
+import com.example.eumserver.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,7 @@ public class ResumeService {
     @Transactional
     public Resume postResume(ResumeRequest resumeRequest, long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Resume resume = ResumeMapper.INSTANCE.resumeRequestToResume(resumeRequest);
         resume.setUser(user);
         resumeRepository.save(resume);
@@ -33,11 +33,13 @@ public class ResumeService {
     @Transactional
     public Resume updateResume(ResumeRequest resumeRequest, long resumeId, long userId) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Resume resume = resumeRepository.findById(resumeId)
-                .orElseThrow(() -> new EntityNotFoundException("Resume not found."));
+                .orElseThrow(() -> new CustomException(ErrorCode.RESUME_NOT_FOUND));
 
-        if (resume.getUser().getId() != userId) throw new CustomException(403, "No Autorization");
+        if (resume.getUser().getId() != userId) {
+            throw new CustomException("You do not have permission to update a resume.", ErrorCode.ACCESS_DENIED);
+        }
 
         Resume updatedResume = ResumeMapper.INSTANCE.resumeRequestToResume(resumeRequest);
         resume.updateResume(updatedResume.getTitle(), updatedResume.getJobCategory(), updatedResume.getJobSubcategory(),
@@ -51,34 +53,34 @@ public class ResumeService {
     @Transactional
     public void deleteResume(long resumeId, long userId) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         Resume resume = resumeRepository.findById(resumeId)
-                .orElseThrow(() -> new EntityNotFoundException("Resume not found."));
+                .orElseThrow(() -> new CustomException(ErrorCode.RESUME_NOT_FOUND));
 
-        if (resume.getUser().getId() != userId) throw new CustomException(403, "No Autorization");
+        if (resume.getUser().getId() != userId) {
+            throw new CustomException("You do not have permission to delete a resume.", ErrorCode.ACCESS_DENIED);
+        }
         resumeRepository.deleteById(resumeId);
     }
 
     public List<Resume> getAllMyResume(long userId) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found."));
-        List<Resume> resumes = resumeRepository.findByUserId(userId);
-        return resumes;
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        return resumeRepository.findByUserId(userId);
     }
 
     public List<Resume> getAllUserResume(long userId) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found."));
-        List<Resume> resumes = resumeRepository.findByUserIdAndIsPublicTrue(userId);
-        return resumes;
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        return resumeRepository.findByUserIdAndIsPublicTrue(userId);
     }
 
     public Resume getResume(long userId, long resumeId) {
         Resume resume = resumeRepository.findById(resumeId)
-                .orElseThrow(() -> new EntityNotFoundException("Resume not found."));
+                .orElseThrow(() -> new CustomException(ErrorCode.RESUME_NOT_FOUND));
 
         if (!resume.getIsPublic() && (userId == 0 || userId != resume.getUser().getId())) {
-            throw new CustomException(403, "No Autorization");
+            throw new CustomException(ErrorCode.ACCESS_DENIED);
         }
         return resume;
     }

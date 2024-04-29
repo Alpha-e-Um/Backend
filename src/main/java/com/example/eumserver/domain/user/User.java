@@ -3,7 +3,7 @@ package com.example.eumserver.domain.user;
 import com.example.eumserver.domain.oauth2.attributes.OAuth2Attributes;
 import com.example.eumserver.domain.resume.entity.Resume;
 import com.example.eumserver.domain.team.participant.Participant;
-import com.example.eumserver.global.entity.TimeStamp;
+import com.example.eumserver.global.dto.TimeStamp;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

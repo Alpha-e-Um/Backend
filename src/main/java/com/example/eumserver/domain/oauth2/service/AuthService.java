@@ -3,7 +3,8 @@ package com.example.eumserver.domain.oauth2.service;
 import com.example.eumserver.domain.jwt.JwtTokenProvider;
 import com.example.eumserver.domain.jwt.PrincipalDetails;
 import com.example.eumserver.domain.oauth2.dto.TokenResponse;
-import com.example.eumserver.global.error.CustomException;
+import com.example.eumserver.global.error.exception.CustomException;
+import com.example.eumserver.global.error.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,11 +39,11 @@ public class AuthService {
 
         if (authentication.getPrincipal() instanceof PrincipalDetails) {
             principalDetails = (PrincipalDetails) authentication.getPrincipal();
-        } else throw new CustomException(401, "No refresh token");
+        } else throw new CustomException(ErrorCode.REFRESH_TOKEN_NOT_EXIST);
 
         String redisRefreshToken = redisTemplate.opsForValue().get(String.valueOf(principalDetails.getUserId()));
         if (redisRefreshToken == null || !redisRefreshToken.equals(refreshToken)) {
-            throw new CustomException(403, "Refresh Token is invalid");
+            throw new CustomException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         String newRefreshToken = jwtTokenProvider.generateRefreshToken(principalDetails);
@@ -59,7 +60,7 @@ public class AuthService {
 
     public void logout(String accessToken, String refreshToken) {
         if (refreshToken == null) {
-            throw new CustomException(400, "Refresh Token not exists");
+            throw new CustomException(ErrorCode.REFRESH_TOKEN_NOT_EXIST);
         }
 
         Claims claims = jwtTokenProvider.parseClaims(refreshToken);
