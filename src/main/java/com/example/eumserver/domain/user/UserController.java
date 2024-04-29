@@ -23,21 +23,24 @@ public class UserController {
     public ResponseEntity<ApiResult<UserResponse>> getMyInfo(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         UserResponse userResponse = UserMapper.INSTANCE.principalDetailsToUserResponse(principalDetails);
         return ResponseEntity
-                .ok(new ApiResult<>("successfully get my information", userResponse));
+                .ok(new ApiResult<>("유저(자신) 조회 성공", userResponse));
     }
 
     @PutMapping("/me")
-    public ResponseEntity<?> updateMyInfo(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody @Valid final UserUpdateRequest request) {
+    public ResponseEntity<ApiResult<UserResponse>> updateMyInfo(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody @Valid final UserUpdateRequest request) {
         long userId = principalDetails.getUserId();
         User user = userService.updateInfo(userId, request);
         UserResponse userResponse = UserMapper.INSTANCE.userToUserResponse(user);
-        return ResponseEntity.ok(userResponse);
+        return ResponseEntity
+                .ok(new ApiResult<>("유저(자신) 업데이트 성공", userResponse));
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getUserInfo(@PathVariable long userId) {
+    public ResponseEntity<ApiResult<UserResponse>> getUserInfo(@PathVariable long userId) {
         User user = userService.findById(userId);
         UserResponse userResponse = UserMapper.INSTANCE.userToUserResponse(user);
-        return ResponseEntity.ok(userResponse);
+        return ResponseEntity
+                .ok(new ApiResult<>("유저 조회 성공", userResponse));
     }
+
 }

@@ -39,11 +39,11 @@ public class AuthService {
 
         if (authentication.getPrincipal() instanceof PrincipalDetails) {
             principalDetails = (PrincipalDetails) authentication.getPrincipal();
-        } else throw new CustomException(ErrorCode.REFRESH_TOKEN_NOT_EXIST);
+        } else throw new CustomException(ErrorCode.INVALID_JWT_TOKEN);
 
         String redisRefreshToken = redisTemplate.opsForValue().get(String.valueOf(principalDetails.getUserId()));
         if (redisRefreshToken == null || !redisRefreshToken.equals(refreshToken)) {
-            throw new CustomException(ErrorCode.INVALID_REFRESH_TOKEN);
+            throw new CustomException(ErrorCode.INVALID_JWT_TOKEN);
         }
 
         String newRefreshToken = jwtTokenProvider.generateRefreshToken(principalDetails);
@@ -60,7 +60,7 @@ public class AuthService {
 
     public void logout(String accessToken, String refreshToken) {
         if (refreshToken == null) {
-            throw new CustomException(ErrorCode.REFRESH_TOKEN_NOT_EXIST);
+            throw new CustomException(ErrorCode.INVALID_JWT_TOKEN);
         }
 
         Claims claims = jwtTokenProvider.parseClaims(refreshToken);

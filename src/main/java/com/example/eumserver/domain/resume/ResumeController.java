@@ -3,6 +3,7 @@ package com.example.eumserver.domain.resume;
 import com.example.eumserver.domain.jwt.PrincipalDetails;
 import com.example.eumserver.domain.resume.dto.ResumeRequest;
 import com.example.eumserver.domain.resume.entity.Resume;
+import com.example.eumserver.global.dto.ApiResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -39,7 +40,7 @@ public class ResumeController {
             @ApiResponse(responseCode = "201", description = "이력서 작성 성공", content = @Content(schema = @Schema(implementation = Resume.class)))
     })
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Resume> createResume(
+    public ResponseEntity<ApiResult<Resume>> createResume(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody @Valid ResumeRequest resumeRequest
     ) {
@@ -47,7 +48,7 @@ public class ResumeController {
         Resume resume = resumeService.postResume(resumeRequest, userId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(resume);
+                .body(new ApiResult<>("이력서 생성 성공", resume));
     }
 
     @PutMapping("/{resumeId}")
@@ -61,7 +62,7 @@ public class ResumeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이력서 수정 성공", content = @Content(schema = @Schema(implementation = Resume.class)))
     })
-    public ResponseEntity<Resume> updateResume(
+    public ResponseEntity<ApiResult<Resume>> updateResume(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable("resumeId") long resumeId,
             @RequestBody @Valid ResumeRequest resumeRequest
@@ -69,7 +70,7 @@ public class ResumeController {
         long userId = principalDetails.getUserId();
         Resume resume = resumeService.updateResume(resumeRequest, resumeId, userId);
         return ResponseEntity
-                .ok(resume);
+                .ok(new ApiResult<>("이력서 업데이트 성공", resume));
     }
 
     @DeleteMapping("/{resumeId}")
@@ -84,16 +85,15 @@ public class ResumeController {
             @ApiResponse(responseCode = "202", description = "이력서 삭제 성공")
     })
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<Resume> deleteResume(
+    public ResponseEntity<ApiResult<Object>> deleteResume(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @PathVariable("resumeId") long resumeId,
-            @RequestBody @Valid ResumeRequest resumeRequest
+            @PathVariable("resumeId") long resumeId
     ) {
         long userId = principalDetails.getUserId();
         resumeService.deleteResume(resumeId, userId);
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
-                .body(null);
+                .body(new ApiResult<>("이력서 삭제 성공"));
     }
 
     @GetMapping("")
@@ -107,13 +107,13 @@ public class ResumeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이력서 받아오기 성공")
     })
-    public ResponseEntity<List<Resume>> getAllMyResume(
+    public ResponseEntity<ApiResult<List<Resume>>> getAllMyResume(
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
         long userId = principalDetails.getUserId();
         List<Resume> resumes = resumeService.getAllMyResume(userId);
         return ResponseEntity
-                .ok(resumes);
+                .ok(new ApiResult<>("내 이력서 전부 받아오기 성공", resumes));
     }
 
     @GetMapping("/user/{userId}")
@@ -121,12 +121,12 @@ public class ResumeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이력서 받아오기 성공")
     })
-    public ResponseEntity<List<Resume>> getAllMyResume(
+    public ResponseEntity<ApiResult<List<Resume>>> getAllMyResume(
             @PathVariable("userId") long userId
     ) {
         List<Resume> resumes = resumeService.getAllUserResume(userId);
         return ResponseEntity
-                .ok(resumes);
+                .ok(new ApiResult<>("타인 이력서 전부 받아오기 성공", resumes));
     }
 
     @GetMapping("/{resumeId}")
@@ -134,7 +134,7 @@ public class ResumeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이력서 받아오기 성공")
     })
-    public ResponseEntity<Resume> getResume(
+    public ResponseEntity<ApiResult<Resume>> getResume(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable("resumeId") long resumeId
     ) {
@@ -142,6 +142,6 @@ public class ResumeController {
         if (principalDetails != null) userId = principalDetails.getUserId();
         Resume resume = resumeService.getResume(userId, resumeId);
         return ResponseEntity
-                .ok(resume);
+                .ok(new ApiResult<>("특정 이력서 받아오기 성공", resume));
     }
 }

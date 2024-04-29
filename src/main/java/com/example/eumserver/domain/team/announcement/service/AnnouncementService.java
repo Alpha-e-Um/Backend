@@ -9,7 +9,8 @@ import com.example.eumserver.domain.team.announcement.dto.AnnouncementResponse;
 import com.example.eumserver.domain.team.announcement.dto.AnnouncementUpdateRequest;
 import com.example.eumserver.domain.team.announcement.mapper.AnnouncementMapper;
 import com.example.eumserver.domain.team.announcement.repository.AnnouncementRepository;
-import com.example.eumserver.global.error.CustomException;
+import com.example.eumserver.global.error.exception.CustomException;
+import com.example.eumserver.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -73,6 +74,6 @@ public class AnnouncementService {
 
     public Announcement findAnnouncementById(Long announcementId) {
         return announcementRepository.findById(announcementId)
-                .orElseThrow(() -> new CustomException(400, "Announcement not found."));
+                .orElseThrow(() -> new CustomException(ErrorCode.ANNOUNCEMENT_NOT_FOUND));
     }
 }

@@ -59,8 +59,8 @@ class AnnouncementControllerTest extends BaseIntegrationTest {
 
         resultActions
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.title").value(announcementRequest.title()))
-                .andExpect(jsonPath("$.description").value(announcementRequest.description()));
+                .andExpect(jsonPath("$.data.title").value(announcementRequest.title()))
+                .andExpect(jsonPath("$.data.description").value(announcementRequest.description()));
     }
 
     @Test
@@ -78,8 +78,8 @@ class AnnouncementControllerTest extends BaseIntegrationTest {
 
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value(announcement.getTitle()))
-                .andExpect(jsonPath("$.description").value(announcement.getDescription()));
+                .andExpect(jsonPath("$.data.title").value(announcement.getTitle()))
+                .andExpect(jsonPath("$.data.description").value(announcement.getDescription()));
     }
 
     @Test
@@ -104,12 +104,12 @@ class AnnouncementControllerTest extends BaseIntegrationTest {
 
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.number").value(0))
-                .andExpect(jsonPath("$.size").value(12))
-                .andExpect(jsonPath("$.totalElements").value(1))
-                .andExpect(jsonPath("$.totalPages").value(1))
-                .andExpect(jsonPath("$.content.[0].title").value(announcement.getTitle()))
-                .andExpect(jsonPath("$.content.[0].description").value(announcement.getDescription()));
+                .andExpect(jsonPath("$.data.number").value(0))
+                .andExpect(jsonPath("$.data.size").value(12))
+                .andExpect(jsonPath("$.data.totalElements").value(1))
+                .andExpect(jsonPath("$.data.totalPages").value(1))
+                .andExpect(jsonPath("$.data.content.[0].title").value(announcement.getTitle()))
+                .andExpect(jsonPath("$.data.content.[0].description").value(announcement.getDescription()));
     }
 
     @Test
@@ -165,7 +165,7 @@ class AnnouncementControllerTest extends BaseIntegrationTest {
 
         resultActions
                 .andExpect(status().isNoContent())
-                .andExpect(jsonPath("$").doesNotExist());
+                .andExpect(jsonPath("$.success").value(true));
     }
 
     private Team createTeam() {

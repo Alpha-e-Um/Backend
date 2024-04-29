@@ -84,7 +84,7 @@ public class CustomExceptionHandler {
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ApiResult<?>> handle404(NoHandlerFoundException e){
-        final ErrorCode errorCode = ErrorCode.ENDPOINT_NOT_FOUND;
+        final ErrorCode errorCode = ErrorCode.PAGE_NOT_FOUND;
         return ResponseEntity
                 .status(e.getStatusCode())
                 .body(new ApiResult<>(errorCode));
