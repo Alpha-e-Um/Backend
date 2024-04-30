@@ -3,9 +3,9 @@ package com.example.eumserver.domain.user;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class UserControllerTest {
+
+    final String BASE_URI = "/api/user";
 
     @BeforeEach
     void setUp() {
@@ -13,6 +13,7 @@ class UserControllerTest {
 
     @Test
     void getMyInfo() {
+
     }
 
     @Test
