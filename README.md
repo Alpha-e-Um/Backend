@@ -28,7 +28,7 @@ This project aims to develop a comprehensive app service for international stude
  
 |이름|역할|
 |-------|-------|  
-|조현진|팀장, Backend, Devops| 
+|조현진|Team Leader, Backend, Devops| 
 |홍석주|Backend, Devops|
 |최지훈|Frontend|
 |최태호|Frontend|  
