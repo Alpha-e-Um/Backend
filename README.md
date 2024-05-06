@@ -92,24 +92,6 @@ This project aims to develop a comprehensive app service for international stude
 <br>
 <img src="https://github.com/Alpha-e-Um/Backend/assets/55117706/332aa6d0-828a-43f4-8d96-6ba68f32d9a3" width=800>
 
-### 📂 디렉토리 구조
-
-```
-├── 📂.github
-
-├── 📂front 🗂 프론트 앱 소스 (Flutter)
-
-├── 📂back-gateway 🗂 백엔드 Api Gateway (Spring Cloud Gateway)
-
-├── 📂back 🗂 백엔드 메인 비즈니스 서버 소스(Spring Boot)
-
-├── 📂back-chat 🗂 백엔드 채팅 서버 소스 (Ruby on Rails)
-
-├── 📂ai 🗂 KuKu 채팅 봇 소스
-
-└── 📕Readme.md
-```
-
 ## 8. 사용법
 
 ### Backend
