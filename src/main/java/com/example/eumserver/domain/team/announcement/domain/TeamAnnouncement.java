@@ -1,7 +1,7 @@
 package com.example.eumserver.domain.team.announcement.domain;
 
 import com.example.eumserver.domain.team.Team;
-import com.example.eumserver.domain.team.announcement.dto.AnnouncementUpdateRequest;
+import com.example.eumserver.domain.team.announcement.dto.TeamAnnouncementUpdateRequest;
 import com.example.eumserver.global.dto.TimeStamp;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Announcement {
+public class TeamAnnouncement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,7 +59,7 @@ public class Announcement {
         return this.publishedDate != null;
     }
 
-    public void updateAnnouncement(AnnouncementUpdateRequest announcementUpdateRequest) {
+    public void updateAnnouncement(TeamAnnouncementUpdateRequest announcementUpdateRequest) {
         this.title = announcementUpdateRequest.title();
         this.description = announcementUpdateRequest.description();
         this.vacancies = announcementUpdateRequest.vacancies();

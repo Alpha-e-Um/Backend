@@ -6,7 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record AnnouncementUpdateRequest(
+public record TeamAnnouncementUpdateRequest(
         String title,
         String description,
         int vacancies,
