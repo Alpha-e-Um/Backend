@@ -2,6 +2,7 @@ package com.example.eumserver.domain.team;
 
 import com.example.eumserver.domain.jwt.PrincipalDetails;
 import com.example.eumserver.domain.team.dto.TeamRequest;
+import com.example.eumserver.global.dto.ApiResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,33 +18,34 @@ public class TeamController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Team> createTeam(
+    public ResponseEntity<ApiResult<Team>> createTeam(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody TeamRequest teamRequest) {
         Team team = teamService.createTeam(principalDetails.getUserId(), teamRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(team);
+                .body(new ApiResult<>("팀 생성 성공", team));
     }
 
     @GetMapping("/{teamId}")
-    public ResponseEntity<Team> getTeamById(
+    public ResponseEntity<ApiResult<Team>> getTeamById(
             @PathVariable long teamId
     ) {
         Team team = teamService.findById(teamId);
-        return ResponseEntity.ok(team);
+        return ResponseEntity
+                .ok(new ApiResult<>("팀 조회 성공", team));
     }
 
     @DeleteMapping("/{teamId}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<Void> deleteTeamById(
+    public ResponseEntity<ApiResult<?>> deleteTeamById(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable long teamId
     ) {
         teamService.deleteTeam(principalDetails.getUserId(), teamId);
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
-                .body(null);
+                .body(new ApiResult<>("팀 삭제 성공"));
     }
 
 }

@@ -2,7 +2,7 @@ package com.example.eumserver.domain.team.announcement.domain;
 
 import com.example.eumserver.domain.team.Team;
 import com.example.eumserver.domain.team.announcement.dto.AnnouncementUpdateRequest;
-import com.example.eumserver.global.entity.TimeStamp;
+import com.example.eumserver.global.dto.TimeStamp;
 import jakarta.persistence.*;
 import lombok.*;
 

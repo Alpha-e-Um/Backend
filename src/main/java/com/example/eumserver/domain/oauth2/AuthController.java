@@ -3,6 +3,7 @@ package com.example.eumserver.domain.oauth2;
 import com.example.eumserver.domain.jwt.JwtTokenProvider;
 import com.example.eumserver.domain.oauth2.dto.TokenResponse;
 import com.example.eumserver.domain.oauth2.service.AuthService;
+import com.example.eumserver.global.dto.ApiResult;
 import com.example.eumserver.global.utils.CookieUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,16 +26,16 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/reissue")
-    public ResponseEntity<TokenResponse> reissue(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<ApiResult<TokenResponse>> reissue(HttpServletRequest request, HttpServletResponse response) {
         TokenResponse tokenResponse = authService.reissueToken(request, response);
         return ResponseEntity
                 .ok()
-                .body(tokenResponse);
+                .body(new ApiResult<>("토큰 재생성 성공", tokenResponse));
     }
 
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<ApiResult<?>> logout(HttpServletRequest request, HttpServletResponse response) {
         String accessToken = jwtTokenProvider.resolveAccessToken(request);
         String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
         authService.logout(accessToken, refreshToken);
@@ -42,7 +43,7 @@ public class AuthController {
         CookieUtils.deleteCookie(request, response, CookieUtils.COOKIE_REFRESH_TOKEN);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
-                .body("Successfully Logged out.");
+                .body(new ApiResult<>("로그아웃 성공"));
     }
 }
 
