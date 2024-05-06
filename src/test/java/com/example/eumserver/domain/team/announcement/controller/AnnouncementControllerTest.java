@@ -2,11 +2,11 @@ package com.example.eumserver.domain.team.announcement.controller;
 
 import com.example.eumserver.BaseIntegrationTest;
 import com.example.eumserver.domain.team.Team;
-import com.example.eumserver.domain.team.announcement.domain.Announcement;
+import com.example.eumserver.domain.team.announcement.domain.TeamAnnouncement;
 import com.example.eumserver.domain.team.announcement.domain.OccupationClassification;
-import com.example.eumserver.domain.team.announcement.dto.AnnouncementFilter;
-import com.example.eumserver.domain.team.announcement.dto.AnnouncementRequest;
-import com.example.eumserver.domain.team.announcement.dto.AnnouncementUpdateRequest;
+import com.example.eumserver.domain.team.announcement.dto.TeamAnnouncementFilter;
+import com.example.eumserver.domain.team.announcement.dto.TeamAnnouncementRequest;
+import com.example.eumserver.domain.team.announcement.dto.TeamAnnouncementUpdateRequest;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,8 +37,8 @@ class AnnouncementControllerTest extends BaseIntegrationTest {
     void create_announcement_success() throws Exception {
         Team team = createTeam();
 
-        AnnouncementRequest announcementRequest =
-                new AnnouncementRequest(
+        TeamAnnouncementRequest announcementRequest =
+                new TeamAnnouncementRequest(
                         "title",
                         "description",
                         5,
@@ -68,7 +68,7 @@ class AnnouncementControllerTest extends BaseIntegrationTest {
     @WithMockUser
     void get_announcement_success() throws Exception {
         Team team = createTeam();
-        Announcement announcement = createAnnouncement(team);
+        TeamAnnouncement announcement = createAnnouncement(team);
 
         ResultActions resultActions = mockMvc.perform(
                 get(BASE_URI + "/{announcementId}", team.getId(), announcement.getId())
@@ -87,9 +87,9 @@ class AnnouncementControllerTest extends BaseIntegrationTest {
     @WithMockUser
     void get_filtered_announcement_with_paging_success() throws Exception {
         Team team = createTeam();
-        Announcement announcement = createAnnouncement(team);
+        TeamAnnouncement announcement = createAnnouncement(team);
 
-        AnnouncementFilter filter = new AnnouncementFilter(
+        TeamAnnouncementFilter filter = new TeamAnnouncementFilter(
                 false,
                 List.of(OccupationClassification.DEVELOPMENT_BACKEND, OccupationClassification.DEVELOPMENT_DEVOPS)
         );
@@ -117,9 +117,9 @@ class AnnouncementControllerTest extends BaseIntegrationTest {
     @WithMockUser
     void update_announcement_success() throws Exception {
         Team team = createTeam();
-        Announcement announcement = createAnnouncement(team);
+        TeamAnnouncement announcement = createAnnouncement(team);
 
-        AnnouncementUpdateRequest announcementUpdateRequest = new AnnouncementUpdateRequest(
+        TeamAnnouncementUpdateRequest announcementUpdateRequest = new TeamAnnouncementUpdateRequest(
                 "new title",
                 "new description",
                 2,
@@ -141,7 +141,7 @@ class AnnouncementControllerTest extends BaseIntegrationTest {
         resultActions
                 .andExpect(status().isOk());
 
-        Announcement updatedAnnouncement = em.find(Announcement.class, announcement.getId());
+        TeamAnnouncement updatedAnnouncement = em.find(TeamAnnouncement.class, announcement.getId());
         assertEquals(announcementUpdateRequest.title(), updatedAnnouncement.getTitle());
         assertEquals(announcementUpdateRequest.description(), updatedAnnouncement.getDescription());
         assertEquals(announcementUpdateRequest.vacancies(), updatedAnnouncement.getVacancies());
@@ -155,7 +155,7 @@ class AnnouncementControllerTest extends BaseIntegrationTest {
     @WithMockUser
     void delete_announcement_success() throws Exception {
         Team team = createTeam();
-        Announcement announcement = createAnnouncement(team);
+        TeamAnnouncement announcement = createAnnouncement(team);
 
         ResultActions resultActions = mockMvc.perform(
                 delete(BASE_URI + "/{announcementId}", team.getId(), announcement.getId())
@@ -176,8 +176,8 @@ class AnnouncementControllerTest extends BaseIntegrationTest {
         return team;
     }
 
-    private Announcement createAnnouncement(Team team) {
-        Announcement announcement = Announcement.builder()
+    private TeamAnnouncement createAnnouncement(Team team) {
+        TeamAnnouncement announcement = TeamAnnouncement.builder()
                 .title("test_title")
                 .description("test_description")
                 .vacancies(1)
