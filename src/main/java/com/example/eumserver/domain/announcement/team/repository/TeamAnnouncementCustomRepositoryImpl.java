@@ -1,10 +1,10 @@
 package com.example.eumserver.domain.announcement.team.repository;
 
+import com.example.eumserver.domain.announcement.team.domain.QTeamAnnouncement;
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementFilter;
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementResponse;
 import com.example.eumserver.domain.announcement.team.mapper.TeamAnnouncementMapper;
 import com.example.eumserver.domain.announcement.filter.domain.OccupationClassification;
-import com.example.eumserver.domain.team.announcement.domain.QTeamAnnouncement;
 import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
