@@ -15,8 +15,6 @@ public interface ResumeMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "timeStamp", ignore = true)
     @Mapping(target = "user", ignore = true)
-    @Mapping(target = "resumeAnnouncement", ignore = true)
-    @Mapping(target = "isPublished", ignore = true)
     Resume resumeRequestToResume(ResumeRequest resumeRequest);
 
     @AfterMapping

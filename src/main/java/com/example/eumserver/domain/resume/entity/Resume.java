@@ -1,6 +1,5 @@
 package com.example.eumserver.domain.resume.entity;
 
-import com.example.eumserver.domain.announcement.resume.domain.ResumeAnnouncement;
 import com.example.eumserver.domain.user.User;
 import com.example.eumserver.global.dto.TimeStamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -65,12 +64,6 @@ public class Resume {
     @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ResumeHomepage> homepages = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "resume_announcement_id")
-    private ResumeAnnouncement resumeAnnouncement;
-
-    @Builder.Default
-    private Boolean isPublished = false;
 
     @Embedded
     private TimeStamp timeStamp;
@@ -99,14 +92,4 @@ public class Resume {
         this.homepages.addAll(resume.getHomepages());
     }
 
-    public void publishResume(ResumeAnnouncement resumeAnnouncement) {
-        this.resumeAnnouncement = resumeAnnouncement;
-        resumeAnnouncement.setResume(this);
-        this.isPublished = true;
-    }
-
-    public void unpublishResume() {
-        this.resumeAnnouncement = null;
-        this.isPublished = false;
-    }
 }
