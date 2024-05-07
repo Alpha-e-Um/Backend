@@ -12,16 +12,9 @@ import org.mapstruct.factory.Mappers;
 public interface ResumeMapper {
     ResumeMapper INSTANCE = Mappers.getMapper(ResumeMapper.class);
 
-    @Mapping(source = "jobCategory", target = "jobCategory")
-    @Mapping(source = "jobSubcategory", target = "jobSubcategory")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "timeStamp", ignore = true)
     @Mapping(target = "user", ignore = true)
-    @Mapping(source = "gpa", target = "gpa")
-    @Mapping(source = "totalScore", target = "totalScore")
-    @Mapping(source = "introduction", target = "introduction")
-    @Mapping(source = "careers", target = "careers")
-    @Mapping(source = "certificates", target = "certificates")
-    @Mapping(source = "projects", target = "projects")
-    @Mapping(source = "isPublic", target = "isPublic")
     Resume resumeRequestToResume(ResumeRequest resumeRequest);
 
     @AfterMapping

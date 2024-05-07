@@ -42,9 +42,7 @@ public class ResumeService {
         }
 
         Resume updatedResume = ResumeMapper.INSTANCE.resumeRequestToResume(resumeRequest);
-        resume.updateResume(updatedResume.getTitle(), updatedResume.getJobCategory(), updatedResume.getJobSubcategory(),
-                updatedResume.getGpa(), updatedResume.getTotalScore(), updatedResume.getCareers(), updatedResume.getActivities(),
-                updatedResume.getCertificates(), updatedResume.getProjects(), updatedResume.getHomepages(), updatedResume.getIsPublic());
+        resume.updateResume(updatedResume);
         resumeRepository.save(resume);
 
         return resume;
@@ -63,23 +61,17 @@ public class ResumeService {
         resumeRepository.deleteById(resumeId);
     }
 
-    public List<Resume> getAllMyResume(long userId) {
+    public List<Resume> getAllResumeByUserId(long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         return resumeRepository.findByUserId(userId);
-    }
-
-    public List<Resume> getAllUserResume(long userId) {
-        userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        return resumeRepository.findByUserIdAndIsPublicTrue(userId);
     }
 
     public Resume getResume(long userId, long resumeId) {
         Resume resume = resumeRepository.findById(resumeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESUME_NOT_FOUND));
 
-        if (!resume.getIsPublic() && (userId == 0 || userId != resume.getUser().getId())) {
+        if (userId == 0 || userId != resume.getUser().getId()) {
             throw new CustomException(ErrorCode.ACCESS_DENIED);
         }
         return resume;
