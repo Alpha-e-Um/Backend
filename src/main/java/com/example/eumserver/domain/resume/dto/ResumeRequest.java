@@ -6,11 +6,11 @@ import java.util.List;
 
 public record ResumeRequest(
         @NotBlank String title,
+        @NotBlank String description,
         @NotBlank String jobCategory,
         @NotBlank String jobSubcategory,
         Double gpa,
         Double totalScore,
-        @NotBlank String introduction,
         Boolean isPublic,
         List<ResumeCareerRequest> careers,
         List<ResumeCertificateRequest> certificates,
