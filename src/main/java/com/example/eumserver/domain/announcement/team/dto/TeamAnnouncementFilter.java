@@ -1,6 +1,6 @@
 package com.example.eumserver.domain.announcement.team.dto;
 
-import com.example.eumserver.domain.announcement.team.domain.OccupationClassification;
+import com.example.eumserver.domain.announcement.filter.domain.OccupationClassification;
 
 import java.util.List;
 

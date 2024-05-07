@@ -3,7 +3,7 @@ package com.example.eumserver.domain.team.announcement.controller;
 import com.example.eumserver.BaseIntegrationTest;
 import com.example.eumserver.domain.team.Team;
 import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
-import com.example.eumserver.domain.announcement.team.domain.OccupationClassification;
+import com.example.eumserver.domain.announcement.filter.domain.OccupationClassification;
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementFilter;
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementRequest;
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementUpdateRequest;
