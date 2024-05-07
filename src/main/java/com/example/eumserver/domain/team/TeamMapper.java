@@ -14,6 +14,7 @@ public interface TeamMapper {
     @Mapping(target = "logo", ignore = true)
     @Mapping(target = "participants", ignore = true)
     @Mapping(target = "formationDate", ignore = true)
+    @Mapping(target = "announcements", ignore = true)
     Team teamRequestToTeam(TeamRequest teamRequest);
 
 }

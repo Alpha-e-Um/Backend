@@ -7,8 +7,8 @@ import com.example.eumserver.domain.team.participant.ParticipantRepository;
 import com.example.eumserver.domain.team.participant.ParticipantRole;
 import com.example.eumserver.domain.user.User;
 import com.example.eumserver.domain.user.UserRepository;
-import com.example.eumserver.global.error.CustomException;
-import com.example.eumserver.global.error.exception.EntityNotFoundException;
+import com.example.eumserver.global.error.exception.CustomException;
+import com.example.eumserver.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +30,7 @@ public class TeamService {
             long userId,
             TeamRequest teamRequest) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new EntityNotFoundException("User not found."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Team team = TeamMapper.INSTANCE.teamRequestToTeam(teamRequest);
         teamRepository.save(team);
@@ -47,7 +47,7 @@ public class TeamService {
     public void deleteTeam(long userId, long teamId) {
         Optional<Participant> _participant = participantRepository.findById(new ParticipantId(userId, teamId));
         if (_participant.isEmpty() || _participant.get().getRole() != ParticipantRole.OWNER) {
-            throw new CustomException(403, "You do not have permission to delete a team.");
+            throw new CustomException("You do not have permission to delete a team.", ErrorCode.ACCESS_DENIED);
         }
         participantRepository.deleteById(new ParticipantId(userId, teamId));
     }
@@ -59,7 +59,7 @@ public class TeamService {
 
     public Team findById(Long id) {
         return teamRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Team not found."));
+                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
     }
 
 }

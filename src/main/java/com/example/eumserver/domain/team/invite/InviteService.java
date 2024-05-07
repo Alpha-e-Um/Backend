@@ -6,8 +6,8 @@ import com.example.eumserver.domain.team.participant.Participant;
 import com.example.eumserver.domain.team.participant.ParticipantRepository;
 import com.example.eumserver.domain.user.User;
 import com.example.eumserver.domain.user.UserRepository;
-import com.example.eumserver.global.error.CustomException;
-import com.example.eumserver.global.error.exception.EntityNotFoundException;
+import com.example.eumserver.global.error.exception.CustomException;
+import com.example.eumserver.global.error.exception.ErrorCode;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -47,10 +47,10 @@ public class InviteService {
     @Transactional
     public Invite inviteUsers(Long teamId, List<String> emails) {
         Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new EntityNotFoundException("Team not found."));
+                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
 
         if (emails.isEmpty()) {
-            throw new CustomException(400, "There are 0 e-mails requested.");
+            throw new CustomException("There are 0 e-mails requested.", ErrorCode.INVALID_INPUT_VALUE);
         }
 
         String token = UUID.randomUUID().toString();
@@ -74,7 +74,7 @@ public class InviteService {
             messageHelper.setText(html, true);
             mailSender.send(message);
         } catch (MessagingException e) {
-            throw new CustomException(500, "이메일 전송 실패");
+            throw new CustomException("There was a problem while sending email.", ErrorCode.INTERNAL_SERVER_ERROR);
         }
         return inviteRepository.save(invite);
     }
@@ -90,21 +90,19 @@ public class InviteService {
 
     /**
      * 초대된 사용자가 해당 초대를 수락하는 함수
-     * @throws {@link EntityNotFoundException} 해당 Invite가 없거나, 유저가 없는 경우 발생합니다.
-     * @throws {@link CustomException} Invite가 만료되었을 경우 발생합니다.
      * @param inviteId Invite ID
      * @param userId User ID
      * @return {@link Participant} 생성된 Participant
      */
     public Participant acceptInvite(Long inviteId, Long userId) {
         Invite invite = inviteRepository.findById(inviteId)
-                .orElseThrow(() -> new EntityNotFoundException("Invite not found."));
+                .orElseThrow(() -> new CustomException(ErrorCode.INVITE_NOT_FOUND));
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         if (isExpiredInvite(invite)) {
-            throw new CustomException(400, "Invite is expired.");
+            throw new CustomException(ErrorCode.EXPIRED_INVITE);
         }
 
         Participant participant = Participant.builder()

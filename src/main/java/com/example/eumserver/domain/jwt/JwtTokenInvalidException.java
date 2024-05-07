@@ -1,6 +1,7 @@
 package com.example.eumserver.domain.jwt;
 
-import com.example.eumserver.global.error.CustomException;
+import com.example.eumserver.global.error.exception.CustomException;
+import com.example.eumserver.global.error.exception.ErrorCode;
 
 /**
  * 토큰이 유효하지 않을때 발생하는 Exception
@@ -12,7 +13,7 @@ public class JwtTokenInvalidException extends CustomException {
     public static final JwtTokenInvalidException INSTANCE = new JwtTokenInvalidException();
 
     private JwtTokenInvalidException() {
-        super(401, "Invalid Token.");
+        super(ErrorCode.INVALID_JWT_TOKEN);
     }
 
 }
