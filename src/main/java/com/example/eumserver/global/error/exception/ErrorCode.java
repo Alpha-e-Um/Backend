@@ -30,7 +30,9 @@ public enum ErrorCode {
     INVITE_NOT_FOUND(400, "INVITE-001", "초대를 찾을 수 없음"),
     EXPIRED_INVITE(400, "INVITE-002", "해당 초대가 만료됨"),
 
-    ANNOUNCEMENT_NOT_FOUND(400, "ANNOUNCEMENT-001", "팀 공고를 찾을 수 없음");
+    TEAM_ANNOUNCEMENT_NOT_FOUND(400, "TEAM-ANNOUNCEMENT-001", "팀 공고를 찾을 수 없음"),
+
+    RESUME_ANNOUNCEMENT_NOT_FOUND(400, "RESUME-ANNOUNCEMENT-001", "이력서 공고를 찾을 수 없음.");
 
     private final int status;
     private final String code;

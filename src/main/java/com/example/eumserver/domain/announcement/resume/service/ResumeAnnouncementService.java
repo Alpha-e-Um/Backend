@@ -32,10 +32,11 @@ public class ResumeAnnouncementService {
         return resumeAnnouncementRepository.save(resumeAnnouncement);
     }
 
-    public void unpublishResume(Long resumeId) {
+    public void unpublishResume(Long resumeId, Long resumeAnnouncementId) {
         Resume resume = resumeRepository.findById(resumeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESUME_NOT_FOUND));
-        ResumeAnnouncement resumeAnnouncement = resume.getResumeAnnouncement();
+        ResumeAnnouncement resumeAnnouncement = resumeAnnouncementRepository.findById(resumeAnnouncementId)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESUME_ANNOUNCEMENT_NOT_FOUND));
 
         resume.unpublishResume();
         resumeRepository.save(resume);
