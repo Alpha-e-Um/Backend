@@ -1,6 +1,6 @@
-package com.example.eumserver.domain.team.announcement.dto;
+package com.example.eumserver.domain.announcement.team.dto;
 
-import com.example.eumserver.domain.team.announcement.domain.OccupationClassification;
+import com.example.eumserver.domain.announcement.team.domain.OccupationClassification;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;

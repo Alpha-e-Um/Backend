@@ -2,11 +2,11 @@ package com.example.eumserver.domain.team.announcement.controller;
 
 import com.example.eumserver.BaseIntegrationTest;
 import com.example.eumserver.domain.team.Team;
-import com.example.eumserver.domain.team.announcement.domain.TeamAnnouncement;
-import com.example.eumserver.domain.team.announcement.domain.OccupationClassification;
-import com.example.eumserver.domain.team.announcement.dto.TeamAnnouncementFilter;
-import com.example.eumserver.domain.team.announcement.dto.TeamAnnouncementRequest;
-import com.example.eumserver.domain.team.announcement.dto.TeamAnnouncementUpdateRequest;
+import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
+import com.example.eumserver.domain.announcement.team.domain.OccupationClassification;
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementFilter;
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementRequest;
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementUpdateRequest;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

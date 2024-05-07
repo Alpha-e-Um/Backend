@@ -1,10 +1,10 @@
-package com.example.eumserver.domain.resume.announcement.service;
+package com.example.eumserver.domain.announcement.resume.service;
 
+import com.example.eumserver.domain.announcement.resume.mapper.ResumeAnnouncementMapper;
+import com.example.eumserver.domain.announcement.resume.repository.ResumeAnnouncementRepository;
 import com.example.eumserver.domain.resume.ResumeRepository;
-import com.example.eumserver.domain.resume.announcement.domain.ResumeAnnouncement;
-import com.example.eumserver.domain.resume.announcement.dto.ResumeAnnouncementRequest;
-import com.example.eumserver.domain.resume.announcement.mapper.ResumeAnnouncementMapper;
-import com.example.eumserver.domain.resume.announcement.repository.ResumeAnnouncementRepository;
+import com.example.eumserver.domain.announcement.resume.domain.ResumeAnnouncement;
+import com.example.eumserver.domain.announcement.resume.dto.ResumeAnnouncementRequest;
 import com.example.eumserver.domain.resume.entity.Resume;
 import com.example.eumserver.global.error.exception.CustomException;
 import com.example.eumserver.global.error.exception.ErrorCode;

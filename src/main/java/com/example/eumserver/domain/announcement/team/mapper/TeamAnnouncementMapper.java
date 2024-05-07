@@ -1,8 +1,8 @@
-package com.example.eumserver.domain.team.announcement.mapper;
+package com.example.eumserver.domain.announcement.team.mapper;
 
-import com.example.eumserver.domain.team.announcement.domain.TeamAnnouncement;
-import com.example.eumserver.domain.team.announcement.dto.TeamAnnouncementRequest;
-import com.example.eumserver.domain.team.announcement.dto.TeamAnnouncementResponse;
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementResponse;
+import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

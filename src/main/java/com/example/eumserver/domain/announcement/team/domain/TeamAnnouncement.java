@@ -1,7 +1,7 @@
-package com.example.eumserver.domain.team.announcement.domain;
+package com.example.eumserver.domain.announcement.team.domain;
 
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementUpdateRequest;
 import com.example.eumserver.domain.team.Team;
-import com.example.eumserver.domain.team.announcement.dto.TeamAnnouncementUpdateRequest;
 import com.example.eumserver.global.dto.TimeStamp;
 import jakarta.persistence.*;
 import lombok.*;
