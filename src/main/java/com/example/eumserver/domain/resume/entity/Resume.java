@@ -1,7 +1,6 @@
 package com.example.eumserver.domain.resume.entity;
 
-import com.example.eumserver.domain.resume.dto.ResumeCareerRequest;
-import com.example.eumserver.domain.resume.dto.ResumeRequest;
+import com.example.eumserver.domain.resume.announcement.domain.ResumeAnnouncement;
 import com.example.eumserver.domain.user.User;
 import com.example.eumserver.global.dto.TimeStamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -30,6 +29,9 @@ public class Resume {
 
     @Column
     private String title;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String description;
 
     @Column(name = "job_category", nullable = false)
     private String jobCategory;
@@ -63,8 +65,12 @@ public class Resume {
     @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ResumeHomepage> homepages = new ArrayList<>();
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String description;
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "resume_announcement_id")
+    private ResumeAnnouncement resumeAnnouncement;
+
+    @Builder.Default
+    private Boolean isPublished = false;
 
     @Embedded
     private TimeStamp timeStamp;
@@ -91,5 +97,16 @@ public class Resume {
         this.projects.addAll(resume.getProjects());
         this.homepages.clear();
         this.homepages.addAll(resume.getHomepages());
+    }
+
+    public void publishResume(ResumeAnnouncement resumeAnnouncement) {
+        this.resumeAnnouncement = resumeAnnouncement;
+        resumeAnnouncement.setResume(this);
+        this.isPublished = true;
+    }
+
+    public void unpublishResume() {
+        this.resumeAnnouncement = null;
+        this.isPublished = false;
     }
 }
