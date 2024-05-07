@@ -46,7 +46,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.AWS_KEY }}
           source: "./.env"
-          target: "capstone"
+          target: "alpha-e_um-deploy"
 
       - name: Copy docker-compose.yaml to EC2
         uses: appleboy/scp-action@master
@@ -55,7 +55,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.AWS_KEY }}
           source: "./docker-compose.yml"
-          target: "capstone"
+          target: "alpha-e_um-deploy"
 
   build-spring:
     runs-on: ubuntu-latest
@@ -128,7 +128,7 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_REPO }}/eum-spring:latest
             sudo docker pull ${{ secrets.DOCKER_REPO }}/eum-nginx:latest
             
-            sudo docker compose -f capstone/docker-compose.yml up -d
+            sudo docker compose -f alpha-e_um-deploy/docker-compose.yml up -d
             sudo docker image prune -f
 
 
