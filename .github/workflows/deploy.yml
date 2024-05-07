@@ -77,7 +77,7 @@ jobs:
       - name: Build and push Spring
         uses: docker/build-push-action@v5
         with:
-          context: ./back
+          context: .
           push: true
           tags: ${{ secrets.DOCKER_REPO }}/eum-spring:latest
           cache-from: type=gha
@@ -103,7 +103,7 @@ jobs:
       - name: Build and push Nginx
         uses: docker/build-push-action@v5
         with:
-          context: ./back/nginx
+          context: ./nginx
           push: true
           tags: ${{ secrets.DOCKER_REPO }}/eum-nginx:latest
           cache-from: type=gha
