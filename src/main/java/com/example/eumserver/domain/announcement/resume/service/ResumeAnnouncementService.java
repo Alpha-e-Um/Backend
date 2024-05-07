@@ -20,7 +20,7 @@ public class ResumeAnnouncementService {
     private final ResumeRepository resumeRepository;
     private final ResumeAnnouncementRepository resumeAnnouncementRepository;
 
-    public ResumeAnnouncement publishResume(Long resumeId, ResumeAnnouncementRequest resumeAnnouncementRequest) {
+    public void publishResume(Long resumeId, ResumeAnnouncementRequest resumeAnnouncementRequest) {
         Resume resume = resumeRepository.findById(resumeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESUME_NOT_FOUND));
 
@@ -29,7 +29,7 @@ public class ResumeAnnouncementService {
 
         resume.publishResume(resumeAnnouncement);
         resumeRepository.save(resume);
-        return resumeAnnouncementRepository.save(resumeAnnouncement);
+        resumeAnnouncementRepository.save(resumeAnnouncement);
     }
 
     public void unpublishResume(Long resumeId, Long resumeAnnouncementId) {
