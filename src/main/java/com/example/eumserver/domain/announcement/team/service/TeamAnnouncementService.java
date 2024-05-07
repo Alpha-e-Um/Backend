@@ -1,14 +1,14 @@
-package com.example.eumserver.domain.team.announcement.service;
+package com.example.eumserver.domain.announcement.team.service;
 
 import com.example.eumserver.domain.team.Team;
 import com.example.eumserver.domain.team.TeamService;
-import com.example.eumserver.domain.team.announcement.domain.TeamAnnouncement;
-import com.example.eumserver.domain.team.announcement.dto.TeamAnnouncementFilter;
-import com.example.eumserver.domain.team.announcement.dto.TeamAnnouncementRequest;
-import com.example.eumserver.domain.team.announcement.dto.TeamAnnouncementResponse;
-import com.example.eumserver.domain.team.announcement.dto.TeamAnnouncementUpdateRequest;
-import com.example.eumserver.domain.team.announcement.mapper.TeamAnnouncementMapper;
-import com.example.eumserver.domain.team.announcement.repository.TeamAnnouncementRepository;
+import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementFilter;
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementRequest;
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementResponse;
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementUpdateRequest;
+import com.example.eumserver.domain.announcement.team.mapper.TeamAnnouncementMapper;
+import com.example.eumserver.domain.announcement.team.repository.TeamAnnouncementRepository;
 import com.example.eumserver.global.error.exception.CustomException;
 import com.example.eumserver.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;

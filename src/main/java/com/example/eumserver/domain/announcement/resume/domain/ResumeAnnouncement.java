@@ -1,4 +1,4 @@
-package com.example.eumserver.domain.resume.announcement.domain;
+package com.example.eumserver.domain.announcement.resume.domain;
 
 import com.example.eumserver.domain.resume.entity.Resume;
 import jakarta.persistence.*;

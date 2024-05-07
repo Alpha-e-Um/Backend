@@ -1,8 +1,8 @@
-package com.example.eumserver.domain.team.announcement.repository;
+package com.example.eumserver.domain.announcement.team.repository;
 
-import com.example.eumserver.domain.team.announcement.dto.TeamAnnouncementFilter;
-import com.example.eumserver.domain.team.announcement.domain.TeamAnnouncement;
-import com.example.eumserver.domain.team.announcement.dto.TeamAnnouncementResponse;
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementFilter;
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementResponse;
+import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

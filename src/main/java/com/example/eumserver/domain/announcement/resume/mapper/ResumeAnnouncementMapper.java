@@ -1,7 +1,7 @@
-package com.example.eumserver.domain.resume.announcement.mapper;
+package com.example.eumserver.domain.announcement.resume.mapper;
 
-import com.example.eumserver.domain.resume.announcement.domain.ResumeAnnouncement;
-import com.example.eumserver.domain.resume.announcement.dto.ResumeAnnouncementRequest;
+import com.example.eumserver.domain.announcement.resume.domain.ResumeAnnouncement;
+import com.example.eumserver.domain.announcement.resume.dto.ResumeAnnouncementRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

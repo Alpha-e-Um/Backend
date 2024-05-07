@@ -1,6 +1,6 @@
 package com.example.eumserver.domain.team;
 
-import com.example.eumserver.domain.team.announcement.domain.TeamAnnouncement;
+import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
 import com.example.eumserver.domain.team.participant.Participant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
