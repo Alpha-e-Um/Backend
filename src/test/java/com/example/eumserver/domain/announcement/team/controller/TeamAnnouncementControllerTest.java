@@ -1,4 +1,4 @@
-package com.example.eumserver.domain.team.announcement.controller;
+package com.example.eumserver.domain.announcement.team.controller;
 
 import com.example.eumserver.BaseIntegrationTest;
 import com.example.eumserver.domain.team.Team;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-class AnnouncementControllerTest extends BaseIntegrationTest {
+class TeamAnnouncementControllerTest extends BaseIntegrationTest {
 
     final String BASE_URI = "/api/team/{teamId}/announcement";
 
