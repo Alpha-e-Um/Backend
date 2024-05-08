@@ -5,7 +5,6 @@ on:
     branches:
       - develop-back
       - main
-      - feature/#43/CICD
 permissions:
   contents: read
 
