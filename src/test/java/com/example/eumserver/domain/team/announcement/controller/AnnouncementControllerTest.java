@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
@@ -33,7 +34,7 @@ class AnnouncementControllerTest extends BaseIntegrationTest {
 
     @Test
     @DisplayName("공고_생성_성공")
-    @WithMockUser
+    @WithUserDetails()
     void create_announcement_success() throws Exception {
         Team team = createTeam();
 

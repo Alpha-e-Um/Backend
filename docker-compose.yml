@@ -1,4 +1,4 @@
-version: '3.0'
+version: '3'
 services:
   redis:
     image: redis:7.2.0-alpine
@@ -16,7 +16,7 @@ services:
   spring:
     container_name: spring
     restart: always
-    image: mclub4/eum-spring
+    image: gcpkmu/eum-spring
     env_file:
       - .env
     ports:
@@ -27,19 +27,18 @@ services:
 
   react:
     container_name: react
-    image: mclub4/eum-react:1.1
+    image: gcpkmu/eum-react
     expose:
       - 3000
 
   nginx:
     container_name: nginx
-    image: mclub4/eum-nginx:1.1
+    image: gcpkmu/eum-nginx
     restart: unless-stopped
     ports:
       - 80:80
       - 443:443
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
     depends_on:
