@@ -1,4 +1,4 @@
-package com.example.eumserver.domain.team.announcement.domain;
+package com.example.eumserver.domain.announcement.filter.domain;
 
 /**
  * 모집 공고의 모집 유형을 나타낸 Enum Class 입니다.

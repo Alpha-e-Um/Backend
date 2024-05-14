@@ -1,7 +1,7 @@
 package com.example.eumserver.domain.application.entity;
 
+import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
 import com.example.eumserver.domain.resume.entity.Resume;
-import com.example.eumserver.domain.team.announcement.domain.Announcement;
 import com.example.eumserver.domain.user.User;
 import com.example.eumserver.global.dto.TimeStamp;
 import jakarta.persistence.*;
@@ -25,7 +25,7 @@ public class Application {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_announcement_id")
-    private Announcement announcement;
+    private TeamAnnouncement announcement;
 
     @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
     private Resume resume;

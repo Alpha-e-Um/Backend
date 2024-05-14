@@ -1,10 +1,10 @@
 package com.example.eumserver.domain.application.repository;
 
+import com.example.eumserver.domain.announcement.team.domain.QTeamAnnouncement;
 import com.example.eumserver.domain.application.dto.MyApplicationResponse;
 import com.example.eumserver.domain.application.entity.Application;
 import com.example.eumserver.domain.application.entity.QApplication;
 import com.example.eumserver.domain.application.mapper.ApplicationMapper;
-import com.example.eumserver.domain.team.announcement.domain.QAnnouncement;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -25,7 +25,7 @@ public class ApplicationRepositoryImpl implements ApplicationCustomRepository {
     public Page<MyApplicationResponse> getMyApplicationsWithPaging(Long user_id, String state,
                                                                    Pageable pageable) {
         QApplication application = QApplication.application;
-        QAnnouncement announcement = QAnnouncement.announcement;
+        QTeamAnnouncement announcement = QTeamAnnouncement.teamAnnouncement;
 
         BooleanExpression predicate = application.isNotNull();
 

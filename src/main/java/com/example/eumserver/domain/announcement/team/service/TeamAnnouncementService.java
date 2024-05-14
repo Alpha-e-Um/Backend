@@ -1,14 +1,14 @@
-package com.example.eumserver.domain.team.announcement.service;
+package com.example.eumserver.domain.announcement.team.service;
 
 import com.example.eumserver.domain.team.Team;
 import com.example.eumserver.domain.team.TeamService;
-import com.example.eumserver.domain.team.announcement.domain.Announcement;
-import com.example.eumserver.domain.team.announcement.dto.AnnouncementFilter;
-import com.example.eumserver.domain.team.announcement.dto.AnnouncementRequest;
-import com.example.eumserver.domain.team.announcement.dto.AnnouncementResponse;
-import com.example.eumserver.domain.team.announcement.dto.AnnouncementUpdateRequest;
-import com.example.eumserver.domain.team.announcement.mapper.AnnouncementMapper;
-import com.example.eumserver.domain.team.announcement.repository.AnnouncementRepository;
+import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementFilter;
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementRequest;
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementResponse;
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementUpdateRequest;
+import com.example.eumserver.domain.announcement.team.mapper.TeamAnnouncementMapper;
+import com.example.eumserver.domain.announcement.team.repository.TeamAnnouncementRepository;
 import com.example.eumserver.global.error.exception.CustomException;
 import com.example.eumserver.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -26,16 +26,16 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class AnnouncementService {
+public class TeamAnnouncementService {
 
-    private final AnnouncementRepository announcementRepository;
+    private final TeamAnnouncementRepository announcementRepository;
 
     private final TeamService teamService;
 
-    public Page<AnnouncementResponse> getFilteredAnnouncementsWithPaging(
+    public Page<TeamAnnouncementResponse> getFilteredAnnouncementsWithPaging(
             Long teamId,
             int page,
-            AnnouncementFilter filter
+            TeamAnnouncementFilter filter
     ) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("date_created"));
@@ -44,10 +44,10 @@ public class AnnouncementService {
     }
 
     @Transactional
-    public AnnouncementResponse createAnnouncement(Long teamId, AnnouncementRequest announcementRequest) {
+    public TeamAnnouncementResponse createAnnouncement(Long teamId, TeamAnnouncementRequest announcementRequest) {
         Team team = teamService.findById(teamId);
 
-        Announcement announcement = AnnouncementMapper.INSTANCE.requestToEntity(announcementRequest);
+        TeamAnnouncement announcement = TeamAnnouncementMapper.INSTANCE.requestToEntity(announcementRequest);
         announcement.setTeam(team);
         if (announcementRequest.publish()) {
             LocalDateTime localDateTime = LocalDateTime.now();
@@ -55,12 +55,12 @@ public class AnnouncementService {
         }
 
         announcementRepository.save(announcement);
-        return AnnouncementMapper.INSTANCE.entityToResponse(announcement);
+        return TeamAnnouncementMapper.INSTANCE.entityToResponse(announcement);
     }
 
     @Transactional
-    public void updateAnnouncement(Long announcementId, AnnouncementUpdateRequest announcementUpdateRequest) {
-        Announcement announcement = this.findAnnouncementById(announcementId);
+    public void updateAnnouncement(Long announcementId, TeamAnnouncementUpdateRequest announcementUpdateRequest) {
+        TeamAnnouncement announcement = this.findAnnouncementById(announcementId);
         announcement.updateAnnouncement(announcementUpdateRequest);
         announcementRepository.save(announcement);
     }
@@ -68,12 +68,12 @@ public class AnnouncementService {
 
     @Transactional
     public void deleteAnnouncement(Long announcementId) {
-        Announcement announcement = this.findAnnouncementById(announcementId);
+        TeamAnnouncement announcement = this.findAnnouncementById(announcementId);
         announcementRepository.delete(announcement);
     }
 
-    public Announcement findAnnouncementById(Long announcementId) {
+    public TeamAnnouncement findAnnouncementById(Long announcementId) {
         return announcementRepository.findById(announcementId)
-                .orElseThrow(() -> new CustomException(ErrorCode.ANNOUNCEMENT_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_ANNOUNCEMENT_NOT_FOUND));
     }
 }

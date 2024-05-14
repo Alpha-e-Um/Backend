@@ -1,4 +1,4 @@
-package com.example.eumserver.domain.team.announcement.domain;
+package com.example.eumserver.domain.announcement.filter.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

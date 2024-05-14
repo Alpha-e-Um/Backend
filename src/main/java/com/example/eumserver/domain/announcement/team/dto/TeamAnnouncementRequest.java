@@ -1,12 +1,12 @@
-package com.example.eumserver.domain.team.announcement.dto;
+package com.example.eumserver.domain.announcement.team.dto;
 
-import com.example.eumserver.domain.team.announcement.domain.OccupationClassification;
+import com.example.eumserver.domain.announcement.filter.domain.OccupationClassification;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record AnnouncementRequest(
+public record TeamAnnouncementRequest(
         String title,
         String description,
         int vacancies,

@@ -1,6 +1,6 @@
 package com.example.eumserver.domain.team;
 
-import com.example.eumserver.domain.team.announcement.domain.Announcement;
+import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
 import com.example.eumserver.domain.team.participant.Participant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -50,13 +50,13 @@ public class Team {
     @JsonIgnore
     @Builder.Default
     @OneToMany(mappedBy = "team", orphanRemoval = true)
-    private List<Announcement> announcements = new ArrayList<>();
+    private List<TeamAnnouncement> announcements = new ArrayList<>();
 
     public void addTeam(Participant participant) {
         this.participants.add(participant);
     }
 
-    public void addAnnouncement(Announcement announcement) {
+    public void addAnnouncement(TeamAnnouncement announcement) {
         this.announcements.add(announcement);
     }
 }

@@ -1,12 +1,12 @@
-package com.example.eumserver.domain.team.announcement.controller;
+package com.example.eumserver.domain.announcement.team.controller;
 
-import com.example.eumserver.domain.team.announcement.domain.Announcement;
-import com.example.eumserver.domain.team.announcement.dto.AnnouncementFilter;
-import com.example.eumserver.domain.team.announcement.dto.AnnouncementRequest;
-import com.example.eumserver.domain.team.announcement.dto.AnnouncementResponse;
-import com.example.eumserver.domain.team.announcement.dto.AnnouncementUpdateRequest;
-import com.example.eumserver.domain.team.announcement.mapper.AnnouncementMapper;
-import com.example.eumserver.domain.team.announcement.service.AnnouncementService;
+import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementFilter;
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementRequest;
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementResponse;
+import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementUpdateRequest;
+import com.example.eumserver.domain.announcement.team.mapper.TeamAnnouncementMapper;
+import com.example.eumserver.domain.announcement.team.service.TeamAnnouncementService;
 import com.example.eumserver.global.dto.ApiResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,38 +19,38 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/team/{teamId}/announcement")
 @RequiredArgsConstructor
-public class AnnouncementController {
+public class TeamAnnouncementController {
 
-    private final AnnouncementService announcementService;
+    private final TeamAnnouncementService announcementService;
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<ApiResult<AnnouncementResponse>> createAnnouncement(
+    public ResponseEntity<ApiResult<TeamAnnouncementResponse>> createAnnouncement(
             @PathVariable(name = "teamId") Long teamId,
-            @RequestBody AnnouncementRequest announcementRequest
+            @RequestBody TeamAnnouncementRequest announcementRequest
     ) {
         log.debug("announcement request: {}", announcementRequest);
-        AnnouncementResponse announcementResponse = announcementService.createAnnouncement(teamId, announcementRequest);
+        TeamAnnouncementResponse announcementResponse = announcementService.createAnnouncement(teamId, announcementRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ApiResult<>("팀 공고 생성 성공", announcementResponse));
     }
 
     @GetMapping("")
-    public ResponseEntity<ApiResult<Page<AnnouncementResponse>>> getAnnouncements(
+    public ResponseEntity<ApiResult<Page<TeamAnnouncementResponse>>> getAnnouncements(
             @PathVariable(name = "teamId") Long teamId,
             @RequestParam(name = "page", defaultValue = "0") Integer page,
-            @RequestBody AnnouncementFilter announcementFilter
+            @RequestBody TeamAnnouncementFilter announcementFilter
     ) {
-        Page<AnnouncementResponse> filteredAnnouncementsWithPaging = announcementService.getFilteredAnnouncementsWithPaging(teamId, page, announcementFilter);
+        Page<TeamAnnouncementResponse> filteredAnnouncementsWithPaging = announcementService.getFilteredAnnouncementsWithPaging(teamId, page, announcementFilter);
         return ResponseEntity
                 .ok(new ApiResult<>("팀 공고 필터링 및 페이징 조회 성공", filteredAnnouncementsWithPaging));
     }
 
     @GetMapping("/{announcementId}")
-    public ResponseEntity<ApiResult<AnnouncementResponse>> getAnnouncement(@PathVariable(name = "announcementId") Long announcementId) {
-        Announcement announcement = announcementService.findAnnouncementById(announcementId);
-        AnnouncementResponse announcementResponse = AnnouncementMapper.INSTANCE.entityToResponse(announcement);
+    public ResponseEntity<ApiResult<TeamAnnouncementResponse>> getAnnouncement(@PathVariable(name = "announcementId") Long announcementId) {
+        TeamAnnouncement announcement = announcementService.findAnnouncementById(announcementId);
+        TeamAnnouncementResponse announcementResponse = TeamAnnouncementMapper.INSTANCE.entityToResponse(announcement);
         return ResponseEntity
                 .ok(new ApiResult<>("팀 공고 조회 성공", announcementResponse));
     }
@@ -58,7 +58,7 @@ public class AnnouncementController {
     @PutMapping("/{announcementId}")
     public ResponseEntity<ApiResult<?>> updateAnnouncement(
             @PathVariable(name = "announcementId") Long announcementId,
-            @RequestBody AnnouncementUpdateRequest announcementUpdateRequest
+            @RequestBody TeamAnnouncementUpdateRequest announcementUpdateRequest
     ) {
         announcementService.updateAnnouncement(announcementId, announcementUpdateRequest);
         return ResponseEntity
