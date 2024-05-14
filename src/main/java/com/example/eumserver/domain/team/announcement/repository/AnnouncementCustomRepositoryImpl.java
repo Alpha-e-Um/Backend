@@ -1,9 +1,9 @@
 package com.example.eumserver.domain.team.announcement.repository;
 
+import com.example.eumserver.domain.team.announcement.domain.Announcement;
 import com.example.eumserver.domain.team.announcement.domain.OccupationClassification;
 import com.example.eumserver.domain.team.announcement.domain.QAnnouncement;
 import com.example.eumserver.domain.team.announcement.dto.AnnouncementFilter;
-import com.example.eumserver.domain.team.announcement.domain.Announcement;
 import com.example.eumserver.domain.team.announcement.dto.AnnouncementResponse;
 import com.example.eumserver.domain.team.announcement.mapper.AnnouncementMapper;
 import com.querydsl.core.types.dsl.BooleanExpression;

@@ -1,5 +1,6 @@
 package com.example.eumserver.domain.user;
 
+import com.example.eumserver.domain.application.entity.Application;
 import com.example.eumserver.domain.oauth2.attributes.OAuth2Attributes;
 import com.example.eumserver.domain.resume.entity.Resume;
 import com.example.eumserver.domain.team.participant.Participant;
@@ -68,6 +69,10 @@ public class User implements UserDetails {
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Resume> resumes = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Application> applications = new ArrayList<>();
 
     @Embedded
     private TimeStamp timeStamp;

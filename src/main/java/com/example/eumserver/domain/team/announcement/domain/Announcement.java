@@ -1,5 +1,6 @@
 package com.example.eumserver.domain.team.announcement.domain;
 
+import com.example.eumserver.domain.application.entity.Application;
 import com.example.eumserver.domain.team.Team;
 import com.example.eumserver.domain.team.announcement.dto.AnnouncementUpdateRequest;
 import com.example.eumserver.global.dto.TimeStamp;
@@ -7,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -49,6 +51,10 @@ public class Announcement {
     @ElementCollection(targetClass = OccupationClassification.class)
     @Enumerated(EnumType.STRING)
     private List<OccupationClassification> occupationClassifications;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "announcement", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Application> applications = new ArrayList<>();
 
     public void setTeam(Team team) {
         this.team = team;
