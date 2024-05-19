@@ -29,6 +29,9 @@ public class Resume {
     @Column
     private String title;
 
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String description;
+
     @Column(name = "job_category", nullable = false)
     private String jobCategory;
 
@@ -61,12 +64,6 @@ public class Resume {
     @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ResumeHomepage> homepages = new ArrayList<>();
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String introduction;
-
-    @Builder.Default
-    @Column(name = "is_public", nullable = false)
-    private Boolean isPublic = true;
 
     @Embedded
     private TimeStamp timeStamp;
@@ -76,24 +73,23 @@ public class Resume {
         user.addResume(this);
     }
 
-    public void updateResume(String title, String jobCategory, String jobSubcategory, Double gpa, Double totalScore,
-                             List<ResumeCareer> careers, List<ResumeActivity> activities, List<ResumeCertificate> certificates,
-                             List<ResumeProject> projects, List<ResumeHomepage> homepages, Boolean isPublic) {
-        this.title = title;
-        this.jobCategory = jobCategory;
-        this.jobSubcategory = jobSubcategory;
-        this.gpa = gpa;
-        this.totalScore = totalScore;
+    public void updateResume(Resume resume) {
+        this.title = resume.getTitle();
+        this.description = resume.getDescription();
+        this.jobCategory = resume.getJobCategory();
+        this.jobSubcategory = resume.getJobSubcategory();
+        this.gpa = resume.getGpa();
+        this.totalScore = resume.getTotalScore();
         this.careers.clear();
-        this.careers.addAll(careers);
+        this.careers.addAll(resume.getCareers());
         this.activities.clear();
-        this.activities.addAll(activities);
+        this.activities.addAll(resume.getActivities());
         this.certificates.clear();
-        this.certificates.addAll(certificates);
+        this.certificates.addAll(resume.getCertificates());
         this.projects.clear();
-        this.projects.addAll(projects);
+        this.projects.addAll(resume.getProjects());
         this.homepages.clear();
-        this.homepages.addAll(homepages);
-        this.isPublic = isPublic;
+        this.homepages.addAll(resume.getHomepages());
     }
+
 }

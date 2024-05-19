@@ -111,7 +111,7 @@ public class ResumeController {
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
         long userId = principalDetails.getUserId();
-        List<Resume> resumes = resumeService.getAllMyResume(userId);
+        List<Resume> resumes = resumeService.getAllResumeByUserId(userId);
         return ResponseEntity
                 .ok(new ApiResult<>("내 이력서 전부 받아오기 성공", resumes));
     }
@@ -124,7 +124,7 @@ public class ResumeController {
     public ResponseEntity<ApiResult<List<Resume>>> getAllMyResume(
             @PathVariable("userId") long userId
     ) {
-        List<Resume> resumes = resumeService.getAllUserResume(userId);
+        List<Resume> resumes = resumeService.getAllResumeByUserId(userId);
         return ResponseEntity
                 .ok(new ApiResult<>("타인 이력서 전부 받아오기 성공", resumes));
     }
