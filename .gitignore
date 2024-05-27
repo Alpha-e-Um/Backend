@@ -39,3 +39,4 @@ generated
 business/src/.env
 .env.global
 dump.rdb
+.env
