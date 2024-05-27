@@ -18,7 +18,7 @@ services:
     restart: always
     image: gcpkmu/eum-spring
     env_file:
-      - .env
+      - business/src/.env
     ports:
       - 8080:8080
     depends_on:
