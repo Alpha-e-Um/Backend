@@ -3,7 +3,6 @@ name: Deploy Server
 on:
   push:
     branches:
-      - develop
       - main
 permissions:
   contents: read
