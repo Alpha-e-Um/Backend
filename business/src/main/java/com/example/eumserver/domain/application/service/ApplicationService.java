@@ -1,7 +1,6 @@
 package com.example.eumserver.domain.application.service;
 
 import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
-import com.example.eumserver.domain.announcement.team.repository.TeamAnnouncementCustomRepositoryImpl;
 import com.example.eumserver.domain.announcement.team.repository.TeamAnnouncementRepository;
 import com.example.eumserver.domain.application.dto.MyApplicationResponse;
 import com.example.eumserver.domain.application.entity.ApplicationState;
