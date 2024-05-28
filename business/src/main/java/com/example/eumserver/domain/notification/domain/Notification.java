@@ -43,6 +43,10 @@ public class Notification {
   @Column(nullable = false)
   private NotificationStatus status;
 
-  private String target;
+  @Column(nullable = false)
+  private Long targetId;
+
+  @Column(nullable = false)
+  private String uri;
   
 }
