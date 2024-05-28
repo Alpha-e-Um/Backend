@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/team/{teamId}/announcement")
+@RequestMapping("/api/announcement")
 @RequiredArgsConstructor
 public class TeamAnnouncementController {
 
@@ -26,11 +26,10 @@ public class TeamAnnouncementController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ApiResult<TeamAnnouncementResponse>> createAnnouncement(
-            @PathVariable(name = "teamId") Long teamId,
             @RequestBody TeamAnnouncementRequest announcementRequest
     ) {
         log.debug("announcement request: {}", announcementRequest);
-        TeamAnnouncementResponse announcementResponse = announcementService.createAnnouncement(teamId, announcementRequest);
+        TeamAnnouncementResponse announcementResponse = announcementService.createAnnouncement(announcementRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ApiResult<>("팀 공고 생성 성공", announcementResponse));
@@ -38,11 +37,11 @@ public class TeamAnnouncementController {
 
     @GetMapping("")
     public ResponseEntity<ApiResult<Page<TeamAnnouncementResponse>>> getAnnouncements(
-            @PathVariable(name = "teamId") Long teamId,
-            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "12") int size,
             @RequestBody TeamAnnouncementFilter announcementFilter
     ) {
-        Page<TeamAnnouncementResponse> filteredAnnouncementsWithPaging = announcementService.getFilteredAnnouncementsWithPaging(teamId, page, announcementFilter);
+        Page<TeamAnnouncementResponse> filteredAnnouncementsWithPaging = announcementService.getFilteredAnnouncementsWithPaging(page, size, announcementFilter);
         return ResponseEntity
                 .ok(new ApiResult<>("팀 공고 필터링 및 페이징 조회 성공", filteredAnnouncementsWithPaging));
     }
