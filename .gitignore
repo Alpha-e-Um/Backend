@@ -1,7 +1,7 @@
 HELP.md
 .gradle
 build/
-!gradle/wrapper/gradle-wrapper.jar
+!business/gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 
@@ -36,6 +36,7 @@ out/
 ### VS Code ###
 .vscode/
 generated
-.env
+business/src/.env
 .env.global
 dump.rdb
+.env

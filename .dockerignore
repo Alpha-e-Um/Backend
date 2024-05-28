@@ -1,7 +1,0 @@
-.idea
-.gitignore
-.env
-.env.global
-.env.example
-dump.rdb
-env.sh
