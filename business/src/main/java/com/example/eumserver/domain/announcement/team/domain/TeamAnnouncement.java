@@ -29,6 +29,9 @@ public class TeamAnnouncement {
     private String title;
 
     @Column(nullable = false)
+    private String region;
+
+    @Column(nullable = false)
     private int vacancies;
 
     @Lob
