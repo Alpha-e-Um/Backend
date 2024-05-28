@@ -76,4 +76,23 @@ public class ApplicationRepositoryImpl implements ApplicationCustomRepository {
 
         return true;
     }
+
+    @Override
+    public TeamApplication getCancelApplication(Long userId, Long applicationId) {
+        QTeamApplication application = QTeamApplication.teamApplication;
+
+        BooleanExpression predicate = application.isNotNull();
+        predicate = predicate.and(application.user.id.eq(userId));
+        predicate = predicate.and(application.id.eq(applicationId));
+        predicate = predicate.and(application.state.eq(ApplicationState.PENDING));
+
+        TeamApplication myApplication =  jpaQueryFactory
+                                            .select(application)
+                                            .from(application)
+                                            .where(predicate)
+                                            .fetchOne();
+
+
+        return myApplication;
+    }
 }

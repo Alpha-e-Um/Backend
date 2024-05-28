@@ -27,10 +27,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ApplicationService {
 
-    private ApplicationRepository applicationRepository;
-    private TeamAnnouncementRepository teamAnnouncementRepository;
-    private UserRepository userRepository;
-    private ResumeRepository resumeRepository;
+    final private ApplicationRepository applicationRepository;
+    final private TeamAnnouncementRepository teamAnnouncementRepository;
+    final private UserRepository userRepository;
+    final private ResumeRepository resumeRepository;
+
     public Page<MyApplicationResponse> getMyApplications(Long user_id, ApplicationState state, Integer page) {
         Pageable paging = PageRequest.of(page, 10);
         Page<MyApplicationResponse> list = applicationRepository
@@ -66,6 +67,17 @@ public class ApplicationService {
                 .resume(resume)
                 .state(ApplicationState.PENDING)
                 .build();
+
+        return application;
+    }
+
+    public TeamApplication cancelApplication(Long userId, Long applicationId){
+        TeamApplication application = applicationRepository.getCancelApplication(userId, applicationId);
+
+        if(application == null) throw new CustomException(ErrorCode.NOT_TO_CANCEL_APPLICATION);
+
+        application.cancelApplication();
+        applicationRepository.save(application);
 
         return application;
     }

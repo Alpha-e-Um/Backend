@@ -57,6 +57,8 @@ public class TeamApplicationController {
     public ResponseEntity<ApiResult<TeamApplication>> cancelApplication(
             @AuthenticationPrincipal PrincipalDetails details,
             @PathVariable(name = "application_id") Long applicationId){
-
+        TeamApplication application = applicationService.cancelApplication(details.getUserId(), applicationId);
+        return ResponseEntity
+                .ok(new ApiResult<TeamApplication>("공고 지원하기 취소 성공", application));
     }
 }

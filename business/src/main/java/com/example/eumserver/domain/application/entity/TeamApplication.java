@@ -35,4 +35,8 @@ public class TeamApplication {
 
     @Embedded
     private TimeStamp timeStamp;
+
+    public void cancelApplication(){
+        this.state = ApplicationState.WITHDRAWN;
+    }
 }
