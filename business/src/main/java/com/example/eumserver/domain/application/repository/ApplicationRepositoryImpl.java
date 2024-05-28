@@ -6,6 +6,8 @@ import com.example.eumserver.domain.application.entity.ApplicationState;
 import com.example.eumserver.domain.application.entity.QTeamApplication;
 import com.example.eumserver.domain.application.entity.TeamApplication;
 import com.example.eumserver.domain.application.mapper.ApplicationMapper;
+import com.example.eumserver.domain.resume.entity.QResume;
+import com.example.eumserver.domain.team.QTeam;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -58,11 +60,20 @@ public class ApplicationRepositoryImpl implements ApplicationCustomRepository {
     public boolean checkApplicationExist(Long userId, Long announcementId) {
         QTeamApplication application = QTeamApplication.teamApplication;
 
-//        TeamApplication myapplication = jpaQueryFactory
-//                .select(application)
-//                .from(application)
-//                .wher
+        BooleanExpression predicate = application.isNotNull();
+        predicate = predicate.and(application.user.id.eq(userId));
+        predicate = predicate.and(application.announcement.id.eq(announcementId));
+        predicate = predicate.and(application.state.ne(ApplicationState.WITHDRAWN));
 
-        return false;
+        long count = jpaQueryFactory
+                .select(application)
+                .from(application)
+                .where(predicate)
+                .fetch()
+                .size();
+
+        if(count == 0) return false;
+
+        return true;
     }
 }

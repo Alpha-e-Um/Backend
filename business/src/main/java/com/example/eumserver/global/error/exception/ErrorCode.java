@@ -32,7 +32,9 @@ public enum ErrorCode {
 
     TEAM_ANNOUNCEMENT_NOT_FOUND(400, "TEAM-ANNOUNCEMENT-001", "팀 공고를 찾을 수 없음"),
 
-    RESUME_ANNOUNCEMENT_NOT_FOUND(400, "RESUME-ANNOUNCEMENT-001", "이력서 공고를 찾을 수 없음.");
+    RESUME_ANNOUNCEMENT_NOT_FOUND(400, "RESUME-ANNOUNCEMENT-001", "이력서 공고를 찾을 수 없음."),
+
+    ALREADY_APPLIED_ANNOUNCEMENT(400, "TEAM-ANNOUNCEMENT-002", "이미 팀에 지원했음");
 
     private final int status;
     private final String code;

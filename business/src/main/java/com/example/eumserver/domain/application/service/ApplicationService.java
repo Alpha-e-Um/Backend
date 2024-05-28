@@ -31,15 +31,23 @@ public class ApplicationService {
     private TeamAnnouncementRepository teamAnnouncementRepository;
     private UserRepository userRepository;
     private ResumeRepository resumeRepository;
-    public Page<MyApplicationResponse> getMyApplications(Long user_id, ApplicationState state) {
-        Pageable paging = PageRequest.of(0, 10);
+    public Page<MyApplicationResponse> getMyApplications(Long user_id, ApplicationState state, Integer page) {
+        Pageable paging = PageRequest.of(page, 10);
         Page<MyApplicationResponse> list = applicationRepository
                 .getMyApplicationsWithPaging(user_id, state, paging);
 
         return list;
     }
 
-    public void applyTeam(long userId, long announcementId, Long resumeId) {
+    public void checkApply(long userId, long announcementId){
+        if(!applicationRepository.checkApplicationExist(userId, announcementId)){
+            throw new CustomException(ErrorCode.ALREADY_APPLIED_ANNOUNCEMENT);
+        }
+    }
+
+    public TeamApplication applyTeam(long userId, long announcementId, Long resumeId) {
+        checkApply(userId, announcementId);
+
         TeamAnnouncement announcement = teamAnnouncementRepository.findById(announcementId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TEAM_ANNOUNCEMENT_NOT_FOUND));
 
@@ -58,5 +66,7 @@ public class ApplicationService {
                 .resume(resume)
                 .state(ApplicationState.PENDING)
                 .build();
+
+        return application;
     }
 }
