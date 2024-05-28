@@ -1,6 +1,8 @@
 package com.example.eumserver.domain.user;
 
 import com.example.eumserver.domain.jwt.PrincipalDetails;
+import com.example.eumserver.domain.team.Team;
+import com.example.eumserver.domain.team.TeamService;
 import com.example.eumserver.domain.user.dto.UserResponse;
 import com.example.eumserver.domain.user.dto.UserUpdateRequest;
 import com.example.eumserver.global.dto.ApiResult;
@@ -11,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/user")
@@ -18,12 +22,21 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final TeamService teamService;
 
     @GetMapping("/me")
     public ResponseEntity<ApiResult<UserResponse>> getMyInfo(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         UserResponse userResponse = UserMapper.INSTANCE.principalDetailsToUserResponse(principalDetails);
         return ResponseEntity
                 .ok(new ApiResult<>("유저(자신) 조회 성공", userResponse));
+    }
+
+    @GetMapping("/me/teams")
+    public ResponseEntity<ApiResult<List<Team>>> getMyTeams(
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
+        List<Team> teams = teamService.findAllByUserId(principalDetails.getUserId());
+        return ResponseEntity.ok(new ApiResult<>("유저(자신) 팀 전체 조회 성공", teams));
     }
 
     @PutMapping("/me")

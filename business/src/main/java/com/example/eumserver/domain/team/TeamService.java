@@ -62,4 +62,7 @@ public class TeamService {
                 .orElseThrow(() -> new CustomException(ErrorCode.TEAM_NOT_FOUND));
     }
 
+    public List<Team> findAllByUserId(long userId) {
+        return teamRepository.findAllByUserId(userId);
+    }
 }
