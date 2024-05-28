@@ -1,6 +1,6 @@
 package com.example.eumserver.domain.user;
 
-import com.example.eumserver.domain.application.team.entity.TeamApplication;
+import com.example.eumserver.domain.application.entity.TeamApplication;
 import com.example.eumserver.domain.oauth2.attributes.OAuth2Attributes;
 import com.example.eumserver.domain.resume.entity.Resume;
 import com.example.eumserver.domain.team.participant.Participant;
@@ -34,6 +34,9 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column
+    private String nickname;
+
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "first", column = @Column(name = "first_name")),
@@ -55,6 +58,12 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String providerId;
+
+    @Column
+    private String school;
+
+    @Column
+    private String region;
 
     @Column(length = 4)
     private String mbti;
