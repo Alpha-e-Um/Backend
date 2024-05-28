@@ -9,9 +9,11 @@ import com.example.eumserver.domain.user.User;
 import com.example.eumserver.domain.user.UserRepository;
 import com.example.eumserver.global.error.exception.CustomException;
 import com.example.eumserver.global.error.exception.ErrorCode;
+import com.example.eumserver.global.utils.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,22 +26,28 @@ public class TeamService {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
     private final ParticipantRepository participantRepository;
+    private final S3Uploader s3Uploader;
 
     @Transactional
     public Team createTeam(
             long userId,
-            TeamRequest teamRequest) {
+            TeamRequest teamRequest,
+            MultipartFile logo) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Team team = TeamMapper.INSTANCE.teamRequestToTeam(teamRequest);
+        String uploadUrl = s3Uploader.uploadToS3(S3Uploader.S3Path.TEAM_IMAGE, logo);
+        team.setLogo(uploadUrl);
         teamRepository.save(team);
+
         Participant participant = Participant.builder()
                 .user(user)
                 .team(team)
                 .role(ParticipantRole.OWNER)
                 .build();
         participantRepository.save(participant);
+
         return team;
     }
 

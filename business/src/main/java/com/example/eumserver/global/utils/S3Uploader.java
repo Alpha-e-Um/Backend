@@ -27,9 +27,9 @@ public class S3Uploader {
 
     private final AmazonS3 amazonS3;
 
-    public String uploadToS3(S3Path s3Path, MultipartFile multipartFile) throws IOException {
+    public String uploadToS3(S3Path s3Path, MultipartFile multipartFile) {
         File uploadFile = this.convert(multipartFile)
-                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE));
+                .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
 
         String storePath = s3Path.path + "/" + UUID.randomUUID();
 
@@ -44,17 +44,21 @@ public class S3Uploader {
         return amazonS3.getUrl(bucket,storePath).toString();
     }
 
-    private Optional<File> convert(MultipartFile  multipartFile) throws IOException {
+    private Optional<File> convert(MultipartFile  multipartFile) {
         String originalFilename = multipartFile.getOriginalFilename();
         String storeFileName = UUID.randomUUID() + "_" + originalFilename;
 
         File convertFile = new File(System.getProperty("user.dir") + "/" + storeFileName);
 
-        if (convertFile.createNewFile()) {
-            try (FileOutputStream fos = new FileOutputStream(convertFile)) {
-                fos.write(multipartFile.getBytes());
+        try {
+            if (convertFile.createNewFile()) {
+                try (FileOutputStream fos = new FileOutputStream(convertFile)) {
+                    fos.write(multipartFile.getBytes());
+                }
+                return Optional.of(convertFile);
             }
-            return Optional.of(convertFile);
+        } catch (IOException ex) {
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
 
         return Optional.empty();
@@ -69,7 +73,7 @@ public class S3Uploader {
     }
     
     public enum S3Path {
-        TEAM_IMAGE("/teams");
+        TEAM_IMAGE("teams");
 
         final String path;
 
