@@ -1,11 +1,22 @@
 package com.example.eumserver.domain.announcement.team.dto;
 
 import com.example.eumserver.domain.announcement.filter.domain.OccupationClassification;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import lombok.Data;
 
 import java.util.List;
 
-public record TeamAnnouncementFilter(
-        boolean published,
-        List<OccupationClassification> occupationClassifications
-) {
+@Data
+public class TeamAnnouncementFilter{
+    private final int page;
+    private final int size;
+    private final List<OccupationClassification> occupationClassifications;
+
+    public TeamAnnouncementFilter(int page, int size, List<String> occupationClassifications) {
+        this.page = page;
+        this.size = size;
+        this.occupationClassifications = occupationClassifications.stream().map(
+                OccupationClassification::from
+        ).toList();
+    }
 }

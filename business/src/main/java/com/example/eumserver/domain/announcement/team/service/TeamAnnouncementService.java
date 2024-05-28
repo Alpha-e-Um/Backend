@@ -33,13 +33,11 @@ public class TeamAnnouncementService {
     private final TeamService teamService;
 
     public Page<TeamAnnouncementResponse> getFilteredAnnouncementsWithPaging(
-            int page,
-            int size,
             TeamAnnouncementFilter filter
     ) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("date_created"));
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
+        Pageable pageable = PageRequest.of(filter.getPage(), filter.getSize(), Sort.by(sorts));
         return announcementRepository.getFilteredAnnouncementsWithPaging(filter, pageable);
     }
 

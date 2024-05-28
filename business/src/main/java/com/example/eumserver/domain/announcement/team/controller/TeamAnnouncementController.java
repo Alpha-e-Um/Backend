@@ -35,13 +35,17 @@ public class TeamAnnouncementController {
                 .body(new ApiResult<>("팀 공고 생성 성공", announcementResponse));
     }
 
+    /**
+     * 팀 공고를 필터에 따라 조회합니다.
+     * 어노테이션이 적용되어 있지 않지만, 쿼리 파라미터로 들어가게 됩니다.
+     * @param filter 팀 공고 필터
+     * @return 페이징이 적용된 팀 공고 리스트
+     */
     @GetMapping("")
     public ResponseEntity<ApiResult<Page<TeamAnnouncementResponse>>> getAnnouncements(
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "12") int size,
-            @RequestBody TeamAnnouncementFilter announcementFilter
+        TeamAnnouncementFilter filter
     ) {
-        Page<TeamAnnouncementResponse> filteredAnnouncementsWithPaging = announcementService.getFilteredAnnouncementsWithPaging(page, size, announcementFilter);
+        Page<TeamAnnouncementResponse> filteredAnnouncementsWithPaging = announcementService.getFilteredAnnouncementsWithPaging(filter);
         return ResponseEntity
                 .ok(new ApiResult<>("팀 공고 필터링 및 페이징 조회 성공", filteredAnnouncementsWithPaging));
     }
