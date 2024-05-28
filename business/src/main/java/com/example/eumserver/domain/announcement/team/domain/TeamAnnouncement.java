@@ -35,7 +35,7 @@ public class TeamAnnouncement {
     private int vacancies;
 
     @Lob
-    @Column(nullable = false)
+    @Column
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)

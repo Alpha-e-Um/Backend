@@ -29,12 +29,12 @@ public class TeamApplicationController {
 
     @GetMapping("")
     @Operation(summary = "내 지원현황 전부 받아오기", description = "state 필터에 따라서 나의 지원현황을 전부 받아오는 기능")
-    public ResponseEntity<ApiResult<Page<MyApplicationResponse>>> getMyApplication (
+    public ResponseEntity<ApiResult<Page<MyApplicationResponse>>> getMyApplication(
             @AuthenticationPrincipal PrincipalDetails details,
-            @RequestParam(name = "page", defaultValue = "0") Integer page,
-            @RequestParam(name = "state", defaultValue = "all") ApplicationState state){
+            @RequestParam(name = "page", defaultValue = "0") Integer page
+    ) {
         Page<MyApplicationResponse> applications = applicationService.getMyApplications(details.getUserId()
-                , state, page);
+                , ApplicationState.ALL, page);
         return ResponseEntity.ok(new ApiResult<>("내 지원현황 받아오기 성공", applications));
     }
 
@@ -42,8 +42,8 @@ public class TeamApplicationController {
     @ApiResponse(responseCode = "201", description = "팀에 지원하기 성공")
     @Operation(summary = "팀 공고에 지원하기", description = "팀 공고에 지원하는 기능입니다. 이미 지원했다면, 지원이 되지 않습니다.")
     public ResponseEntity<ApiResult<TeamApplication>> applyTeamAnnouncement(@AuthenticationPrincipal PrincipalDetails details,
-                                                              @PathVariable(name = "announcement_id") Long announcementId,
-                                                              @RequestParam(name = "resume_id", required = false) Long resumeId){
+                                                                            @PathVariable(name = "announcement_id") Long announcementId,
+                                                                            @RequestParam(name = "resume_id", required = false) Long resumeId) {
         TeamApplication application = applicationService.applyTeam(details.getUserId(), announcementId, resumeId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -56,9 +56,9 @@ public class TeamApplicationController {
     @Operation(summary = "팀 공고 지원 취소하기", description = "지원한 팀 공고에 지원 취소하는 기능입니다.")
     public ResponseEntity<ApiResult<TeamApplication>> cancelApplication(
             @AuthenticationPrincipal PrincipalDetails details,
-            @PathVariable(name = "application_id") Long applicationId){
+            @PathVariable(name = "application_id") Long applicationId) {
         TeamApplication application = applicationService.cancelApplication(details.getUserId(), applicationId);
         return ResponseEntity
-                .ok(new ApiResult<TeamApplication>("공고 지원하기 취소 성공", application));
+                .ok(new ApiResult<>("공고 지원하기 취소 성공", application));
     }
 }

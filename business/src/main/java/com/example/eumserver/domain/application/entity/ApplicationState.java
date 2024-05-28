@@ -20,11 +20,6 @@ public enum ApplicationState {
         this.value = value;
     }
 
-    @JsonValue
-    public String getValue() {
-        return value;
-    }
-
     @JsonCreator
     public static ApplicationState from(String value) {
         for (ApplicationState state : ApplicationState.values()) {
@@ -32,6 +27,11 @@ public enum ApplicationState {
                 return state;
             }
         }
-        throw new IllegalArgumentException("Unknown enum type " + value);
+        return null;
+    }
+
+    @JsonValue
+    public String getValue() {
+        return value;
     }
 }

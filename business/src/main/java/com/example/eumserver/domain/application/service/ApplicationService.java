@@ -20,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -39,12 +41,13 @@ public class ApplicationService {
         return list;
     }
 
-    public void checkApply(long userId, long announcementId){
-        if(!applicationRepository.checkApplicationExist(userId, announcementId)){
+    public void checkApply(long userId, long announcementId) {
+        if (applicationRepository.checkApplicationExist(userId, announcementId)) {
             throw new CustomException(ErrorCode.ALREADY_APPLIED_ANNOUNCEMENT);
         }
     }
 
+    @Transactional
     public TeamApplication applyTeam(long userId, long announcementId, Long resumeId) {
         checkApply(userId, announcementId);
 
@@ -55,10 +58,14 @@ public class ApplicationService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Resume resume = null;
-        if(resumeId != null){
+        if (resumeId != null) {
             resume = resumeRepository.findById(resumeId)
                     .orElseThrow(() -> new CustomException(ErrorCode.RESUME_NOT_FOUND));
         }
+
+        if (announcement.getExpiredDate().isBefore(LocalDateTime.now()) ||
+                announcement.getVacancies() < 1)
+            throw new CustomException(ErrorCode.NOT_VALID_ANNOUNCEMENT);
 
         TeamApplication application = TeamApplication.builder()
                 .announcement(announcement)
@@ -67,13 +74,16 @@ public class ApplicationService {
                 .state(ApplicationState.PENDING)
                 .build();
 
+        applicationRepository.save(application);
+
         return application;
     }
 
-    public TeamApplication cancelApplication(Long userId, Long applicationId){
+    @Transactional
+    public TeamApplication cancelApplication(Long userId, Long applicationId) {
         TeamApplication application = applicationRepository.getCancelApplication(userId, applicationId);
 
-        if(application == null) throw new CustomException(ErrorCode.NOT_TO_CANCEL_APPLICATION);
+        if (application == null) throw new CustomException(ErrorCode.NOT_TO_CANCEL_APPLICATION);
 
         application.cancelApplication();
         applicationRepository.save(application);

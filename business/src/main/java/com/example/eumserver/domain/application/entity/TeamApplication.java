@@ -4,6 +4,7 @@ import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
 import com.example.eumserver.domain.resume.entity.Resume;
 import com.example.eumserver.domain.user.User;
 import com.example.eumserver.global.dto.TimeStamp;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,14 +20,17 @@ public class TeamApplication {
     @Column(name = "team_application_id")
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_announcement_id")
     private TeamAnnouncement announcement;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
     private Resume resume;
 
@@ -36,7 +40,7 @@ public class TeamApplication {
     @Embedded
     private TimeStamp timeStamp;
 
-    public void cancelApplication(){
+    public void cancelApplication() {
         this.state = ApplicationState.WITHDRAWN;
     }
 }
