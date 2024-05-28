@@ -45,10 +45,10 @@ public class ResumeAnnouncementService {
         resumeAnnouncementRepository.delete(resumeAnnouncement);
     }
 
-    public Page<ResumeAnnouncementResponse> getResumeAnnouncements(ResumeAnnouncementFilter filter, int page) {
+    public Page<ResumeAnnouncementResponse> getResumeAnnouncements(ResumeAnnouncementFilter filter, int page, int size) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("date_created"));
-        Pageable pageable = PageRequest.of(page, 12, Sort.by(sorts));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
         return resumeRepository.findResumeAnnouncementsWithFilteredAndPagination(filter, pageable);
     }
 }

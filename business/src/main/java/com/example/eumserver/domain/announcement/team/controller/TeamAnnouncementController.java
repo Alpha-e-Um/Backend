@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/announcement")
+@RequestMapping("/api/team-announcement")
 @RequiredArgsConstructor
 public class TeamAnnouncementController {
 
