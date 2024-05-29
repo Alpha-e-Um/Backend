@@ -1,0 +1,7 @@
+../../.idea
+.gitignore
+business/src/.env
+.env.global
+business/src/.env.example
+dump.rdb
+env.sh
