@@ -12,11 +12,15 @@ public interface TeamAnnouncementMapper {
 
     TeamAnnouncementMapper INSTANCE = Mappers.getMapper(TeamAnnouncementMapper.class);
 
+    @Mapping(target = "createDate", source = "timeStamp.createDate")
+    @Mapping(target = "teamId", source = "team.id")
+    @Mapping(target = "teamLogo", source = "team.logo")
     TeamAnnouncementResponse entityToResponse(TeamAnnouncement announcement);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "timeStamp", ignore = true)
     @Mapping(target = "publishedDate", ignore = true)
     @Mapping(target = "team", ignore = true)
+    @Mapping(target = "applications", ignore = true)
     TeamAnnouncement requestToEntity(TeamAnnouncementRequest announcementRequest);
 }
