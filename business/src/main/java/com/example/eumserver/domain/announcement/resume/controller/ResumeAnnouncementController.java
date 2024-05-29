@@ -40,9 +40,10 @@ public class ResumeAnnouncementController {
     @GetMapping("")
     public ResponseEntity<ApiResult<Page<ResumeAnnouncementResponse>>> getResumeAnnouncements(
             @RequestBody ResumeAnnouncementFilter filter,
-            @RequestParam(name = "page", defaultValue = "0") int page
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "12") int size
     ) {
-        Page<ResumeAnnouncementResponse> resumeAnnouncementResponses = resumeAnnouncementService.getResumeAnnouncements(filter, page);
+        Page<ResumeAnnouncementResponse> resumeAnnouncementResponses = resumeAnnouncementService.getResumeAnnouncements(filter, page, size);
         return ResponseEntity.ok(new ApiResult<>("이력서 공고 필터링 및 페이징 조회 성공", resumeAnnouncementResponses));
     }
 }

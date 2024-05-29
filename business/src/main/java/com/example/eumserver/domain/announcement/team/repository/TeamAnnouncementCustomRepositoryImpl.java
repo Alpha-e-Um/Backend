@@ -24,17 +24,12 @@ public class TeamAnnouncementCustomRepositoryImpl implements TeamAnnouncementCus
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<TeamAnnouncementResponse> getFilteredAnnouncementsWithPaging(Long teamId, TeamAnnouncementFilter filter, Pageable pageable) {
+    public Page<TeamAnnouncementResponse> getFilteredAnnouncementsWithPaging(TeamAnnouncementFilter filter, Pageable pageable) {
         QTeamAnnouncement teamAnnouncement = QTeamAnnouncement.teamAnnouncement;
         BooleanExpression predicate = teamAnnouncement.isNotNull();
+        predicate = predicate.and(teamAnnouncement.publishedDate.isNotNull());
 
-        predicate = predicate.and(teamAnnouncement.team.id.eq(teamId));
-
-        if (filter.published()) {
-            predicate = predicate.and(teamAnnouncement.publishedDate.isNotNull());
-        }
-
-        List<OccupationClassification> occupationClassifications = filter.occupationClassifications();
+        List<OccupationClassification> occupationClassifications = filter.getOccupationClassifications();
         if (occupationClassifications != null && !occupationClassifications.isEmpty()) {
             predicate = predicate.and(teamAnnouncement.occupationClassifications.any().in(occupationClassifications));
         }

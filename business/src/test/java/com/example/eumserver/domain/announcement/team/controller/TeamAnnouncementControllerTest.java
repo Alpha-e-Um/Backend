@@ -15,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,6 +42,7 @@ class TeamAnnouncementControllerTest extends BaseIntegrationTest {
 
         TeamAnnouncementRequest announcementRequest =
                 new TeamAnnouncementRequest(
+                        team.getId(),
                         "title",
                         "충청도",
                         "description",
@@ -92,15 +95,19 @@ class TeamAnnouncementControllerTest extends BaseIntegrationTest {
         TeamAnnouncement announcement = createAnnouncement(team);
 
         TeamAnnouncementFilter filter = new TeamAnnouncementFilter(
-                false,
-                List.of(OccupationClassification.DEVELOPMENT_BACKEND, OccupationClassification.DEVELOPMENT_DEVOPS)
+                0,
+                10,
+                List.of("design_ui_ux")
         );
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("page", String.valueOf(filter.getPage()));
+        params.add("size", String.valueOf(filter.getSize()));
+        filter.getOccupationClassifications().forEach(oc -> params.add("occupationClassifications", oc.toString()));
 
         ResultActions resultActions = mockMvc.perform(
                 get(BASE_URI, team.getId())
-                        .param("page", "0")
-                        .content(objectMapper.writeValueAsString(filter))
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .queryParams(params)
                         .accept(MediaType.APPLICATION_JSON)
         );
 

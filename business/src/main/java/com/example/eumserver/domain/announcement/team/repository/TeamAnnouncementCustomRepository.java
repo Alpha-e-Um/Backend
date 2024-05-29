@@ -15,6 +15,6 @@ public interface TeamAnnouncementCustomRepository {
      * @param pageable Pagination information including page number, page size, and sort order.
      * @return A {@link Page} of {@link TeamAnnouncement} objects that match the specified filters.
      */
-    Page<TeamAnnouncementResponse> getFilteredAnnouncementsWithPaging(Long teamId, TeamAnnouncementFilter filter, Pageable pageable);
+    Page<TeamAnnouncementResponse> getFilteredAnnouncementsWithPaging(TeamAnnouncementFilter filter, Pageable pageable);
 
 }
