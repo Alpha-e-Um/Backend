@@ -2,6 +2,7 @@ package com.example.eumserver.domain.team;
 
 import com.example.eumserver.domain.jwt.PrincipalDetails;
 import com.example.eumserver.domain.team.dto.TeamRequest;
+import com.example.eumserver.global.annotation.MaxFileSize;
 import com.example.eumserver.global.dto.ApiResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,11 +19,14 @@ public class TeamController {
 
     private final TeamService teamService;
 
+    private static final int MAX_TEAM_LOGO_SIZE = 3 * 1024 * 1024; // 3MB
+
+    @MaxFileSize(value = MAX_TEAM_LOGO_SIZE)
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ApiResult<Team>> createTeam(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @RequestPart(name = "logo", required = false) MultipartFile logo,
+            @RequestPart(name = "file", required = false) MultipartFile logo,
             @RequestPart(name = "json") TeamRequest teamRequest) {
         Team team = teamService.createTeam(principalDetails.getUserId(), teamRequest, logo);
         return ResponseEntity

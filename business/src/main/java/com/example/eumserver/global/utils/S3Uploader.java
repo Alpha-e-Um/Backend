@@ -73,7 +73,8 @@ public class S3Uploader {
     }
     
     public enum S3Path {
-        TEAM_IMAGE("teams");
+        TEAM_IMAGE("teams"),
+        RESUME_FILE("resumes");
 
         final String path;
 
