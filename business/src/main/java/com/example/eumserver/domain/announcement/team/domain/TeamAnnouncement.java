@@ -2,7 +2,7 @@ package com.example.eumserver.domain.announcement.team.domain;
 
 import com.example.eumserver.domain.announcement.filter.domain.OccupationClassification;
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementUpdateRequest;
-import com.example.eumserver.domain.application.team.entity.TeamApplication;
+import com.example.eumserver.domain.application.entity.TeamApplication;
 import com.example.eumserver.domain.team.Team;
 import com.example.eumserver.global.dto.TimeStamp;
 import jakarta.persistence.*;
@@ -35,7 +35,7 @@ public class TeamAnnouncement {
     private int vacancies;
 
     @Lob
-    @Column(nullable = false)
+    @Column
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)

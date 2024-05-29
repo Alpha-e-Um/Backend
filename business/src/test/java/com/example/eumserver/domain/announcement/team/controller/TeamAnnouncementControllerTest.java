@@ -44,6 +44,7 @@ class TeamAnnouncementControllerTest extends BaseIntegrationTest {
                 new TeamAnnouncementRequest(
                         team.getId(),
                         "title",
+                        "충청도",
                         "description",
                         5,
                         List.of(
@@ -129,6 +130,7 @@ class TeamAnnouncementControllerTest extends BaseIntegrationTest {
 
         TeamAnnouncementUpdateRequest announcementUpdateRequest = new TeamAnnouncementUpdateRequest(
                 "new title",
+                "중국",
                 "new description",
                 2,
                 List.of(OccupationClassification.DEVELOPMENT_BACKEND,

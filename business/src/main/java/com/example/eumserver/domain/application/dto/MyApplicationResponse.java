@@ -1,4 +1,4 @@
-package com.example.eumserver.domain.application.team.dto;
+package com.example.eumserver.domain.application.dto;
 
 import java.time.LocalDateTime;
 

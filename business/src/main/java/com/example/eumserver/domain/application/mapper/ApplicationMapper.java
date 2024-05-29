@@ -1,7 +1,7 @@
-package com.example.eumserver.domain.application.team.mapper;
+package com.example.eumserver.domain.application.mapper;
 
-import com.example.eumserver.domain.application.team.dto.MyApplicationResponse;
-import com.example.eumserver.domain.application.team.entity.TeamApplication;
+import com.example.eumserver.domain.application.dto.MyApplicationResponse;
+import com.example.eumserver.domain.application.entity.TeamApplication;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

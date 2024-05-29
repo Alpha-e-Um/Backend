@@ -1,6 +1,8 @@
 package com.example.eumserver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.navercorp.fixturemonkey.FixtureMonkey;
+import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,14 +19,13 @@ import org.testcontainers.utility.DockerImageName;
 @AutoConfigureMockMvc
 public abstract class BaseIntegrationTest {
 
-    @Autowired protected MockMvc mockMvc;
-    @Autowired protected ObjectMapper objectMapper;
-
+    public static final FixtureMonkey sut = FixtureMonkey.builder()
+            .defaultNotNull(Boolean.TRUE)
+            .objectIntrospector(ConstructorPropertiesArbitraryIntrospector.INSTANCE)
+            .build();
     private static final String MYSQL_IMAGE = "mysql:8";
     private static final String REDIS_IMAGE = "redis:7-alpine";
-
     private static final MySQLContainer<?> mySqlContainer;
-
     private static final GenericContainer<?> redisContainer;
 
     static {
@@ -36,6 +37,11 @@ public abstract class BaseIntegrationTest {
                 .withReuse(true);
         redisContainer.start();
     }
+
+    @Autowired
+    protected MockMvc mockMvc;
+    @Autowired
+    protected ObjectMapper objectMapper;
 
     @DynamicPropertySource
     private static void configureProperties(DynamicPropertyRegistry registry) {

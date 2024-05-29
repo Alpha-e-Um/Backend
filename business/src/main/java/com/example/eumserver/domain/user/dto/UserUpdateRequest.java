@@ -12,6 +12,9 @@ public record UserUpdateRequest (
         @NotBlank String firstName,
         String lastName,
         String avatar,
+        String region,
+        String school,
+        String nicname,
         LocalDate birthday,
         @Size(min = 4, max = 4) String mbti,
         @Pattern(regexp = "[0-9]{10,11}") String phoneNumber

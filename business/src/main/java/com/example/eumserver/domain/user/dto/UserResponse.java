@@ -9,6 +9,9 @@ public record UserResponse(
         String email,
         Name name,
         String avatar,
+        String region,
+        String school,
+        String nickname,
         LocalDate birthday,
         String mbti,
         String phoneNumber
