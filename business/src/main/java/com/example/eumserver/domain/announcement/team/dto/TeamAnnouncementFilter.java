@@ -1,7 +1,6 @@
 package com.example.eumserver.domain.announcement.team.dto;
 
 import com.example.eumserver.domain.announcement.filter.domain.OccupationClassification;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Data;
 
 import java.util.List;
