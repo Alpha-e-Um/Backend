@@ -29,6 +29,7 @@ public class Team {
     @Column
     private String email;
 
+    @Setter
     @Column
     private String logo;
 
