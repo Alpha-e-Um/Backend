@@ -51,8 +51,10 @@ public class TeamAnnouncementController {
     }
 
     @GetMapping("/{announcementId}")
-    public ResponseEntity<ApiResult<TeamAnnouncementResponse>> getAnnouncement(@PathVariable(name = "announcementId") Long announcementId) {
-        TeamAnnouncement announcement = announcementService.findAnnouncementById(announcementId);
+    public ResponseEntity<ApiResult<TeamAnnouncementResponse>> getAnnouncement(
+            @RequestHeader(name = "Authroization", required = false) String token,
+            @PathVariable(name = "announcementId") Long announcementId) {
+        TeamAnnouncement announcement = announcementService.findAnnouncementById(announcementId, token);
         TeamAnnouncementResponse announcementResponse = TeamAnnouncementMapper.INSTANCE.entityToResponse(announcement);
         return ResponseEntity
                 .ok(new ApiResult<>("팀 공고 조회 성공", announcementResponse));

@@ -16,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +33,8 @@ public class TeamAnnouncementService {
     private final TeamAnnouncementRepository announcementRepository;
 
     private final TeamService teamService;
+
+    private final RedisTemplate<String, Object> redisTemplate;
 
     public Page<TeamAnnouncementResponse> getFilteredAnnouncementsWithPaging(
             TeamAnnouncementFilter filter
@@ -66,13 +70,25 @@ public class TeamAnnouncementService {
 
     @Transactional
     public void deleteAnnouncement(Long announcementId) {
-        TeamAnnouncement announcement = this.findAnnouncementById(announcementId);
+        TeamAnnouncement announcement = announcementRepository.findById(announcementId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TEAM_ANNOUNCEMENT_NOT_FOUND));
         announcementRepository.delete(announcement);
     }
 
-    public TeamAnnouncement findAnnouncementById(Long announcementId) {
+    public TeamAnnouncement findAnnouncementById(Long announcementId, String token) {
+        if(token != null){
+            addView(2);
+        }
+
         return announcementRepository.findById(announcementId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TEAM_ANNOUNCEMENT_NOT_FOUND));
+    }
+
+    private void addView(Long userId){
+
+        SetOperations<String, Object> set = redisTemplate.opsForSet();
+        set.add("viewUser", userId);
+
     }
 
 }
