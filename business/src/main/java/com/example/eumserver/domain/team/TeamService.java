@@ -28,6 +28,8 @@ public class TeamService {
     private final ParticipantRepository participantRepository;
     private final S3Uploader s3Uploader;
 
+    private static final List<String> ALLOWED_MIME_TYPES = List.of("image/jpeg", "image/png");
+
     @Transactional
     public Team createTeam(
             long userId,
@@ -38,6 +40,12 @@ public class TeamService {
 
         Team team = TeamMapper.INSTANCE.teamRequestToTeam(teamRequest);
         if (logo != null) {
+            String contentType = logo.getContentType();
+            if (!ALLOWED_MIME_TYPES.contains(contentType)) {
+                throw new CustomException(
+                        ErrorCode.UNSUPPORTED_MEDIA_TYPE.getMessage() + " (허용된 형식: " + ALLOWED_MIME_TYPES + ")",
+                        ErrorCode.UNSUPPORTED_MEDIA_TYPE);
+            }
             String uploadUrl = s3Uploader.uploadToS3(S3Uploader.S3Path.TEAM_IMAGE, logo);
             team.setLogo(uploadUrl);
         }

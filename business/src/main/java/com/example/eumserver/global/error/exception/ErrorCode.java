@@ -2,7 +2,6 @@ package com.example.eumserver.global.error.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
@@ -15,6 +14,7 @@ public enum ErrorCode {
     METHOD_NOT_ALLOWED(405, "COMMON-004", "요청이 API가 요구하는 HTTP 메서드와 다름"),
     INTERNAL_SERVER_ERROR(500, "COMMON-005", "정의되지 않은 서버 오류 발생"),
     PAYLOAD_TOO_LARGE(413, "COMMON-006", "요청의 파일 크기가 3MB를 초과"),
+    UNSUPPORTED_MEDIA_TYPE(415, "COMMON-007", "요청의 파일 형식이 요구하는 형식과 다름."),
 
     // Auth error
     INVALID_JWT_TOKEN(401, "AUTH-001", "제공된 토큰이 유효하지 않음"),
