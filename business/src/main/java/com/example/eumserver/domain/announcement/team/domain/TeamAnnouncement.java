@@ -56,6 +56,9 @@ public class TeamAnnouncement {
     @Enumerated(EnumType.STRING)
     private List<OccupationClassification> occupationClassifications;
 
+    @Column
+    private Long view;
+
     @Builder.Default
     @OneToMany(mappedBy = "announcement", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TeamApplication> applications = new ArrayList<>();

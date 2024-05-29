@@ -74,4 +74,5 @@ public class TeamAnnouncementService {
         return announcementRepository.findById(announcementId)
                 .orElseThrow(() -> new CustomException(ErrorCode.TEAM_ANNOUNCEMENT_NOT_FOUND));
     }
+
 }
