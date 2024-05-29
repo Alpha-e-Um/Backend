@@ -1,5 +1,6 @@
 package com.example.eumserver.domain.application.controller;
 
+import com.example.eumserver.domain.application.dto.MyApplicationFilterRequest;
 import com.example.eumserver.domain.application.dto.MyApplicationResponse;
 import com.example.eumserver.domain.application.entity.ApplicationState;
 import com.example.eumserver.domain.application.entity.TeamApplication;
@@ -31,11 +32,10 @@ public class TeamApplicationController {
     @Operation(summary = "내 지원현황 전부 받아오기", description = "state 필터에 따라서 나의 지원현황을 전부 받아오는 기능")
     public ResponseEntity<ApiResult<Page<MyApplicationResponse>>> getMyApplication(
             @AuthenticationPrincipal PrincipalDetails details,
-            @RequestParam(name = "page", defaultValue = "0") Integer page,
-            @RequestParam(name = "state", defaultValue = "all") ApplicationState state
+            MyApplicationFilterRequest filterRequest
     ) {
         Page<MyApplicationResponse> applications = applicationService.getMyApplications(details.getUserId()
-                , ApplicationState.ALL, page);
+                , filterRequest.getState(), filterRequest.getPage());
         return ResponseEntity.ok(new ApiResult<>("내 지원현황 받아오기 성공", applications));
     }
 

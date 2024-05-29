@@ -34,7 +34,7 @@ public class TeamApplication {
     @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
     private Resume resume;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private ApplicationState state;
 
     @Embedded
