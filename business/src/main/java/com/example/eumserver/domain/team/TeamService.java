@@ -37,8 +37,10 @@ public class TeamService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Team team = TeamMapper.INSTANCE.teamRequestToTeam(teamRequest);
-        String uploadUrl = s3Uploader.uploadToS3(S3Uploader.S3Path.TEAM_IMAGE, logo);
-        team.setLogo(uploadUrl);
+        if (logo != null) {
+            String uploadUrl = s3Uploader.uploadToS3(S3Uploader.S3Path.TEAM_IMAGE, logo);
+            team.setLogo(uploadUrl);
+        }
         teamRepository.save(team);
 
         Participant participant = Participant.builder()
