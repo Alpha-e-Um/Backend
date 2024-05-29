@@ -33,19 +33,17 @@ public class TeamAnnouncementService {
     private final TeamService teamService;
 
     public Page<TeamAnnouncementResponse> getFilteredAnnouncementsWithPaging(
-            Long teamId,
-            int page,
             TeamAnnouncementFilter filter
     ) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("date_created"));
-        Pageable pageable = PageRequest.of(page, 12, Sort.by(sorts));
-        return announcementRepository.getFilteredAnnouncementsWithPaging(teamId, filter, pageable);
+        Pageable pageable = PageRequest.of(filter.getPage(), filter.getSize(), Sort.by(sorts));
+        return announcementRepository.getFilteredAnnouncementsWithPaging(filter, pageable);
     }
 
     @Transactional
-    public TeamAnnouncementResponse createAnnouncement(Long teamId, TeamAnnouncementRequest announcementRequest) {
-        Team team = teamService.findById(teamId);
+    public TeamAnnouncementResponse createAnnouncement(TeamAnnouncementRequest announcementRequest) {
+        Team team = teamService.findById(announcementRequest.teamId());
 
         TeamAnnouncement announcement = TeamAnnouncementMapper.INSTANCE.requestToEntity(announcementRequest);
         announcement.setTeam(team);
