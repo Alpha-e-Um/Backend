@@ -9,6 +9,7 @@ import java.util.List;
 public record TeamAnnouncementRequest(
         Long teamId,
         String title,
+        String region,
         String description,
         int vacancies,
         List<OccupationClassification> occupationClassifications,
