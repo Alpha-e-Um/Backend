@@ -9,6 +9,7 @@ public record ResumeRequest(
         @NotBlank String description,
         @NotBlank String jobCategory,
         @NotBlank String jobSubcategory,
+        List<String> techStacks,
         Double gpa,
         Double totalScore,
         Boolean isPublic,
@@ -18,5 +19,5 @@ public record ResumeRequest(
         List<ResumeHomepageRequest> homepages,
         List<ResumeActivityRequest> activities
 ) {
-    //TODO : Resume 직군이 제대로 들어갔는지 ValidCheck
+
 }

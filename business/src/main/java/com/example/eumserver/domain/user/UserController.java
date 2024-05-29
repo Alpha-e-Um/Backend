@@ -26,7 +26,8 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<ApiResult<UserResponse>> getMyInfo(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        UserResponse userResponse = UserMapper.INSTANCE.principalDetailsToUserResponse(principalDetails);
+        User user = userService.findById(principalDetails.getUserId());
+        UserResponse userResponse = UserMapper.INSTANCE.userToUserResponse(user);
         return ResponseEntity
                 .ok(new ApiResult<>("유저(자신) 조회 성공", userResponse));
     }

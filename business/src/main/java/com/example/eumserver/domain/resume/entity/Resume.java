@@ -1,5 +1,6 @@
 package com.example.eumserver.domain.resume.entity;
 
+import com.example.eumserver.domain.announcement.filter.domain.OccupationClassification;
 import com.example.eumserver.domain.user.User;
 import com.example.eumserver.global.dto.TimeStamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -45,6 +46,12 @@ public class Resume {
     private Double totalScore;
 
     @Builder.Default
+    @ElementCollection(targetClass = String.class)
+    @Column(name = "tech_stack")
+    private List<String> techStacks = new ArrayList<>();
+
+
+    @Builder.Default
     @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ResumeCareer> careers = new ArrayList<>();
 
@@ -78,6 +85,7 @@ public class Resume {
         this.description = resume.getDescription();
         this.jobCategory = resume.getJobCategory();
         this.jobSubcategory = resume.getJobSubcategory();
+        this.techStacks = resume.getTechStacks();
         this.gpa = resume.getGpa();
         this.totalScore = resume.getTotalScore();
         this.careers.clear();
