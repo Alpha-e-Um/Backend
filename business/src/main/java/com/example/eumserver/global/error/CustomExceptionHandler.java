@@ -16,7 +16,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.View;
 
 /**
  * Controller단과 Filter단에서 발생하는 모든 Exception을 Handling합니다.
@@ -25,6 +27,12 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @Slf4j
 @RestControllerAdvice
 public class CustomExceptionHandler {
+
+    private final View error;
+
+    public CustomExceptionHandler(View error) {
+        this.error = error;
+    }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     protected ResponseEntity<ApiResult<?>> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
@@ -54,6 +62,14 @@ public class CustomExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResult<?>> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         final ErrorCode errorCode = ErrorCode.INVALID_INPUT_VALUE;
+        return ResponseEntity
+                .status(errorCode.getStatus())
+                .body(new ApiResult<>(errorCode));
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ApiResult<?>> handleMaxUploadSizeExceededException(final MaxUploadSizeExceededException e) {
+        final ErrorCode errorCode = ErrorCode.PAYLOAD_TOO_LARGE;
         return ResponseEntity
                 .status(errorCode.getStatus())
                 .body(new ApiResult<>(errorCode));
