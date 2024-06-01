@@ -4,6 +4,7 @@ import com.example.eumserver.domain.announcement.filter.domain.OccupationClassif
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementUpdateRequest;
 import com.example.eumserver.domain.application.entity.TeamApplication;
 import com.example.eumserver.domain.team.Team;
+import com.example.eumserver.global.domain.Region;
 import com.example.eumserver.global.dto.TimeStamp;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,7 +30,8 @@ public class TeamAnnouncement {
     private String title;
 
     @Column(nullable = false)
-    private String region;
+    @Enumerated(EnumType.STRING)
+    private Region region;
 
     @Column(nullable = false)
     private int vacancies;

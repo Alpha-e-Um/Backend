@@ -1,4 +1,4 @@
-package com.example.eumserver.domain.user;
+package com.example.eumserver.domain.user.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

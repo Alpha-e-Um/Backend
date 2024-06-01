@@ -1,6 +1,7 @@
 package com.example.eumserver.domain.user;
 
 import com.example.eumserver.domain.jwt.PrincipalDetails;
+import com.example.eumserver.domain.user.domain.User;
 import com.example.eumserver.global.error.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

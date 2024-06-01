@@ -1,6 +1,7 @@
 package com.example.eumserver.domain.announcement.team.dto;
 
 import com.example.eumserver.domain.announcement.filter.domain.OccupationClassification;
+import com.example.eumserver.global.domain.Region;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -9,7 +10,7 @@ import java.util.List;
 public record TeamAnnouncementRequest(
         Long teamId,
         String title,
-        String region,
+        Region region,
         String description,
         int vacancies,
         List<OccupationClassification> occupationClassifications,

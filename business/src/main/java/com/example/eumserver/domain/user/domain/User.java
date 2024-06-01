@@ -1,9 +1,11 @@
-package com.example.eumserver.domain.user;
+package com.example.eumserver.domain.user.domain;
 
 import com.example.eumserver.domain.application.entity.TeamApplication;
 import com.example.eumserver.domain.oauth2.attributes.OAuth2Attributes;
 import com.example.eumserver.domain.resume.entity.Resume;
 import com.example.eumserver.domain.team.participant.Participant;
+import com.example.eumserver.domain.user.dto.UserUpdateRequest;
+import com.example.eumserver.global.domain.Region;
 import com.example.eumserver.global.dto.TimeStamp;
 import jakarta.persistence.*;
 import lombok.*;
@@ -44,7 +46,6 @@ public class User implements UserDetails {
     })
     private Name name;
 
-    @Column
     private String avatar;
 
     @Column(name = "phone_number")
@@ -59,16 +60,14 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String providerId;
 
-    @Column
     private String school;
 
-    @Column
-    private String region;
+    @Enumerated(EnumType.STRING)
+    private Region region;
 
-    @Column(length = 4)
-    private String mbti;
+    @Enumerated(EnumType.STRING)
+    private MBTI mbti;
 
-    @Column
     private LocalDate birthday;
 
     @Builder.Default
@@ -92,12 +91,15 @@ public class User implements UserDetails {
         this.avatar = OAuth2Attributes.getAvatar();
     }
 
-    public void updateProfile(Name name, String avatar, String phoneNumber, String mbti, LocalDate birthday) {
-        this.name = name;
-        this.avatar = avatar;
-        this.phoneNumber = phoneNumber;
-        this.mbti = mbti;
-        this.birthday = birthday;
+    public void updateProfile(UserUpdateRequest request) {
+        this.name = new Name(request.firstName(), request.lastName());
+        this.avatar = request.avatar();
+        this.region = request.region();
+        this.mbti = request.mbti();
+        this.school = request.school();
+        this.nickname = request.nickname();
+        this.birthday = request.birthday();
+        this.phoneNumber = request.phoneNumber();
     }
 
     @Override
