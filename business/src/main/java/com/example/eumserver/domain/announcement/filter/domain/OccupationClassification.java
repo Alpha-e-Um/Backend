@@ -40,9 +40,9 @@ public enum OccupationClassification {
     TRANSLATION_JAPANESE("translation_japanese"),
     TRANSLATION_CHINESE("translation_chinese"),
     TRANSLATION_SPANISH("translation_spanish"),
-    TRANSLATION_ALABIC("translation_alabic"),
+    TRANSLATION_ARABIC("translation_arabic"),
     TRANSLATION_HINDI("translation_hindi"),
-    TRANSLATION_FRANCH("translation_franch"),
+    TRANSLATION_FRENCH("translation_french"),
     TRANSLATION_ETC("translation_etc"),
 
     ETC("etc");
