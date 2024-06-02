@@ -80,12 +80,6 @@ public class User {
     @Embedded
     private TimeStamp timeStamp;
 
-    public void updateDefaultInfo(OAuth2Attributes oAuth2Attributes) {
-        this.email = oAuth2Attributes.getEmail();
-        this.name = oAuth2Attributes.getName();
-        this.avatar = oAuth2Attributes.getAvatar();
-    }
-
     public void updateProfile(UserUpdateRequest request) {
         this.name = new Name(request.firstName(), request.lastName());
         this.avatar = request.avatar();

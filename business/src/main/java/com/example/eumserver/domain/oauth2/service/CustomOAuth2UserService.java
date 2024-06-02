@@ -38,7 +38,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2Attributes oAuth2Attributes = OAuth2AttributesFactory.getOauth2Attributes(registrationId, userNameAttributeName, attributes);
 
         Optional<User> _user = userRepository.findByEmail(oAuth2Attributes.getEmail());
-        User user = _user.map(value -> updateUser(value, oAuth2Attributes)).orElseGet(() -> registerUser(oAuth2Attributes));
+        User user = _user.orElseGet(() -> registerUser(oAuth2Attributes));
 
         return new PrincipalDetails(
                 user.getId(),
@@ -56,11 +56,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .provider(oAuth2Attributes.getProvider())
                 .providerId(oAuth2Attributes.getProviderId())
                 .build();
-        return userRepository.save(user);
-    }
-
-    private User updateUser(User user, OAuth2Attributes OAuth2Attributes) {
-        user.updateDefaultInfo(OAuth2Attributes);
         return userRepository.save(user);
     }
 }
