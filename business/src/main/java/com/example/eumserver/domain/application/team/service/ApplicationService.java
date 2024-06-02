@@ -1,11 +1,11 @@
-package com.example.eumserver.domain.application.service;
+package com.example.eumserver.domain.application.team.service;
 
 import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
 import com.example.eumserver.domain.announcement.team.repository.TeamAnnouncementRepository;
-import com.example.eumserver.domain.application.dto.MyApplicationResponse;
-import com.example.eumserver.domain.application.entity.ApplicationState;
-import com.example.eumserver.domain.application.entity.TeamApplication;
-import com.example.eumserver.domain.application.repository.ApplicationRepository;
+import com.example.eumserver.domain.application.team.dto.MyTeamApplicationResponse;
+import com.example.eumserver.domain.application.team.entity.TeamApplicationState;
+import com.example.eumserver.domain.application.team.entity.TeamApplication;
+import com.example.eumserver.domain.application.team.repository.TeamApplicationRepository;
 import com.example.eumserver.domain.resume.ResumeRepository;
 import com.example.eumserver.domain.resume.entity.Resume;
 import com.example.eumserver.domain.team.participant.Participant;
@@ -32,12 +32,12 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class ApplicationService {
 
-    final private ApplicationRepository applicationRepository;
+    final private TeamApplicationRepository applicationRepository;
     final private TeamAnnouncementRepository teamAnnouncementRepository;
     final private UserRepository userRepository;
     final private ResumeRepository resumeRepository;
 
-    public Page<MyApplicationResponse> getMyApplications(Long user_id, ApplicationState state, Integer page) {
+    public Page<MyTeamApplicationResponse> getMyApplications(Long user_id, TeamApplicationState state, Integer page) {
         Pageable paging = PageRequest.of(page, 10);
         return applicationRepository
                 .getMyApplicationsWithPaging(user_id, state, paging);
@@ -73,7 +73,7 @@ public class ApplicationService {
                 .announcement(announcement)
                 .user(user)
                 .resume(resume)
-                .state(ApplicationState.PENDING)
+                .state(TeamApplicationState.PENDING)
                 .build();
 
         applicationRepository.save(application);
@@ -83,7 +83,7 @@ public class ApplicationService {
 
     @Transactional
     public TeamApplication cancelApplication(Long userId, Long applicationId) {
-        TeamApplication application = applicationRepository.getApplicationWithState(userId, applicationId, ApplicationState.PENDING);
+        TeamApplication application = applicationRepository.getApplicationWithState(userId, applicationId, TeamApplicationState.PENDING);
 
         if (application == null) throw new CustomException(ErrorCode.TEAM_APPLICATION_CANT_CANCEL);
 
@@ -141,7 +141,7 @@ public class ApplicationService {
     }
 
     private void checkState(TeamApplication teamApplication) {
-        if (teamApplication.getState() != ApplicationState.PENDING) {
+        if (teamApplication.getState() != TeamApplicationState.PENDING) {
             throw new CustomException(ErrorCode.TEAM_APPLICATION_CANT_REJECTED);
         }
     }

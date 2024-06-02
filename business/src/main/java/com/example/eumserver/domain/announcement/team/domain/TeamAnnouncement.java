@@ -2,7 +2,7 @@ package com.example.eumserver.domain.announcement.team.domain;
 
 import com.example.eumserver.domain.announcement.filter.domain.OccupationClassification;
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementUpdateRequest;
-import com.example.eumserver.domain.application.entity.TeamApplication;
+import com.example.eumserver.domain.application.team.entity.TeamApplication;
 import com.example.eumserver.domain.team.Team;
 import com.example.eumserver.domain.post.Post;
 import com.example.eumserver.global.domain.Region;

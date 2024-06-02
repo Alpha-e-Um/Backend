@@ -1,9 +1,9 @@
-package com.example.eumserver.domain.application.controller;
+package com.example.eumserver.domain.application.team.controller;
 
-import com.example.eumserver.domain.application.dto.MyApplicationFilterRequest;
-import com.example.eumserver.domain.application.dto.MyApplicationResponse;
-import com.example.eumserver.domain.application.entity.TeamApplication;
-import com.example.eumserver.domain.application.service.ApplicationService;
+import com.example.eumserver.domain.application.team.dto.MyTeamApplicationFilterRequest;
+import com.example.eumserver.domain.application.team.dto.MyTeamApplicationResponse;
+import com.example.eumserver.domain.application.team.entity.TeamApplication;
+import com.example.eumserver.domain.application.team.service.ApplicationService;
 import com.example.eumserver.domain.jwt.PrincipalDetails;
 import com.example.eumserver.global.dto.ApiResult;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,11 +29,11 @@ public class TeamApplicationController {
 
     @GetMapping("")
     @Operation(summary = "내 지원현황 전부 받아오기", description = "state 필터에 따라서 나의 지원현황을 전부 받아오는 기능")
-    public ResponseEntity<ApiResult<Page<MyApplicationResponse>>> getMyApplication(
+    public ResponseEntity<ApiResult<Page<MyTeamApplicationResponse>>> getMyApplication(
             @AuthenticationPrincipal PrincipalDetails details,
-            MyApplicationFilterRequest filterRequest
+            MyTeamApplicationFilterRequest filterRequest
     ) {
-        Page<MyApplicationResponse> applications = applicationService.getMyApplications(details.getUserId()
+        Page<MyTeamApplicationResponse> applications = applicationService.getMyApplications(details.getUserId()
                 , filterRequest.getState(), filterRequest.getPage());
         return ResponseEntity.ok(new ApiResult<>("내 지원현황 받아오기 성공", applications));
     }

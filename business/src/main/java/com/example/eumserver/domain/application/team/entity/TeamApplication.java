@@ -1,4 +1,4 @@
-package com.example.eumserver.domain.application.entity;
+package com.example.eumserver.domain.application.team.entity;
 
 import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
 import com.example.eumserver.domain.resume.entity.Resume;
@@ -35,20 +35,20 @@ public class TeamApplication {
     private Resume resume;
 
     @Enumerated(EnumType.STRING)
-    private ApplicationState state;
+    private TeamApplicationState state;
 
     @Embedded
     private TimeStamp timeStamp;
 
     public void cancel() {
-        this.state = ApplicationState.WITHDRAWN;
+        this.state = TeamApplicationState.WITHDRAWN;
     }
 
     public void accept() {
-        this.state = ApplicationState.ACCEPTED;
+        this.state = TeamApplicationState.ACCEPTED;
     }
 
     public void reject() {
-        this.state = ApplicationState.REJECTED;
+        this.state = TeamApplicationState.REJECTED;
     }
 }
