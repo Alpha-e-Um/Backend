@@ -24,7 +24,6 @@ public class ResumeAnnouncementCustomRepositoryImpl implements ResumeAnnouncemen
 
     @Override
     public Page<ResumeAnnouncementResponse> findResumeAnnouncementsWithFilteredAndPagination(ResumeAnnouncementFilter filter, Pageable pageable) {
-
         QResumeAnnouncement resumeAnnouncement = QResumeAnnouncement.resumeAnnouncement;
         BooleanExpression predicate = resumeAnnouncement.isNotNull();
 

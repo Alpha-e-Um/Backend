@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,19 +31,15 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenProvider {
 
-    private final RedisTemplate<String, String> redisTemplate;
-
-    private final Key jwtSecret;
-
-    public static Long AC_EXPIRATION_IN_MS;
-
-    public static Long RF_EXPIRATION_IN_MS;
-
     private static final String CLAIM_EMAIL = "email";
     private static final String CLAIM_NAME = "name";
     private static final String CLAIM_AVATAR = "avatar";
     private static final String CLAIM_AUTHORITIES = "authorities";
     private static final String DELIMITER = ",";
+    public static Long AC_EXPIRATION_IN_MS;
+    public static Long RF_EXPIRATION_IN_MS;
+    private final RedisTemplate<String, String> redisTemplate;
+    private final Key jwtSecret;
 
     public JwtTokenProvider(
             @Value("${jwt.secret}") String jwtSecretStr,
@@ -139,15 +134,14 @@ public class JwtTokenProvider {
     }
 
     public Claims parseClaims(String token) {
-       return Jwts.parserBuilder()
+        return Jwts.parserBuilder()
                 .setSigningKey(jwtSecret)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
 
-    public String resolveAccessToken(HttpServletRequest request) {
-        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+    public String resolveAccessToken(String token) {
         if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
             return token.substring(7);
         }
