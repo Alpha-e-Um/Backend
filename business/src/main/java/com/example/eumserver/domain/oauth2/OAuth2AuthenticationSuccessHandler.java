@@ -44,7 +44,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         log.debug("accessToken: {}", accessToken);
         log.debug("refreshToken: {}", refreshToken);
-        log.debug("redirect_uri: {}", redirectUrlWithToken);
+        log.debug("redirectUri: {}", redirectUrlWithToken);
 
         addCookie(response, COOKIE_REFRESH_TOKEN, refreshToken, (int) TimeUnit.MILLISECONDS.toSeconds(RF_EXPIRATION_IN_MS));
         getRedirectStrategy().sendRedirect(request, response, redirectUrlWithToken);
