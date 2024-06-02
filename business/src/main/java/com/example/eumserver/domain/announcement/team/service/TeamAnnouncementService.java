@@ -79,18 +79,21 @@ public class TeamAnnouncementService extends PostService<TeamAnnouncementReposit
 
     @Transactional
     public TeamAnnouncementDetailResponse viewPost(Long announcementId, String authorization) {
+        TeamAnnouncement announcement = this.findPostById(announcementId);
+
         if (authorization != null) {
-            String token = jwtTokenProvider.resolveAccessToken(authorization);
-            String userId = jwtTokenProvider.parseClaims(token).getSubject();
-            increaseViewCount(announcementId, userId);
+//            String token = jwtTokenProvider.resolveAccessToken(authorization);
+//            String userId = jwtTokenProvider.parseClaims(token).getSubject();
+//            System.out.println(userId);
+            increaseViewCount(announcementId, String.valueOf(1), announcement.getViews());
         }
 
-        TeamAnnouncement announcement = this.findPostById(announcementId);
         TeamAnnouncementDetailResponse response = TeamAnnouncementMapper.INSTANCE.entityToDetailResponse(announcement);
 
-        Long view = (Long) redisUtil.getValues(getPrefix() + ":view:" + announcementId);
-        if (view == null) response.setViews(announcement.getViews());
-        else response.setViews(view);
+        String views = (String) redisUtil.getValues(getPrefix() + ":view::" + announcementId);
+        System.out.println(views);
+        if (views == null) response.setViews(announcement.getViews());
+        else response.setViews(Long.parseLong(views));
 
         return response;
     }

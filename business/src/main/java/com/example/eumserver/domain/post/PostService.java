@@ -34,9 +34,9 @@ public abstract class PostService<T extends PostRepository, R extends Post> {
      */
     protected abstract String getPrefix();
 
-    public void increaseViewCount(Long postId, String userId) {
+    public void increaseViewCount(Long postId, String userId, Long views) {
         String prefix = getPrefix();
-        String key = prefix + ":view::" + postId;
+        String totalViewKey = prefix + ":view::" + postId;
         String userKey = prefix + ":user::" + postId;
 
         /**
@@ -48,7 +48,7 @@ public abstract class PostService<T extends PostRepository, R extends Post> {
          * 또한, Redis의 Set 자료구조를 이용하여, 몇분동안 같은 사람이 글을 보더라도
          * 조회수가 오르지 않도록 구성했습니다.
          */
-        while (!redisUtil.lock("lock::" + key)) {
+        while (!redisUtil.lock("lock::" + totalViewKey)) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -56,19 +56,25 @@ public abstract class PostService<T extends PostRepository, R extends Post> {
         }
 
         try {
-            if (redisUtil.hasKey(key) && redisUtil.hasKey(userKey)) {
-                if (redisUtil.checkValuesSet(userKey, userId)) {
-                    redisUtil.increaseValue(key);
-                    return;
-                } else return;
-            } else {
-                R announcement = this.findPostById(postId);
-                redisUtil.setValue(key, announcement.getViews(),
-                        Duration.ofSeconds(480).toMillis(), TimeUnit.SECONDS);
-                redisUtil.createValueSet(userKey, Duration.ofSeconds(480).toMillis(), TimeUnit.SECONDS);
+            if (Boolean.FALSE.equals(redisUtil.hasKey(userKey))) {
+                redisUtil.createValueSet(userKey, userId,
+                        Duration.ofHours(2).toMillis(), TimeUnit.MILLISECONDS);
+                redisUtil.setValue(totalViewKey, views.toString(),
+                        Duration.ofSeconds(480).toMillis(), TimeUnit.MILLISECONDS);
             }
-        } finally {
-            redisUtil.unlock("lock::" + key);
+            else if(Boolean.FALSE.equals(redisUtil.checkValuesSet(userKey, userId))) {
+                redisUtil.addValuesSet(userKey, userId);
+
+                if (Boolean.FALSE.equals(redisUtil.hasKey(totalViewKey))) {
+                    redisUtil.setValue(totalViewKey, views.toString(),
+                            Duration.ofSeconds(480).toMillis(), TimeUnit.MILLISECONDS);
+                }
+
+                redisUtil.increaseValue(totalViewKey);
+            }
+        }
+        finally {
+            redisUtil.unlock("lock::" + totalViewKey);
         }
     }
 
@@ -82,7 +88,7 @@ public abstract class PostService<T extends PostRepository, R extends Post> {
     @Scheduled(cron = "0 0/3 * * * *")
     protected void applyViewToDB() {
         String prefix = getPrefix();
-        Set<String> keys = redisUtil.keys( prefix + ":view:*");
+        Set<String> keys = redisUtil.keys( prefix + ":view::*");
         Iterator<String> iterator = keys.iterator();
 
         while (iterator.hasNext()) {

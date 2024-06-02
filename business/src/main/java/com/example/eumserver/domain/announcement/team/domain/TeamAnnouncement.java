@@ -86,7 +86,7 @@ public class TeamAnnouncement extends Post {
     }
 
     public static class TeamAnnouncementBuilder {
-        private Long views = 0L; // Initialize the views field
+        private Long views = 0L;
 
         public TeamAnnouncementBuilder views(Long views) {
             this.views = views;

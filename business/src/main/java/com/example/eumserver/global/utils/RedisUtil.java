@@ -54,8 +54,8 @@ public class RedisUtil {
         redisTemplate.opsForSet().add(key);
     }
 
-    public void createValueSet(String key, Long time, TimeUnit timeUnit) {
-        redisTemplate.opsForSet().add(key);
+    public void createValueSet(String key, String data, Long time, TimeUnit timeUnit) {
+        redisTemplate.opsForSet().add(key, data);
         redisTemplate.expire(key, time, timeUnit);
     }
 
@@ -83,7 +83,7 @@ public class RedisUtil {
     }
 
     public boolean checkValuesSet(String key, String data) {
-        return Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(key, data));
+        return redisTemplate.opsForSet().isMember(key, data);
     }
 
     public void deleteValues(String key) {
