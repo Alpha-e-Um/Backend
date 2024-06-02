@@ -13,6 +13,7 @@ public class TeamAnnouncementDetailResponse {
     private Long id;
     private String title;
     private String description;
+    private String summary;
     private String region;
     private LocalDateTime createDate;
     private List<OccupationClassification> occupationClassifications;

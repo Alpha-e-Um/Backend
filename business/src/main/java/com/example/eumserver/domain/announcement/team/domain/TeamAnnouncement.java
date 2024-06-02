@@ -37,9 +37,11 @@ public class TeamAnnouncement extends Post {
     @Column(nullable = false)
     private int vacancies;
 
-    @Lob
     @Column
     private String description;
+
+    @Column(length = 200)
+    private String summary;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
@@ -75,6 +77,7 @@ public class TeamAnnouncement extends Post {
     public void updateAnnouncement(TeamAnnouncementUpdateRequest announcementUpdateRequest) {
         this.title = announcementUpdateRequest.title();
         this.description = announcementUpdateRequest.description();
+        this.summary = announcementUpdateRequest.summary();
         this.vacancies = announcementUpdateRequest.vacancies();
         this.expiredDate = announcementUpdateRequest.expiredDate();
         this.occupationClassifications = announcementUpdateRequest.occupationClassifications();
