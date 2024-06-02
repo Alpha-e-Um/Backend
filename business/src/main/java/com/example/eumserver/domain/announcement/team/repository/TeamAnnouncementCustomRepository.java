@@ -3,7 +3,7 @@ package com.example.eumserver.domain.announcement.team.repository;
 import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementFilter;
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementResponse;
-import com.example.eumserver.domain.view.PostRepository;
+import com.example.eumserver.domain.post.PostRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

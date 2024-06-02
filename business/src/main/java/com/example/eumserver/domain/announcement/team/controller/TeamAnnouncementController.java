@@ -52,7 +52,7 @@ public class TeamAnnouncementController {
     public ResponseEntity<ApiResult<TeamAnnouncementDetailResponse>> getAnnouncement(
             @RequestHeader(name = "Authorization", required = false) String authorization,
             @PathVariable(name = "announcementId") Long announcementId) {
-        TeamAnnouncementDetailResponse announcement = announcementService.viewAnnouncement(announcementId, authorization);
+        TeamAnnouncementDetailResponse announcement = announcementService.viewPost(announcementId, authorization);
         return ResponseEntity
                 .ok(new ApiResult<>("팀 공고 조회 성공", announcement));
     }

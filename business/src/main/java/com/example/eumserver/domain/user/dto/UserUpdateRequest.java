@@ -14,7 +14,7 @@ public record UserUpdateRequest (
         String avatar,
         String region,
         String school,
-        String nicname,
+        String nickname,
         LocalDate birthday,
         @Size(min = 4, max = 4) String mbti,
         @Pattern(regexp = "[0-9]{10,11}") String phoneNumber

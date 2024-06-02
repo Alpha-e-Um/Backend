@@ -2,11 +2,13 @@ package com.example.eumserver.domain.announcement.team.dto;
 
 import com.example.eumserver.domain.announcement.filter.domain.OccupationClassification;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@Setter
 public class TeamAnnouncementDetailResponse {
     private Long id;
     private String title;
@@ -18,7 +20,4 @@ public class TeamAnnouncementDetailResponse {
     private Long teamId;
     private String teamLogo;
 
-    public void setViews(Long views) {
-        this.views = views;
-    }
 }
