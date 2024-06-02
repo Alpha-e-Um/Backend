@@ -75,7 +75,7 @@ jobs:
       - name: Build and push Spring
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./business
           push: true
           tags: ${{ secrets.DOCKER_REPO }}/eum-spring:latest
           cache-from: type=gha
