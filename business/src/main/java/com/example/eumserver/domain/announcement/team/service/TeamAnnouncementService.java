@@ -35,6 +35,13 @@ public class TeamAnnouncementService {
     public Page<TeamAnnouncementResponse> getFilteredAnnouncementsWithPaging(
             TeamAnnouncementFilter filter
     ) {
+        if (filter.getSize() <= 0) {
+            throw new CustomException("사이즈를 1 이상으로 설정해주세요. 현재: " + filter.getSize(), ErrorCode.INVALID_INPUT_VALUE);
+        }
+
+        if (filter.getPage() < 0) {
+            throw new CustomException("페이지는 음수여선 안됩니다. 현재: " + filter.getPage(), ErrorCode.INVALID_INPUT_VALUE);
+        }
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("date_created"));
         Pageable pageable = PageRequest.of(filter.getPage(), filter.getSize(), Sort.by(sorts));
