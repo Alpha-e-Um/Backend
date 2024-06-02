@@ -36,9 +36,12 @@ public enum ErrorCode {
 
     RESUME_ANNOUNCEMENT_NOT_FOUND(400, "RESUME-ANNOUNCEMENT-001", "이력서 공고를 찾을 수 없음."),
 
-    ALREADY_APPLIED_ANNOUNCEMENT(400, "APPLICATION-001", "이미 팀에 지원했음"),
-    NOT_TO_CANCEL_APPLICATION(400, "APPLICATION-002", "지원 취소할 수 있는 상황이 아님"),
-    NOT_VALID_ANNOUNCEMENT(400, "APPLICATION-003", "이미 만료된 공고임");
+    ALREADY_APPLIED_ANNOUNCEMENT(400, "APPLICATION-001", "이미 공고에 지원했음"),
+    EXPIRED_ANNOUNCEMENT(400, "APPLICATION-002", "이미 만료된 공고임"),
+    TEAM_APPLICATION_CANT_CANCEL(400, "APPLICATION-003", "지원 취소할 수 있는 상황이 아님"),
+    TEAM_APPLICATION_NOT_FOUND(400, "APPLICATION-004", "지원을 찾을 수 없음"),
+    TEAM_APPLICATION_CANT_REJECTED(400, "APPLICATION-005", "지원을 거절할 수 없음"),
+    TEAM_APPLICATION_CANT_ACCEPTED(400, "APPLICATION-006", "지원을 수락할 수 없음");
 
     private final int status;
     private final String code;

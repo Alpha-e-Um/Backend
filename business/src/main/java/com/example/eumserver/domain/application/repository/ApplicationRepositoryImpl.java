@@ -6,8 +6,6 @@ import com.example.eumserver.domain.application.entity.ApplicationState;
 import com.example.eumserver.domain.application.entity.QTeamApplication;
 import com.example.eumserver.domain.application.entity.TeamApplication;
 import com.example.eumserver.domain.application.mapper.ApplicationMapper;
-import com.example.eumserver.domain.resume.entity.QResume;
-import com.example.eumserver.domain.team.QTeam;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -72,27 +70,22 @@ public class ApplicationRepositoryImpl implements ApplicationCustomRepository {
                 .fetch()
                 .size();
 
-        if(count == 0) return false;
-
-        return true;
+        return count != 0;
     }
 
     @Override
-    public TeamApplication getCancelApplication(Long userId, Long applicationId) {
+    public TeamApplication getApplicationWithState(Long userId, Long applicationId, ApplicationState state) {
         QTeamApplication application = QTeamApplication.teamApplication;
 
         BooleanExpression predicate = application.isNotNull();
         predicate = predicate.and(application.user.id.eq(userId));
         predicate = predicate.and(application.id.eq(applicationId));
-        predicate = predicate.and(application.state.eq(ApplicationState.PENDING));
+        predicate = predicate.and(application.state.eq(state));
 
-        TeamApplication myApplication =  jpaQueryFactory
-                                            .select(application)
-                                            .from(application)
-                                            .where(predicate)
-                                            .fetchOne();
-
-
-        return myApplication;
+        return jpaQueryFactory
+                .select(application)
+                .from(application)
+                .where(predicate)
+                .fetchOne();
     }
 }

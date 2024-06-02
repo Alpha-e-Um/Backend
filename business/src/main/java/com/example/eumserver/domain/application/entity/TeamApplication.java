@@ -40,7 +40,15 @@ public class TeamApplication {
     @Embedded
     private TimeStamp timeStamp;
 
-    public void cancelApplication() {
+    public void cancel() {
         this.state = ApplicationState.WITHDRAWN;
+    }
+
+    public void accept() {
+        this.state = ApplicationState.ACCEPTED;
+    }
+
+    public void reject() {
+        this.state = ApplicationState.REJECTED;
     }
 }

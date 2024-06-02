@@ -12,6 +12,7 @@ public record TeamAnnouncementResponse(
         String description,
         Region region,
         LocalDateTime createDate,
+        LocalDateTime expiredDate,
         List<OccupationClassification> occupationClassifications,
 
         Long teamId,
