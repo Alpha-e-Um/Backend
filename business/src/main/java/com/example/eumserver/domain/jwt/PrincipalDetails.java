@@ -1,6 +1,6 @@
 package com.example.eumserver.domain.jwt;
 
-import com.example.eumserver.domain.user.Name;
+import com.example.eumserver.domain.user.domain.Name;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;

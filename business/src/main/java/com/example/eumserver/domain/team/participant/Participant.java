@@ -1,7 +1,7 @@
 package com.example.eumserver.domain.team.participant;
 
 import com.example.eumserver.domain.team.Team;
-import com.example.eumserver.domain.user.User;
+import com.example.eumserver.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;

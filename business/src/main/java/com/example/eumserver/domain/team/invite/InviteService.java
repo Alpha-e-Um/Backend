@@ -1,10 +1,10 @@
 package com.example.eumserver.domain.team.invite;
 
 import com.example.eumserver.domain.team.Team;
-import com.example.eumserver.domain.team.TeamRepository;
+import com.example.eumserver.domain.team.repository.TeamRepository;
 import com.example.eumserver.domain.team.participant.Participant;
 import com.example.eumserver.domain.team.participant.ParticipantRepository;
-import com.example.eumserver.domain.user.User;
+import com.example.eumserver.domain.user.domain.User;
 import com.example.eumserver.domain.user.UserRepository;
 import com.example.eumserver.global.error.exception.CustomException;
 import com.example.eumserver.global.error.exception.ErrorCode;

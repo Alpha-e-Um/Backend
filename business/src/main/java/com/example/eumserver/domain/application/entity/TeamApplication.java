@@ -2,7 +2,7 @@ package com.example.eumserver.domain.application.entity;
 
 import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
 import com.example.eumserver.domain.resume.entity.Resume;
-import com.example.eumserver.domain.user.User;
+import com.example.eumserver.domain.user.domain.User;
 import com.example.eumserver.global.dto.TimeStamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

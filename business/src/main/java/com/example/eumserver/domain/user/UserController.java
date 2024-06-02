@@ -1,8 +1,9 @@
 package com.example.eumserver.domain.user;
 
 import com.example.eumserver.domain.jwt.PrincipalDetails;
-import com.example.eumserver.domain.team.Team;
 import com.example.eumserver.domain.team.TeamService;
+import com.example.eumserver.domain.user.domain.User;
+import com.example.eumserver.domain.team.dto.TeamResponse;
 import com.example.eumserver.domain.user.dto.UserResponse;
 import com.example.eumserver.domain.user.dto.UserUpdateRequest;
 import com.example.eumserver.global.dto.ApiResult;
@@ -32,12 +33,12 @@ public class UserController {
                 .ok(new ApiResult<>("유저(자신) 조회 성공", userResponse));
     }
 
-    @GetMapping("/me/teams")
-    public ResponseEntity<ApiResult<List<Team>>> getMyTeams(
+    @GetMapping("/me/team")
+    public ResponseEntity<ApiResult<List<TeamResponse>>> getMyTeams(
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
-        List<Team> teams = teamService.findAllByUserId(principalDetails.getUserId());
-        return ResponseEntity.ok(new ApiResult<>("유저(자신) 팀 전체 조회 성공", teams));
+        List<TeamResponse> teamResponses = teamService.getAllByUserId(principalDetails.getUserId());
+        return ResponseEntity.ok(new ApiResult<>("유저(자신) 팀 전체 조회 성공", teamResponses));
     }
 
     @PutMapping("/me")

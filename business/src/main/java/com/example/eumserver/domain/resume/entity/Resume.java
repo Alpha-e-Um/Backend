@@ -1,7 +1,6 @@
 package com.example.eumserver.domain.resume.entity;
 
-import com.example.eumserver.domain.announcement.filter.domain.OccupationClassification;
-import com.example.eumserver.domain.user.User;
+import com.example.eumserver.domain.user.domain.User;
 import com.example.eumserver.global.dto.TimeStamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
