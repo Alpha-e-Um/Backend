@@ -9,6 +9,7 @@ import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementRespon
 import com.example.eumserver.domain.announcement.team.mapper.TeamAnnouncementMapper;
 import com.example.eumserver.domain.post.PostSortingOption;
 import com.example.eumserver.domain.post.strategy.SortingStrategyFactory;
+import com.example.eumserver.domain.team.QTeam;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
