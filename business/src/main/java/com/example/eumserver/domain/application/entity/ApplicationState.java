@@ -7,12 +7,12 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * 지원 상태를 나타내는 Enum 클래스입니다.
  */
 public enum ApplicationState {
-    ALL("all"),
-    PENDING("pending"),
-    UNDER_REVIEW("under_review"),
-    ACCEPTED("accepted"),
-    REJECTED("rejected"),
-    WITHDRAWN("withdrawn");
+    ALL("all"), //전체
+    PENDING("pending"), //대기중
+    UNDER_REVIEW("under_review"), //지원서를 읽은 상태
+    ACCEPTED("accepted"), //합격
+    REJECTED("rejected"), //불합격
+    WITHDRAWN("withdrawn"); //지원철회
 
     private final String value;
 

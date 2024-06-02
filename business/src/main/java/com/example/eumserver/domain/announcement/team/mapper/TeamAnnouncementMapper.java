@@ -19,7 +19,6 @@ public interface TeamAnnouncementMapper {
     TeamAnnouncementResponse entityToResponse(TeamAnnouncement announcement);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "timeStamp", ignore = true)
     @Mapping(target = "publishedDate", ignore = true)
     @Mapping(target = "team", ignore = true)
     @Mapping(target = "applications", ignore = true)
