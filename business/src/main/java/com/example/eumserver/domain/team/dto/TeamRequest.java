@@ -8,5 +8,6 @@ public record TeamRequest(
     String email,
     String phoneNumber,
     String domain,
-    String introduction
+    String introduction,
+    String content
 ) { }
