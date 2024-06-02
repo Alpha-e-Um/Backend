@@ -33,7 +33,6 @@ public class JwtTokenProvider {
 
     private static final String CLAIM_EMAIL = "email";
     private static final String CLAIM_NAME = "name";
-    private static final String CLAIM_AVATAR = "avatar";
     private static final String CLAIM_AUTHORITIES = "authorities";
     private static final String DELIMITER = ",";
     public static Long AC_EXPIRATION_IN_MS;
@@ -68,7 +67,6 @@ public class JwtTokenProvider {
                 .setSubject(String.valueOf(principalDetails.getUserId()))
                 .claim(CLAIM_EMAIL, principalDetails.getEmail())
                 .claim(CLAIM_NAME, principalDetails.getName())
-                .claim(CLAIM_AVATAR, principalDetails.getAvatar())
                 .claim(CLAIM_AUTHORITIES, authorities)
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + AC_EXPIRATION_IN_MS))
@@ -86,7 +84,6 @@ public class JwtTokenProvider {
                 .setSubject(String.valueOf(principalDetails.getUserId()))
                 .claim(CLAIM_EMAIL, principalDetails.getEmail())
                 .claim(CLAIM_NAME, principalDetails.getName())
-                .claim(CLAIM_AVATAR, principalDetails.getAvatar())
                 .claim(CLAIM_AUTHORITIES, authorities)
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + RF_EXPIRATION_IN_MS))
@@ -123,13 +120,12 @@ public class JwtTokenProvider {
         long userId = Long.parseLong(claims.getSubject());
         String email = claims.get(CLAIM_EMAIL, String.class);
         Name name = new Name(claims.get(CLAIM_NAME, String.class), "");
-        String avatar = claims.get(CLAIM_AVATAR, String.class);
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(CLAIM_AUTHORITIES).toString().split(DELIMITER))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        PrincipalDetails principalDetails = new PrincipalDetails(userId, email, name, avatar, authorities);
+        PrincipalDetails principalDetails = new PrincipalDetails(userId, email, name, authorities);
         return new UsernamePasswordAuthenticationToken(principalDetails, null, authorities);
     }
 

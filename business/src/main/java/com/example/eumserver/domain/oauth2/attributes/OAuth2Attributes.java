@@ -1,5 +1,6 @@
 package com.example.eumserver.domain.oauth2.attributes;
 
+import com.example.eumserver.domain.user.domain.Name;
 import lombok.Getter;
 
 import java.util.Map;
@@ -11,7 +12,7 @@ public abstract class OAuth2Attributes {
     protected String provider;
     protected String userNameAttributeName;
 
-    public abstract String getName();
+    public abstract Name getName();
     public abstract String getEmail();
     public abstract String getAvatar();
     public abstract String getProviderId();
