@@ -26,22 +26,21 @@ public class Team {
     @Column(nullable = false)
     private String name;
 
-    @Column
     private String email;
 
     @Setter
-    @Column
     private String logo;
 
-    @Column(name = "phone_number")
     private String phoneNumber;
 
     @CreationTimestamp
     @Column(name = "formation_date", nullable = false, updatable = false)
     private LocalDateTime formationDate;
 
-    @Column(columnDefinition = "TEXT")
     private String introduction;
+
+    @Column(columnDefinition = "TEXT")
+    private String content;
 
     @JsonIgnore
     @Builder.Default
