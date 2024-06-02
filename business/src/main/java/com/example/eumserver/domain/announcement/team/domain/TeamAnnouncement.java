@@ -37,6 +37,7 @@ public class TeamAnnouncement extends Post {
     @Column(nullable = false)
     private int vacancies;
 
+    @Lob
     @Column
     private String description;
 
