@@ -3,8 +3,8 @@ package com.example.eumserver.domain.oauth2.service;
 import com.example.eumserver.domain.jwt.PrincipalDetails;
 import com.example.eumserver.domain.oauth2.attributes.OAuth2Attributes;
 import com.example.eumserver.domain.oauth2.attributes.OAuth2AttributesFactory;
-import com.example.eumserver.domain.user.Name;
-import com.example.eumserver.domain.user.User;
+import com.example.eumserver.domain.user.domain.Name;
+import com.example.eumserver.domain.user.domain.User;
 import com.example.eumserver.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,11 +39,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         Optional<User> _user = userRepository.findByEmail(oAuth2Attributes.getEmail());
         User user;
-        if (_user.isPresent()) {
-            user = updateUser(_user.get(), oAuth2Attributes);
-        } else {
-            user = registerUser(oAuth2Attributes);
-        }
+        user = _user.map(value -> updateUser(value, oAuth2Attributes)).orElseGet(() -> registerUser(oAuth2Attributes));
 
         return new PrincipalDetails(
                 user.getId(),

@@ -8,7 +8,7 @@ import com.example.eumserver.domain.application.entity.TeamApplication;
 import com.example.eumserver.domain.application.repository.ApplicationRepository;
 import com.example.eumserver.domain.resume.ResumeRepository;
 import com.example.eumserver.domain.resume.entity.Resume;
-import com.example.eumserver.domain.user.User;
+import com.example.eumserver.domain.user.domain.User;
 import com.example.eumserver.domain.user.UserRepository;
 import com.example.eumserver.global.error.exception.CustomException;
 import com.example.eumserver.global.error.exception.ErrorCode;

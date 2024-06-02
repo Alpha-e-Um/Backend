@@ -1,6 +1,6 @@
 package com.example.eumserver.domain.jwt;
 
-import com.example.eumserver.domain.user.Name;
+import com.example.eumserver.domain.user.domain.Name;
 import com.example.eumserver.global.utils.CookieUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;

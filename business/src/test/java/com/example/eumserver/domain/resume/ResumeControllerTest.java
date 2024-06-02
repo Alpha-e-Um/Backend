@@ -2,8 +2,8 @@ package com.example.eumserver.domain.resume;
 
 import com.example.eumserver.BaseIntegrationTest;
 import com.example.eumserver.domain.resume.dto.ResumeRequest;
-import com.example.eumserver.domain.user.Name;
-import com.example.eumserver.domain.user.User;
+import com.example.eumserver.domain.user.domain.Name;
+import com.example.eumserver.domain.user.domain.User;
 import com.example.eumserver.domain.user.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

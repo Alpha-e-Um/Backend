@@ -2,6 +2,7 @@ package com.example.eumserver.domain.user;
 
 import com.example.eumserver.domain.jwt.PrincipalDetails;
 import com.example.eumserver.domain.team.TeamService;
+import com.example.eumserver.domain.user.domain.User;
 import com.example.eumserver.domain.team.dto.TeamResponse;
 import com.example.eumserver.domain.user.dto.UserResponse;
 import com.example.eumserver.domain.user.dto.UserUpdateRequest;
