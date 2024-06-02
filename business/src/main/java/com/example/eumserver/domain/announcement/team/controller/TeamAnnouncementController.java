@@ -40,10 +40,10 @@ public class TeamAnnouncementController {
      * @return 페이징이 적용된 팀 공고 리스트
      */
     @GetMapping("")
-    public ResponseEntity<ApiResult<Page<TeamAnnouncementResponse>>> getAnnouncements(
+    public ResponseEntity<ApiResult<TeamAnnouncementResponseWrapper>> getAnnouncements(
             TeamAnnouncementFilter filter
     ) {
-        Page<TeamAnnouncementResponse> filteredAnnouncementsWithPaging = announcementService.getFilteredAnnouncementsWithPaging(filter);
+        TeamAnnouncementResponseWrapper filteredAnnouncementsWithPaging = announcementService.getFilteredAnnouncementsWithPaging(filter);
         return ResponseEntity
                 .ok(new ApiResult<>("팀 공고 필터링 및 페이징 조회 성공", filteredAnnouncementsWithPaging));
     }

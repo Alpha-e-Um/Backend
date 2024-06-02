@@ -8,6 +8,7 @@ import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementFilter
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementResponse;
 import com.example.eumserver.domain.announcement.team.mapper.TeamAnnouncementMapper;
 import com.example.eumserver.domain.post.PostSortingOption;
+import com.example.eumserver.domain.post.strategy.SortingStrategyFactory;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 public class TeamAnnouncementCustomRepositoryImpl implements TeamAnnouncementCustomRepository {
 
     private final JPAQueryFactory queryFactory;
+    private final SortingStrategyFactory sortingStrategyFactory;
 
     @Override
     public Page<TeamAnnouncementResponse> getFilteredAnnouncementsWithPaging(TeamAnnouncementFilter filter, Pageable pageable) {
@@ -45,19 +47,10 @@ public class TeamAnnouncementCustomRepositoryImpl implements TeamAnnouncementCus
                 .selectFrom(teamAnnouncement)
                 .where(predicate);
 
-        switch (filter.getOption()) {
-            case LATEST:
-                System.out.println("latest");
-                query.orderBy(teamAnnouncement.timeStamp.createDate.desc());
-                break;
-            case VIEWS:
-                query.orderBy(teamAnnouncement.views.desc());
-                break;
-            case POPULAR:
-                query.where(teamAnnouncement.views.ne(0L));
-                query.orderBy(teamAnnouncement.publishedDate.desc());
-                break;
-        }
+        sortingStrategyFactory.getStrategy(filter.getOption(),
+                teamAnnouncement.views,
+                teamAnnouncement.timeStamp.createDate
+                ).applySorting(teamAnnouncement, query);
 
         List<TeamAnnouncement> announcements = query
                 .offset(pageable.getOffset())
@@ -74,11 +67,6 @@ public class TeamAnnouncementCustomRepositoryImpl implements TeamAnnouncementCus
 
             announcementResponses = popularAnnouncement.stream()
                     .map(scoredAnnouncement -> TeamAnnouncementMapper.INSTANCE.entityToResponse(scoredAnnouncement.getAnnouncement()))
-                    .collect(Collectors.toList());
-
-            announcementResponses = announcementResponses.stream()
-                    .skip(pageable.getOffset())
-                    .limit(pageable.getPageSize())
                     .collect(Collectors.toList());
         }
 

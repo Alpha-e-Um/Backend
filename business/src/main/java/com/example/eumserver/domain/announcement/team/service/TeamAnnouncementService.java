@@ -40,7 +40,7 @@ public class TeamAnnouncementService extends PostService<TeamAnnouncementReposit
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public Page<TeamAnnouncementResponse> getFilteredAnnouncementsWithPaging(
+    public TeamAnnouncementResponseWrapper getFilteredAnnouncementsWithPaging(
             TeamAnnouncementFilter filter
     ) {
         if (filter.getSize() <= 0) {
@@ -55,10 +55,20 @@ public class TeamAnnouncementService extends PostService<TeamAnnouncementReposit
             throw new CustomException("페이지를 보여주는 옵션은 필수적입니다.", ErrorCode.INVALID_INPUT_VALUE);
         }
 
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("date_created"));
-        Pageable pageable = PageRequest.of(filter.getPage(), filter.getSize(), Sort.by(sorts));
-        return postRepository.getFilteredAnnouncementsWithPaging(filter, pageable);
+//        List<Sort.Order> sorts = new ArrayList<>();
+//        sorts.add(Sort.Order.desc("date_created"));
+        Pageable pageable = PageRequest.of(filter.getPage(), filter.getSize());
+        Page<TeamAnnouncementResponse> filtered = postRepository.getFilteredAnnouncementsWithPaging(filter, pageable);
+
+        TeamAnnouncementResponseWrapper response = new TeamAnnouncementResponseWrapper(
+                filtered.isEmpty(),
+                filtered.isFirst(),
+                filtered.isLast(),
+                filtered.getTotalPages(),
+                filtered.getContent()
+        );
+
+        return response;
     }
 
     @Transactional
