@@ -31,6 +31,7 @@ public class TeamAnnouncementCustomRepositoryImpl implements TeamAnnouncementCus
     @Override
     public Page<TeamAnnouncementResponse> getFilteredAnnouncementsWithPaging(TeamAnnouncementFilter filter, Pageable pageable) {
         QTeamAnnouncement teamAnnouncement = QTeamAnnouncement.teamAnnouncement;
+        QTeam team = QTeam.team;
         BooleanExpression predicate = teamAnnouncement.isNotNull();
         predicate = predicate.and(teamAnnouncement.publishedDate.isNotNull());
 
@@ -45,6 +46,8 @@ public class TeamAnnouncementCustomRepositoryImpl implements TeamAnnouncementCus
 
         JPAQuery<TeamAnnouncement> query = queryFactory
                 .selectFrom(teamAnnouncement)
+                .join(teamAnnouncement.team, team).fetchJoin()
+                .where(predicate)
                 .where(predicate);
 
         sortingStrategyFactory.getStrategy(filter.getOption(),

@@ -15,6 +15,7 @@ public interface TeamAnnouncementMapper {
 
     @Mapping(target = "createDate", source = "timeStamp.createDate")
     @Mapping(target = "teamId", source = "team.id")
+    @Mapping(target = "teamName", source = "team.name")
     @Mapping(target = "teamLogo", source = "team.logo")
     TeamAnnouncementResponse entityToResponse(TeamAnnouncement announcement);
 

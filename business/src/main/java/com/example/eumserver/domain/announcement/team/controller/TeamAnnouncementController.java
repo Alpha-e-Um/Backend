@@ -2,6 +2,7 @@ package com.example.eumserver.domain.announcement.team.controller;
 
 import com.example.eumserver.domain.announcement.team.dto.*;
 import com.example.eumserver.domain.announcement.team.service.TeamAnnouncementService;
+import com.example.eumserver.global.annotation.Timer;
 import com.example.eumserver.global.dto.ApiResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +28,6 @@ public class TeamAnnouncementController {
     public ResponseEntity<ApiResult<TeamAnnouncementResponse>> createAnnouncement(
             @RequestBody TeamAnnouncementRequest announcementRequest
     ) {
-        log.debug("announcement request: {}", announcementRequest);
         TeamAnnouncementResponse announcementResponse = announcementService.createAnnouncement(announcementRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -41,6 +41,7 @@ public class TeamAnnouncementController {
      * @param filter 팀 공고 필터
      * @return 페이징이 적용된 팀 공고 리스트
      */
+    @Timer
     @GetMapping("")
     @Operation(summary = "팀원 구하기 공고를 필터에 따라 조회", description = "만료 여부, 검색 필터, 글 목록 필터 등에 따라 페이지네이션으로 보여줍니다.")
     public ResponseEntity<ApiResult<TeamAnnouncementResponseWrapper>> getAnnouncements(
@@ -51,6 +52,7 @@ public class TeamAnnouncementController {
                 .ok(new ApiResult<>("팀 공고 필터링 및 페이징 조회 성공", filteredAnnouncementsWithPaging));
     }
 
+    @Timer
     @GetMapping("/{announcementId}")
     @Operation(summary = "팀원 구하기 공고 세부 조회", description = "팀원 구하기 공고의 세부 사항을 보여줍니다.")
     public ResponseEntity<ApiResult<TeamAnnouncementDetailResponse>> getAnnouncement(

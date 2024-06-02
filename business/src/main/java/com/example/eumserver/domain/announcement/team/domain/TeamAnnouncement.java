@@ -2,7 +2,7 @@ package com.example.eumserver.domain.announcement.team.domain;
 
 import com.example.eumserver.domain.announcement.filter.domain.OccupationClassification;
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementUpdateRequest;
-import com.example.eumserver.domain.application.entity.TeamApplication;
+import com.example.eumserver.domain.application.team.entity.TeamApplication;
 import com.example.eumserver.domain.team.Team;
 import com.example.eumserver.domain.post.Post;
 import com.example.eumserver.global.domain.Region;
@@ -44,6 +44,9 @@ public class TeamAnnouncement extends Post {
     @Column
     private String description;
 
+    @Column(length = 200)
+    private String summary;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
@@ -75,6 +78,7 @@ public class TeamAnnouncement extends Post {
     public void updateAnnouncement(TeamAnnouncementUpdateRequest announcementUpdateRequest) {
         this.title = announcementUpdateRequest.title();
         this.description = announcementUpdateRequest.description();
+        this.summary = announcementUpdateRequest.summary();
         this.vacancies = announcementUpdateRequest.vacancies();
         this.expiredDate = announcementUpdateRequest.expiredDate();
         this.occupationClassifications = announcementUpdateRequest.occupationClassifications();

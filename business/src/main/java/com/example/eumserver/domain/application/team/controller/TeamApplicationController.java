@@ -1,10 +1,9 @@
-package com.example.eumserver.domain.application.controller;
+package com.example.eumserver.domain.application.team.controller;
 
-import com.example.eumserver.domain.application.dto.MyApplicationFilterRequest;
-import com.example.eumserver.domain.application.dto.MyApplicationResponse;
-import com.example.eumserver.domain.application.entity.ApplicationState;
-import com.example.eumserver.domain.application.entity.TeamApplication;
-import com.example.eumserver.domain.application.service.ApplicationService;
+import com.example.eumserver.domain.application.team.dto.MyTeamApplicationFilterRequest;
+import com.example.eumserver.domain.application.team.dto.MyTeamApplicationResponse;
+import com.example.eumserver.domain.application.team.entity.TeamApplication;
+import com.example.eumserver.domain.application.team.service.ApplicationService;
 import com.example.eumserver.domain.jwt.PrincipalDetails;
 import com.example.eumserver.global.dto.ApiResult;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,11 +29,11 @@ public class TeamApplicationController {
 
     @GetMapping("")
     @Operation(summary = "내 지원현황 전부 받아오기", description = "state 필터에 따라서 나의 지원현황을 전부 받아오는 기능")
-    public ResponseEntity<ApiResult<Page<MyApplicationResponse>>> getMyApplication(
+    public ResponseEntity<ApiResult<Page<MyTeamApplicationResponse>>> getMyApplication(
             @AuthenticationPrincipal PrincipalDetails details,
-            MyApplicationFilterRequest filterRequest
+            MyTeamApplicationFilterRequest filterRequest
     ) {
-        Page<MyApplicationResponse> applications = applicationService.getMyApplications(details.getUserId()
+        Page<MyTeamApplicationResponse> applications = applicationService.getMyApplications(details.getUserId()
                 , filterRequest.getState(), filterRequest.getPage());
         return ResponseEntity.ok(new ApiResult<>("내 지원현황 받아오기 성공", applications));
     }
@@ -52,7 +51,7 @@ public class TeamApplicationController {
     }
 
 
-    @PutMapping("/{application_id}")
+    @PutMapping("/{application_id}/cancel")
     @ApiResponse(responseCode = "200", description = "팀에 지원하기 취소 성공")
     @Operation(summary = "팀 공고 지원 취소하기", description = "지원한 팀 공고에 지원 취소하는 기능입니다.")
     public ResponseEntity<ApiResult<TeamApplication>> cancelApplication(
@@ -61,5 +60,27 @@ public class TeamApplicationController {
         TeamApplication application = applicationService.cancelApplication(details.getUserId(), applicationId);
         return ResponseEntity
                 .ok(new ApiResult<>("공고 지원하기 취소 성공", application));
+    }
+
+    @PutMapping("/{application_id}/accept")
+    @ApiResponse(responseCode = "200", description = "팀 공고 지원 수락 성공")
+    @Operation(summary = "팀 공고 지원 수락하기", description = "지원한 팀 공고에 대해 수락하는 기능입니다.")
+    public ResponseEntity<ApiResult<TeamApplication>> acceptApplication(
+            @AuthenticationPrincipal PrincipalDetails details,
+            @PathVariable(name = "application_id") Long applicationId) {
+        TeamApplication application = applicationService.acceptApplication(details.getUserId(), applicationId);
+        return ResponseEntity
+                .ok(new ApiResult<>("공고 지원 수락 성공", application));
+    }
+
+    @PutMapping("/{application_id}/reject")
+    @ApiResponse(responseCode = "200", description = "팀 공고 지원 거절 성공")
+    @Operation(summary = "팀 공고 지원 거절하기", description = "지원한 팀 공고에 대해 거절하는 기능입니다.")
+    public ResponseEntity<ApiResult<TeamApplication>> rejectApplication(
+            @AuthenticationPrincipal PrincipalDetails details,
+            @PathVariable(name = "application_id") Long applicationId) {
+        TeamApplication application = applicationService.rejectApplication(details.getUserId(), applicationId);
+        return ResponseEntity
+                .ok(new ApiResult<>("공고 지원 거절 성공", application));
     }
 }
