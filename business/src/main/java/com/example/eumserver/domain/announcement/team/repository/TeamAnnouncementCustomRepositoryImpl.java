@@ -6,6 +6,9 @@ import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementFilter;
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementResponse;
 import com.example.eumserver.domain.announcement.team.mapper.TeamAnnouncementMapper;
+import com.example.eumserver.domain.announcement.filter.domain.OccupationClassification;
+import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
+import com.example.eumserver.domain.team.QTeam;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -26,6 +29,7 @@ public class TeamAnnouncementCustomRepositoryImpl implements TeamAnnouncementCus
     @Override
     public Page<TeamAnnouncementResponse> getFilteredAnnouncementsWithPaging(TeamAnnouncementFilter filter, Pageable pageable) {
         QTeamAnnouncement teamAnnouncement = QTeamAnnouncement.teamAnnouncement;
+        QTeam team = QTeam.team;
         BooleanExpression predicate = teamAnnouncement.isNotNull();
         predicate = predicate.and(teamAnnouncement.publishedDate.isNotNull());
 
@@ -36,6 +40,7 @@ public class TeamAnnouncementCustomRepositoryImpl implements TeamAnnouncementCus
 
         List<TeamAnnouncement> announcements = queryFactory
                 .selectFrom(teamAnnouncement)
+                .join(teamAnnouncement.team, team).fetchJoin()
                 .where(predicate)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
