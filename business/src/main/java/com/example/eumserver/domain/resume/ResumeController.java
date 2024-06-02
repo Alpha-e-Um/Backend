@@ -5,8 +5,6 @@ import com.example.eumserver.domain.resume.dto.ResumeRequest;
 import com.example.eumserver.domain.resume.entity.Resume;
 import com.example.eumserver.global.dto.ApiResult;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,13 +27,7 @@ public class ResumeController {
     private final ResumeService resumeService;
 
     @PostMapping("")
-    @Operation(summary = "이력서 생성", description = "유저에 이력서를 작성하는 API, Homepage Enum Type은 Schema 참조", parameters = {
-            @Parameter(name = "Authorization",
-                    description = "Access Token",
-                    in = ParameterIn.HEADER,
-                    schema = @Schema(type = "string"),
-                    required = true)
-    })
+    @Operation(summary = "이력서 생성", description = "유저에 이력서를 작성하는 API, Homepage Enum Type은 Schema 참조")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "이력서 작성 성공", content = @Content(schema = @Schema(implementation = Resume.class)))
     })
@@ -52,13 +44,7 @@ public class ResumeController {
     }
 
     @PutMapping("/{resumeId}")
-    @Operation(summary = "이력서 수정", description = "유저에 이력서를 수정하는 API, Homepage Enum Type은 Schema 참조", parameters = {
-            @Parameter(name = "Authorization",
-                    description = "Access Token",
-                    in = ParameterIn.HEADER,
-                    schema = @Schema(type = "string"),
-                    required = true)
-    })
+    @Operation(summary = "이력서 수정", description = "유저에 이력서를 수정하는 API, Homepage Enum Type은 Schema 참조")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이력서 수정 성공", content = @Content(schema = @Schema(implementation = Resume.class)))
     })
@@ -74,13 +60,7 @@ public class ResumeController {
     }
 
     @DeleteMapping("/{resumeId}")
-    @Operation(summary = "이력서 삭제", description = "유저에 이력서를 삭제하는 API", parameters = {
-            @Parameter(name = "Authorization",
-                    description = "Access Token",
-                    in = ParameterIn.HEADER,
-                    schema = @Schema(type = "string"),
-                    required = true)
-    })
+    @Operation(summary = "이력서 삭제", description = "유저에 이력서를 삭제하는 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "이력서 삭제 성공")
     })
@@ -97,13 +77,7 @@ public class ResumeController {
     }
 
     @GetMapping("")
-    @Operation(summary = "내 이력서 전부 받아오기", description = "내 이력서를 전부 받아오는 API", parameters = {
-            @Parameter(name = "Authorization",
-                    description = "Access Token",
-                    in = ParameterIn.HEADER,
-                    schema = @Schema(type = "string"),
-                    required = true)
-    })
+    @Operation(summary = "내 이력서 전부 받아오기", description = "내 이력서를 전부 받아오는 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이력서 받아오기 성공")
     })

@@ -26,7 +26,6 @@ public class TeamAnnouncementController {
     public ResponseEntity<ApiResult<TeamAnnouncementResponse>> createAnnouncement(
             @RequestBody TeamAnnouncementRequest announcementRequest
     ) {
-        log.debug("announcement request: {}", announcementRequest);
         TeamAnnouncementResponse announcementResponse = announcementService.createAnnouncement(announcementRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)

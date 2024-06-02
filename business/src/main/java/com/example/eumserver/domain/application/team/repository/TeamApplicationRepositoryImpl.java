@@ -1,13 +1,11 @@
-package com.example.eumserver.domain.application.repository;
+package com.example.eumserver.domain.application.team.repository;
 
 import com.example.eumserver.domain.announcement.team.domain.QTeamAnnouncement;
-import com.example.eumserver.domain.application.dto.MyApplicationResponse;
-import com.example.eumserver.domain.application.entity.ApplicationState;
-import com.example.eumserver.domain.application.entity.QTeamApplication;
-import com.example.eumserver.domain.application.entity.TeamApplication;
-import com.example.eumserver.domain.application.mapper.ApplicationMapper;
-import com.example.eumserver.domain.resume.entity.QResume;
-import com.example.eumserver.domain.team.QTeam;
+import com.example.eumserver.domain.application.team.dto.MyTeamApplicationResponse;
+import com.example.eumserver.domain.application.team.entity.QTeamApplication;
+import com.example.eumserver.domain.application.team.entity.TeamApplicationState;
+import com.example.eumserver.domain.application.team.entity.TeamApplication;
+import com.example.eumserver.domain.application.team.mapper.TeamApplicationMapper;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -21,12 +19,12 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class ApplicationRepositoryImpl implements ApplicationCustomRepository {
+public class TeamApplicationRepositoryImpl implements TeamApplicationCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<MyApplicationResponse> getMyApplicationsWithPaging(Long userId, ApplicationState state,
-                                                                   Pageable pageable) {
+    public Page<MyTeamApplicationResponse> getMyApplicationsWithPaging(Long userId, TeamApplicationState state,
+                                                                       Pageable pageable) {
         QTeamApplication application = QTeamApplication.teamApplication;
         QTeamAnnouncement announcement = QTeamAnnouncement.teamAnnouncement;
 
@@ -34,7 +32,7 @@ public class ApplicationRepositoryImpl implements ApplicationCustomRepository {
 
         predicate = predicate.and(application.user.id.eq(userId));
 
-        if (state != ApplicationState.ALL) {
+        if (state != TeamApplicationState.ALL) {
             predicate = predicate.and(application.state.eq(state));
         }
 
@@ -45,15 +43,15 @@ public class ApplicationRepositoryImpl implements ApplicationCustomRepository {
                 .where(predicate)
                 .fetch();
 
-        List<MyApplicationResponse> myApplicationResponses = applications.stream()
-                .map(ApplicationMapper.INSTANCE::entityToMyApplicationResponse).toList();
+        List<MyTeamApplicationResponse> myTeamApplicationRespons = applications.stream()
+                .map(TeamApplicationMapper.INSTANCE::entityToMyApplicationResponse).toList();
 
         JPAQuery<Long> count = jpaQueryFactory
                 .select(application.count())
                 .from(application)
                 .where(predicate);
 
-        return PageableExecutionUtils.getPage(myApplicationResponses, pageable, count::fetchOne);
+        return PageableExecutionUtils.getPage(myTeamApplicationRespons, pageable, count::fetchOne);
     }
 
     @Override
@@ -63,7 +61,7 @@ public class ApplicationRepositoryImpl implements ApplicationCustomRepository {
         BooleanExpression predicate = application.isNotNull();
         predicate = predicate.and(application.user.id.eq(userId));
         predicate = predicate.and(application.announcement.id.eq(announcementId));
-        predicate = predicate.and(application.state.ne(ApplicationState.WITHDRAWN));
+        predicate = predicate.and(application.state.ne(TeamApplicationState.WITHDRAWN));
 
         long count = jpaQueryFactory
                 .select(application)
@@ -72,27 +70,22 @@ public class ApplicationRepositoryImpl implements ApplicationCustomRepository {
                 .fetch()
                 .size();
 
-        if(count == 0) return false;
-
-        return true;
+        return count != 0;
     }
 
     @Override
-    public TeamApplication getCancelApplication(Long userId, Long applicationId) {
+    public TeamApplication getApplicationWithState(Long userId, Long applicationId, TeamApplicationState state) {
         QTeamApplication application = QTeamApplication.teamApplication;
 
         BooleanExpression predicate = application.isNotNull();
         predicate = predicate.and(application.user.id.eq(userId));
         predicate = predicate.and(application.id.eq(applicationId));
-        predicate = predicate.and(application.state.eq(ApplicationState.PENDING));
+        predicate = predicate.and(application.state.eq(state));
 
-        TeamApplication myApplication =  jpaQueryFactory
-                                            .select(application)
-                                            .from(application)
-                                            .where(predicate)
-                                            .fetchOne();
-
-
-        return myApplication;
+        return jpaQueryFactory
+                .select(application)
+                .from(application)
+                .where(predicate)
+                .fetchOne();
     }
 }
