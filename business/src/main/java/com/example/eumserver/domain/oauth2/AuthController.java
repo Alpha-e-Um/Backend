@@ -36,7 +36,7 @@ public class AuthController {
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<ApiResult<?>> logout(HttpServletRequest request, HttpServletResponse response) {
-        String accessToken = jwtTokenProvider.resolveAccessToken(request);
+        String accessToken = jwtTokenProvider.resolveAccessToken(request.getHeader("Authorization"));
         String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
         authService.logout(accessToken, refreshToken);
 

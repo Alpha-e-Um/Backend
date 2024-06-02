@@ -1,6 +1,8 @@
 package com.example.eumserver.domain.announcement.team.repository;
 
+import com.example.eumserver.domain.announcement.filter.domain.OccupationClassification;
 import com.example.eumserver.domain.announcement.team.domain.QTeamAnnouncement;
+import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementFilter;
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementResponse;
 import com.example.eumserver.domain.announcement.team.mapper.TeamAnnouncementMapper;
@@ -53,5 +55,15 @@ public class TeamAnnouncementCustomRepositoryImpl implements TeamAnnouncementCus
                 .where(predicate);
 
         return PageableExecutionUtils.getPage(announcementResponses, pageable, count::fetchOne);
+    }
+
+    @Override
+    public void updateViews(Long announcementId, Long views) {
+        QTeamAnnouncement announcement = QTeamAnnouncement.teamAnnouncement;
+
+        queryFactory.update(announcement)
+                .set(announcement.views, views)
+                .where(announcement.id.eq(announcementId))
+                .execute();
     }
 }

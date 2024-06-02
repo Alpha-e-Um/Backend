@@ -9,14 +9,9 @@ import com.example.eumserver.global.domain.Region;
 import com.example.eumserver.global.dto.TimeStamp;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -26,7 +21,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User implements UserDetails {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -85,10 +80,10 @@ public class User implements UserDetails {
     @Embedded
     private TimeStamp timeStamp;
 
-    public void updateDefaultInfo(OAuth2Attributes OAuth2Attributes) {
-        this.email = OAuth2Attributes.getEmail();
-        this.name = new Name(OAuth2Attributes.getName(), "");
-        this.avatar = OAuth2Attributes.getAvatar();
+    public void updateDefaultInfo(OAuth2Attributes oAuth2Attributes) {
+        this.email = oAuth2Attributes.getEmail();
+        this.name = oAuth2Attributes.getName();
+        this.avatar = oAuth2Attributes.getAvatar();
     }
 
     public void updateProfile(UserUpdateRequest request) {
@@ -100,41 +95,6 @@ public class User implements UserDetails {
         this.nickname = request.nickname();
         this.birthday = request.birthday();
         this.phoneNumber = request.phoneNumber();
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority(this.role));
-    }
-
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
-
-    @Override
-    public String getPassword() {
-        return "";
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 
     public void addTeam(Participant participant) {

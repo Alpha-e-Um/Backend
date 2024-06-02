@@ -1,13 +1,10 @@
 package com.example.eumserver.domain.announcement.team.controller;
 
-import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
-import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementFilter;
-import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementRequest;
-import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementResponse;
-import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementUpdateRequest;
-import com.example.eumserver.domain.announcement.team.mapper.TeamAnnouncementMapper;
+import com.example.eumserver.domain.announcement.team.dto.*;
 import com.example.eumserver.domain.announcement.team.service.TeamAnnouncementService;
+import com.example.eumserver.global.annotation.Timer;
 import com.example.eumserver.global.dto.ApiResult;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -15,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "팀원 구하기 공고")
 @Slf4j
 @RestController
 @RequestMapping("/api/team-announcement")
@@ -38,24 +36,28 @@ public class TeamAnnouncementController {
     /**
      * 팀 공고를 필터에 따라 조회합니다.
      * 어노테이션이 적용되어 있지 않지만, 쿼리 파라미터로 들어가게 됩니다.
+     *
      * @param filter 팀 공고 필터
      * @return 페이징이 적용된 팀 공고 리스트
      */
+    @Timer
     @GetMapping("")
     public ResponseEntity<ApiResult<Page<TeamAnnouncementResponse>>> getAnnouncements(
-        TeamAnnouncementFilter filter
+            TeamAnnouncementFilter filter
     ) {
         Page<TeamAnnouncementResponse> filteredAnnouncementsWithPaging = announcementService.getFilteredAnnouncementsWithPaging(filter);
         return ResponseEntity
                 .ok(new ApiResult<>("팀 공고 필터링 및 페이징 조회 성공", filteredAnnouncementsWithPaging));
     }
 
+    @Timer
     @GetMapping("/{announcementId}")
-    public ResponseEntity<ApiResult<TeamAnnouncementResponse>> getAnnouncement(@PathVariable(name = "announcementId") Long announcementId) {
-        TeamAnnouncement announcement = announcementService.findAnnouncementById(announcementId);
-        TeamAnnouncementResponse announcementResponse = TeamAnnouncementMapper.INSTANCE.entityToResponse(announcement);
+    public ResponseEntity<ApiResult<TeamAnnouncementDetailResponse>> getAnnouncement(
+            @RequestHeader(name = "Authorization", required = false) String authorization,
+            @PathVariable(name = "announcementId") Long announcementId) {
+        TeamAnnouncementDetailResponse announcement = announcementService.viewPost(announcementId, authorization);
         return ResponseEntity
-                .ok(new ApiResult<>("팀 공고 조회 성공", announcementResponse));
+                .ok(new ApiResult<>("팀 공고 조회 성공", announcement));
     }
 
     @PutMapping("/{announcementId}")

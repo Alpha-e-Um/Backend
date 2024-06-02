@@ -4,6 +4,7 @@ import com.example.eumserver.domain.announcement.filter.domain.OccupationClassif
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementUpdateRequest;
 import com.example.eumserver.domain.application.entity.TeamApplication;
 import com.example.eumserver.domain.team.Team;
+import com.example.eumserver.domain.post.Post;
 import com.example.eumserver.global.domain.Region;
 import com.example.eumserver.global.dto.TimeStamp;
 import jakarta.persistence.*;
@@ -16,10 +17,10 @@ import java.util.List;
 @Entity
 @Table(name = "team_announcements")
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class TeamAnnouncement {
+public class TeamAnnouncement extends Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -81,6 +82,15 @@ public class TeamAnnouncement {
             this.publishedDate = LocalDateTime.now();
         } else if (!announcementUpdateRequest.publish()) {
             this.publishedDate = null;
+        }
+    }
+
+    public static class TeamAnnouncementBuilder {
+        private Long views = 0L;
+
+        public TeamAnnouncementBuilder views(Long views) {
+            this.views = views;
+            return this;
         }
     }
 }

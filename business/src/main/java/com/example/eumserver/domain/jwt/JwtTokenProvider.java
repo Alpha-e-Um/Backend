@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,19 +31,14 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenProvider {
 
-    private final RedisTemplate<String, String> redisTemplate;
-
-    private final Key jwtSecret;
-
-    public static Long AC_EXPIRATION_IN_MS;
-
-    public static Long RF_EXPIRATION_IN_MS;
-
     private static final String CLAIM_EMAIL = "email";
     private static final String CLAIM_NAME = "name";
-    private static final String CLAIM_AVATAR = "avatar";
     private static final String CLAIM_AUTHORITIES = "authorities";
     private static final String DELIMITER = ",";
+    public static Long AC_EXPIRATION_IN_MS;
+    public static Long RF_EXPIRATION_IN_MS;
+    private final RedisTemplate<String, String> redisTemplate;
+    private final Key jwtSecret;
 
     public JwtTokenProvider(
             @Value("${jwt.secret}") String jwtSecretStr,
@@ -73,7 +67,6 @@ public class JwtTokenProvider {
                 .setSubject(String.valueOf(principalDetails.getUserId()))
                 .claim(CLAIM_EMAIL, principalDetails.getEmail())
                 .claim(CLAIM_NAME, principalDetails.getName())
-                .claim(CLAIM_AVATAR, principalDetails.getAvatar())
                 .claim(CLAIM_AUTHORITIES, authorities)
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + AC_EXPIRATION_IN_MS))
@@ -91,7 +84,6 @@ public class JwtTokenProvider {
                 .setSubject(String.valueOf(principalDetails.getUserId()))
                 .claim(CLAIM_EMAIL, principalDetails.getEmail())
                 .claim(CLAIM_NAME, principalDetails.getName())
-                .claim(CLAIM_AVATAR, principalDetails.getAvatar())
                 .claim(CLAIM_AUTHORITIES, authorities)
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + RF_EXPIRATION_IN_MS))
@@ -128,26 +120,24 @@ public class JwtTokenProvider {
         long userId = Long.parseLong(claims.getSubject());
         String email = claims.get(CLAIM_EMAIL, String.class);
         Name name = new Name(claims.get(CLAIM_NAME, String.class), "");
-        String avatar = claims.get(CLAIM_AVATAR, String.class);
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(CLAIM_AUTHORITIES).toString().split(DELIMITER))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        PrincipalDetails principalDetails = new PrincipalDetails(userId, email, name, avatar, authorities);
+        PrincipalDetails principalDetails = new PrincipalDetails(userId, email, name, authorities);
         return new UsernamePasswordAuthenticationToken(principalDetails, null, authorities);
     }
 
     public Claims parseClaims(String token) {
-       return Jwts.parserBuilder()
+        return Jwts.parserBuilder()
                 .setSigningKey(jwtSecret)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
 
-    public String resolveAccessToken(HttpServletRequest request) {
-        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+    public String resolveAccessToken(String token) {
         if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
             return token.substring(7);
         }

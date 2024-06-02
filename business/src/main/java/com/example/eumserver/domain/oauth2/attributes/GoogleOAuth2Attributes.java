@@ -1,5 +1,6 @@
 package com.example.eumserver.domain.oauth2.attributes;
 
+import com.example.eumserver.domain.user.domain.Name;
 import lombok.Builder;
 
 import java.util.Map;
@@ -29,8 +30,10 @@ public class GoogleOAuth2Attributes extends OAuth2Attributes {
     }
 
     @Override
-    public String getName() {
-        return attributes.get("name").toString();
+    public Name getName() {
+        String familyName = attributes.get("family_name").toString();
+        String givenName = attributes.get("given_name").toString();
+        return new Name(familyName, givenName);
     }
 
 }
