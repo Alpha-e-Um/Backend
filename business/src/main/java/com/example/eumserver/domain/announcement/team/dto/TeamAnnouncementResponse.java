@@ -15,6 +15,7 @@ public record TeamAnnouncementResponse(
         List<OccupationClassification> occupationClassifications,
 
         Long teamId,
+        String teamName,
         String teamLogo
 ) {
 }
