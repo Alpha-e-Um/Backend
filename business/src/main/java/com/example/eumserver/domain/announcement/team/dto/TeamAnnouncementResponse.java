@@ -10,6 +10,7 @@ public record TeamAnnouncementResponse(
         Long id,
         String title,
         String description,
+        String summary,
         Region region,
         LocalDateTime createDate,
         List<OccupationClassification> occupationClassifications,

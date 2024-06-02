@@ -11,6 +11,7 @@ public record TeamAnnouncementUpdateRequest(
         String title,
         Region region,
         String description,
+        String summary,
         int vacancies,
         List<OccupationClassification> occupationClassifications,
         boolean publish,
