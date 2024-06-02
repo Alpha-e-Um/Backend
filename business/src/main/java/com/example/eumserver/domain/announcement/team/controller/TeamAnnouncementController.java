@@ -2,6 +2,7 @@ package com.example.eumserver.domain.announcement.team.controller;
 
 import com.example.eumserver.domain.announcement.team.dto.*;
 import com.example.eumserver.domain.announcement.team.service.TeamAnnouncementService;
+import com.example.eumserver.global.annotation.Timer;
 import com.example.eumserver.global.dto.ApiResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class TeamAnnouncementController {
      * @param filter 팀 공고 필터
      * @return 페이징이 적용된 팀 공고 리스트
      */
+    @Timer
     @GetMapping("")
     public ResponseEntity<ApiResult<Page<TeamAnnouncementResponse>>> getAnnouncements(
             TeamAnnouncementFilter filter
@@ -48,6 +50,7 @@ public class TeamAnnouncementController {
                 .ok(new ApiResult<>("팀 공고 필터링 및 페이징 조회 성공", filteredAnnouncementsWithPaging));
     }
 
+    @Timer
     @GetMapping("/{announcementId}")
     public ResponseEntity<ApiResult<TeamAnnouncementDetailResponse>> getAnnouncement(
             @RequestHeader(name = "Authorization", required = false) String authorization,
