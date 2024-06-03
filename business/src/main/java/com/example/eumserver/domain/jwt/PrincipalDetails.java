@@ -1,6 +1,6 @@
 package com.example.eumserver.domain.jwt;
 
-import com.example.eumserver.domain.user.Name;
+import com.example.eumserver.domain.user.domain.Name;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,8 +17,12 @@ public class PrincipalDetails implements OAuth2User, UserDetails {
     private long userId;
     private String email;
     private Name name;
-    private String avatar;
     private Collection<? extends GrantedAuthority> authorities;
+
+    @Override
+    public <A> A getAttribute(String name) {
+        return OAuth2User.super.getAttribute(name);
+    }
 
     @Override
     public Map<String, Object> getAttributes() {
@@ -33,6 +37,11 @@ public class PrincipalDetails implements OAuth2User, UserDetails {
     @Override
     public String getPassword() {
         return null;
+    }
+
+    @Override
+    public String getName() {
+        return this.name.getFullName();
     }
 
     @Override
@@ -58,15 +67,6 @@ public class PrincipalDetails implements OAuth2User, UserDetails {
     @Override
     public boolean isEnabled() {
         return false;
-    }
-
-    @Override
-    public String getName() {
-        return this.name.getFullName();
-    }
-
-    public Name getNameObject() {
-        return this.name;
     }
 
 }

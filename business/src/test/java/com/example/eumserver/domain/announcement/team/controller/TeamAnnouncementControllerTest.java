@@ -7,6 +7,7 @@ import com.example.eumserver.domain.announcement.filter.domain.OccupationClassif
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementFilter;
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementRequest;
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementUpdateRequest;
+import com.example.eumserver.global.domain.Region;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,7 +45,7 @@ class TeamAnnouncementControllerTest extends BaseIntegrationTest {
                 new TeamAnnouncementRequest(
                         team.getId(),
                         "title",
-                        "충청도",
+                        Region.BUSAN,
                         "description",
                         5,
                         List.of(
@@ -130,7 +131,7 @@ class TeamAnnouncementControllerTest extends BaseIntegrationTest {
 
         TeamAnnouncementUpdateRequest announcementUpdateRequest = new TeamAnnouncementUpdateRequest(
                 "new title",
-                "중국",
+                Region.CHUNGBUK,
                 "new description",
                 2,
                 List.of(OccupationClassification.DEVELOPMENT_BACKEND,

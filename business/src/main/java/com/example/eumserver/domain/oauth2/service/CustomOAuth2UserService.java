@@ -3,8 +3,7 @@ package com.example.eumserver.domain.oauth2.service;
 import com.example.eumserver.domain.jwt.PrincipalDetails;
 import com.example.eumserver.domain.oauth2.attributes.OAuth2Attributes;
 import com.example.eumserver.domain.oauth2.attributes.OAuth2AttributesFactory;
-import com.example.eumserver.domain.user.Name;
-import com.example.eumserver.domain.user.User;
+import com.example.eumserver.domain.user.domain.User;
 import com.example.eumserver.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,21 +34,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
         Map<String, Object> attributes = oAuth2User.getAttributes();
+        log.debug("[loadUser] attributes = {}", attributes);
         OAuth2Attributes oAuth2Attributes = OAuth2AttributesFactory.getOauth2Attributes(registrationId, userNameAttributeName, attributes);
 
         Optional<User> _user = userRepository.findByEmail(oAuth2Attributes.getEmail());
-        User user;
-        if (_user.isPresent()) {
-            user = updateUser(_user.get(), oAuth2Attributes);
-        } else {
-            user = registerUser(oAuth2Attributes);
-        }
+        User user = _user.orElseGet(() -> registerUser(oAuth2Attributes));
 
         return new PrincipalDetails(
                 user.getId(),
                 user.getEmail(),
                 user.getName(),
-                user.getAvatar(),
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))
         );
     }
@@ -57,16 +51,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private User registerUser(OAuth2Attributes oAuth2Attributes) {
         User user = User.builder()
                 .email(oAuth2Attributes.getEmail())
-                .name(new Name(oAuth2Attributes.getName(), ""))
+                .name(oAuth2Attributes.getName())
                 .avatar(oAuth2Attributes.getAvatar())
                 .provider(oAuth2Attributes.getProvider())
                 .providerId(oAuth2Attributes.getProviderId())
                 .build();
-        return userRepository.save(user);
-    }
-
-    private User updateUser(User user, OAuth2Attributes OAuth2Attributes) {
-        user.updateDefaultInfo(OAuth2Attributes);
         return userRepository.save(user);
     }
 }

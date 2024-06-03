@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -20,15 +21,14 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    public static final String ATTRIBUTE_TOKEN_ERROR = "token_error";
     private final JwtTokenProvider tokenProvider;
     private final RedisTemplate<String, String> redisTemplate;
-
-    public static final String ATTRIBUTE_TOKEN_ERROR = "token_error";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String accessToken = tokenProvider.resolveAccessToken(request);
+        String accessToken = tokenProvider.resolveAccessToken(request.getHeader(HttpHeaders.AUTHORIZATION));
         log.debug("receive access token: {}", accessToken);
 
         try {

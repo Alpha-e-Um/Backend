@@ -1,20 +1,17 @@
-package com.example.eumserver.domain.user;
+package com.example.eumserver.domain.user.domain;
 
 import com.example.eumserver.domain.application.entity.TeamApplication;
 import com.example.eumserver.domain.oauth2.attributes.OAuth2Attributes;
 import com.example.eumserver.domain.resume.entity.Resume;
 import com.example.eumserver.domain.team.participant.Participant;
+import com.example.eumserver.domain.user.dto.UserUpdateRequest;
+import com.example.eumserver.global.domain.Region;
 import com.example.eumserver.global.dto.TimeStamp;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -24,7 +21,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User implements UserDetails {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +41,6 @@ public class User implements UserDetails {
     })
     private Name name;
 
-    @Column
     private String avatar;
 
     @Column(name = "phone_number")
@@ -59,16 +55,14 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String providerId;
 
-    @Column
     private String school;
 
-    @Column
-    private String region;
+    @Enumerated(EnumType.STRING)
+    private Region region;
 
-    @Column(length = 4)
-    private String mbti;
+    @Enumerated(EnumType.STRING)
+    private MBTI mbti;
 
-    @Column
     private LocalDate birthday;
 
     @Builder.Default
@@ -86,53 +80,15 @@ public class User implements UserDetails {
     @Embedded
     private TimeStamp timeStamp;
 
-    public void updateDefaultInfo(OAuth2Attributes OAuth2Attributes) {
-        this.email = OAuth2Attributes.getEmail();
-        this.name = new Name(OAuth2Attributes.getName(), "");
-        this.avatar = OAuth2Attributes.getAvatar();
-    }
-
-    public void updateProfile(Name name, String avatar, String phoneNumber, String mbti, LocalDate birthday) {
-        this.name = name;
-        this.avatar = avatar;
-        this.phoneNumber = phoneNumber;
-        this.mbti = mbti;
-        this.birthday = birthday;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority(this.role));
-    }
-
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
-
-    @Override
-    public String getPassword() {
-        return "";
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public void updateProfile(UserUpdateRequest request) {
+        this.name = new Name(request.firstName(), request.lastName());
+        this.avatar = request.avatar();
+        this.region = request.region();
+        this.mbti = request.mbti();
+        this.school = request.school();
+        this.nickname = request.nickname();
+        this.birthday = request.birthday();
+        this.phoneNumber = request.phoneNumber();
     }
 
     public void addTeam(Participant participant) {

@@ -2,8 +2,10 @@ package com.example.eumserver.domain.announcement.team.domain;
 
 import com.example.eumserver.domain.announcement.filter.domain.OccupationClassification;
 import com.example.eumserver.domain.announcement.team.dto.TeamAnnouncementUpdateRequest;
-import com.example.eumserver.domain.application.entity.TeamApplication;
+import com.example.eumserver.domain.application.team.entity.TeamApplication;
 import com.example.eumserver.domain.team.Team;
+import com.example.eumserver.domain.post.Post;
+import com.example.eumserver.global.domain.Region;
 import com.example.eumserver.global.dto.TimeStamp;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,10 +17,10 @@ import java.util.List;
 @Entity
 @Table(name = "team_announcements")
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class TeamAnnouncement {
+public class TeamAnnouncement extends Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,14 +31,21 @@ public class TeamAnnouncement {
     private String title;
 
     @Column(nullable = false)
-    private String region;
+    @Enumerated(EnumType.STRING)
+    private Region region;
 
     @Column(nullable = false)
     private int vacancies;
 
+    @Column(nullable = false)
+    private Boolean closed = false;
+
     @Lob
     @Column
     private String description;
+
+    @Column(length = 200)
+    private String summary;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
@@ -48,9 +57,6 @@ public class TeamAnnouncement {
     @Setter
     @Column(name = "date_published")
     private LocalDateTime publishedDate;
-
-    @Embedded
-    private TimeStamp timeStamp;
 
     @ElementCollection(targetClass = OccupationClassification.class)
     @Enumerated(EnumType.STRING)
@@ -72,6 +78,7 @@ public class TeamAnnouncement {
     public void updateAnnouncement(TeamAnnouncementUpdateRequest announcementUpdateRequest) {
         this.title = announcementUpdateRequest.title();
         this.description = announcementUpdateRequest.description();
+        this.summary = announcementUpdateRequest.summary();
         this.vacancies = announcementUpdateRequest.vacancies();
         this.expiredDate = announcementUpdateRequest.expiredDate();
         this.occupationClassifications = announcementUpdateRequest.occupationClassifications();
@@ -79,6 +86,15 @@ public class TeamAnnouncement {
             this.publishedDate = LocalDateTime.now();
         } else if (!announcementUpdateRequest.publish()) {
             this.publishedDate = null;
+        }
+    }
+
+    public static class TeamAnnouncementBuilder {
+        private Long views = 0L;
+
+        public TeamAnnouncementBuilder views(Long views) {
+            this.views = views;
+            return this;
         }
     }
 }

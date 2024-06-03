@@ -1,5 +1,6 @@
 package com.example.eumserver.domain.user;
 
+import com.example.eumserver.domain.user.domain.User;
 import com.example.eumserver.domain.user.dto.UserUpdateRequest;
 import com.example.eumserver.global.error.exception.CustomException;
 import com.example.eumserver.global.error.exception.ErrorCode;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
 
@@ -19,12 +20,11 @@ public class UserService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
+    @Transactional
     public User updateInfo(long userId, UserUpdateRequest dto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        if (!dto.isValid(dto.mbti())) throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
-        user.updateProfile(new Name(dto.firstName(), dto.lastName()), dto.avatar(), dto.phoneNumber(),
-                dto.mbti(), dto.birthday());
+        user.updateProfile(dto);
         return user;
     }
 

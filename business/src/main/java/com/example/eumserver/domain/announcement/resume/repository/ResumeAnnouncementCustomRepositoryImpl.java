@@ -24,17 +24,16 @@ public class ResumeAnnouncementCustomRepositoryImpl implements ResumeAnnouncemen
 
     @Override
     public Page<ResumeAnnouncementResponse> findResumeAnnouncementsWithFilteredAndPagination(ResumeAnnouncementFilter filter, Pageable pageable) {
-
         QResumeAnnouncement resumeAnnouncement = QResumeAnnouncement.resumeAnnouncement;
         BooleanExpression predicate = resumeAnnouncement.isNotNull();
 
-        List<OccupationClassification> occupationClassifications = filter.occupationClassifications();
+        List<OccupationClassification> occupationClassifications = filter.getOccupationClassifications();
         if (occupationClassifications != null && !occupationClassifications.isEmpty()) {
             predicate = predicate.and(resumeAnnouncement.occupationClassifications.any().in(occupationClassifications));
         }
 
         List<ResumeAnnouncement> announcements = queryFactory
-                .select(resumeAnnouncement)
+                .selectFrom(resumeAnnouncement)
                 .where(predicate)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

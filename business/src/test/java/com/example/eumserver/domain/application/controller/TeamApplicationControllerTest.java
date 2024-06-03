@@ -47,10 +47,10 @@ class TeamApplicationControllerTest extends BaseIntegrationTest {
         announcementRepository.save(test);
 
 
-//        TeamAnnouncement failAnnouncement = sut.giveMeBuilder(TeamAnnouncement.class)
-//                .set("expiredDate", LocalDateTime.now().minusHours(1))
-//                .set("description", "dd")
-//                .sample();
+        TeamAnnouncement failAnnouncement = sut.giveMeBuilder(TeamAnnouncement.class)
+                .set("expiredDate", LocalDateTime.now().minusHours(1))
+                .set("description", "dd")
+                .sample();
 
 //        System.out.println(failAnnouncement.getTitle());
 

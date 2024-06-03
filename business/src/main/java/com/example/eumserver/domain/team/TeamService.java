@@ -1,11 +1,13 @@
 package com.example.eumserver.domain.team;
 
 import com.example.eumserver.domain.team.dto.TeamRequest;
+import com.example.eumserver.domain.team.dto.TeamResponse;
 import com.example.eumserver.domain.team.participant.Participant;
 import com.example.eumserver.domain.team.participant.ParticipantId;
 import com.example.eumserver.domain.team.participant.ParticipantRepository;
 import com.example.eumserver.domain.team.participant.ParticipantRole;
-import com.example.eumserver.domain.user.User;
+import com.example.eumserver.domain.user.domain.User;
+import com.example.eumserver.domain.team.repository.TeamRepository;
 import com.example.eumserver.domain.user.UserRepository;
 import com.example.eumserver.global.error.exception.CustomException;
 import com.example.eumserver.global.error.exception.ErrorCode;
@@ -70,9 +72,9 @@ public class TeamService {
         participantRepository.deleteById(new ParticipantId(userId, teamId));
     }
 
-
-    public List<Team> findAll() {
-        return teamRepository.findAll();
+    public List<TeamResponse> getAllByUserId(long userId) {
+        List<Team> teams = findAllByUserId(userId);
+        return teams.stream().map(team -> TeamMapper.INSTANCE.teamToTeamResponse(team, userId)).toList();
     }
 
     public Team findById(Long id) {
