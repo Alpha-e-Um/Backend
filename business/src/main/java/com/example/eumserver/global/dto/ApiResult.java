@@ -34,4 +34,10 @@ public class ApiResult<T> {
         this.message = error.getMessage();
     }
 
+    public ApiResult(String message, ErrorCode error) {
+        this.success = false;
+        this.code = error.getCode();
+        this.message = error.getMessage() + " => " + message;
+    }
+
 }

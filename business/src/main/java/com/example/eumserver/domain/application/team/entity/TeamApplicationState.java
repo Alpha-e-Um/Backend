@@ -1,4 +1,4 @@
-package com.example.eumserver.domain.application.entity;
+package com.example.eumserver.domain.application.team.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 /**
  * 지원 상태를 나타내는 Enum 클래스입니다.
  */
-public enum ApplicationState {
+public enum TeamApplicationState {
     ALL("all"),
     PENDING("pending"),
     UNDER_REVIEW("under_review"),
@@ -16,13 +16,13 @@ public enum ApplicationState {
 
     private final String value;
 
-    ApplicationState(String value) {
+    TeamApplicationState(String value) {
         this.value = value;
     }
 
     @JsonCreator
-    public static ApplicationState from(String value) {
-        for (ApplicationState state : ApplicationState.values()) {
+    public static TeamApplicationState from(String value) {
+        for (TeamApplicationState state : TeamApplicationState.values()) {
             if (state.getValue().equals(value)) {
                 return state;
             }

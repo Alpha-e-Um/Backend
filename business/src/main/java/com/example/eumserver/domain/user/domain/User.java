@@ -1,6 +1,7 @@
 package com.example.eumserver.domain.user.domain;
 
 import com.example.eumserver.domain.application.entity.TeamApplication;
+import com.example.eumserver.domain.oauth2.attributes.OAuth2Attributes;
 import com.example.eumserver.domain.resume.entity.Resume;
 import com.example.eumserver.domain.team.participant.Participant;
 import com.example.eumserver.domain.user.dto.UserUpdateRequest;

@@ -13,6 +13,7 @@ public record TeamAnnouncementResponse(
         String summary,
         Region region,
         LocalDateTime createDate,
+        LocalDateTime expiredDate,
         List<OccupationClassification> occupationClassifications,
 
         Long teamId,
