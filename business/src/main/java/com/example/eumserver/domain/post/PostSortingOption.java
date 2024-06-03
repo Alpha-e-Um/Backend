@@ -1,6 +1,7 @@
 package com.example.eumserver.domain.post;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -16,6 +17,11 @@ public enum PostSortingOption {
     FAVORITES("favorites"); //찜순
 
     private final String value;
+
+    @JsonValue
+    public String getValue() {
+        return this.value;
+    }
 
     @JsonCreator
     public static PostSortingOption from(String value) {
