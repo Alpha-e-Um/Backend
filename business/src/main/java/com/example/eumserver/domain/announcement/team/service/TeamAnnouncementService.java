@@ -40,7 +40,7 @@ public class TeamAnnouncementService extends PostService<TeamAnnouncementReposit
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public Page<TeamAnnouncementResponse> getFilteredAnnouncementsWithPaging(
+    public TeamAnnouncementResponseWrapper getFilteredAnnouncementsWithPaging(
             TeamAnnouncementFilter filter
     ) {
         if (filter.getSize() <= 0) {
@@ -50,10 +50,25 @@ public class TeamAnnouncementService extends PostService<TeamAnnouncementReposit
         if (filter.getPage() < 0) {
             throw new CustomException("페이지는 음수여선 안됩니다. 현재: " + filter.getPage(), ErrorCode.INVALID_INPUT_VALUE);
         }
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("date_created"));
-        Pageable pageable = PageRequest.of(filter.getPage(), filter.getSize(), Sort.by(sorts));
-        return postRepository.getFilteredAnnouncementsWithPaging(filter, pageable);
+
+        if (filter.getOption() == null) {
+            throw new CustomException("페이지를 보여주는 옵션은 필수적입니다.", ErrorCode.INVALID_INPUT_VALUE);
+        }
+
+//        List<Sort.Order> sorts = new ArrayList<>();
+//        sorts.add(Sort.Order.desc("date_created"));
+        Pageable pageable = PageRequest.of(filter.getPage(), filter.getSize());
+        Page<TeamAnnouncementResponse> filtered = postRepository.getFilteredAnnouncementsWithPaging(filter, pageable);
+
+        TeamAnnouncementResponseWrapper response = new TeamAnnouncementResponseWrapper(
+                filtered.isEmpty(),
+                filtered.isFirst(),
+                filtered.isLast(),
+                filtered.getTotalPages(),
+                filtered.getContent()
+        );
+
+        return response;
     }
 
     @Transactional
@@ -89,10 +104,9 @@ public class TeamAnnouncementService extends PostService<TeamAnnouncementReposit
         TeamAnnouncement announcement = this.findPostById(announcementId);
 
         if (authorization != null) {
-//            String token = jwtTokenProvider.resolveAccessToken(authorization);
-//            String userId = jwtTokenProvider.parseClaims(token).getSubject();
-//            System.out.println(userId);
-            increaseViewCount(announcementId, String.valueOf(1), announcement.getViews());
+            String token = jwtTokenProvider.resolveAccessToken(authorization);
+            String userId = jwtTokenProvider.parseClaims(token).getSubject();
+            increaseViewCount(announcementId, userId, announcement.getViews());
         }
 
         TeamAnnouncementDetailResponse response = TeamAnnouncementMapper.INSTANCE.entityToDetailResponse(announcement);

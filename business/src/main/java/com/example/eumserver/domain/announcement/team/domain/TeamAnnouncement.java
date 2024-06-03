@@ -37,6 +37,9 @@ public class TeamAnnouncement extends Post {
     @Column(nullable = false)
     private int vacancies;
 
+    @Column(nullable = false)
+    private Boolean closed = false;
+
     @Lob
     @Column
     private String description;
@@ -54,9 +57,6 @@ public class TeamAnnouncement extends Post {
     @Setter
     @Column(name = "date_published")
     private LocalDateTime publishedDate;
-
-    @Embedded
-    private TimeStamp timeStamp;
 
     @ElementCollection(targetClass = OccupationClassification.class)
     @Enumerated(EnumType.STRING)
