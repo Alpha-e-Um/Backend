@@ -1,0 +1,60 @@
+services:
+  mysql:
+    image: mysql:8.4.0
+    container_name: e_um-mysql
+    hostname: mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    networks:
+      - e_um-api-network
+    environment:
+      TZ: Asia/Seoul"
+      MYSQL_USER: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7.2.0-alpine
+    container_name: e_um-redis
+    hostname: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - e_um-api-network
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  spring:
+    container_name: e_um-api-server
+    restart: always
+    build:
+      context: business
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    networks:
+      - e_um-api-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+networks:
+    e_um-api-network:
