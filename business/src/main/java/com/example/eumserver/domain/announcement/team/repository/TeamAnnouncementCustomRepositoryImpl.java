@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,8 +37,8 @@ public class TeamAnnouncementCustomRepositoryImpl implements TeamAnnouncementCus
         BooleanExpression predicate = teamAnnouncement.isNotNull();
         predicate = predicate.and(teamAnnouncement.publishedDate.isNotNull());
 
-        if (filter.isExpired()) {
-            predicate.and(teamAnnouncement.closed.eq(false));
+        if (!filter.isExpired()) {
+            predicate = predicate.and(teamAnnouncement.closed.eq(false).and(teamAnnouncement.expiredDate.after(LocalDateTime.now())));
         }
 
         List<OccupationClassification> occupationClassifications = filter.getOccupationClassifications();
