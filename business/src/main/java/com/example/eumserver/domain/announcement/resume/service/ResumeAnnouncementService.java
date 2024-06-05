@@ -4,7 +4,7 @@ import com.example.eumserver.domain.announcement.resume.dto.ResumeAnnouncementFi
 import com.example.eumserver.domain.announcement.resume.dto.ResumeAnnouncementResponse;
 import com.example.eumserver.domain.announcement.resume.mapper.ResumeAnnouncementMapper;
 import com.example.eumserver.domain.announcement.resume.repository.ResumeAnnouncementRepository;
-import com.example.eumserver.domain.resume.ResumeRepository;
+import com.example.eumserver.domain.resume.repository.ResumeRepository;
 import com.example.eumserver.domain.announcement.resume.domain.ResumeAnnouncement;
 import com.example.eumserver.domain.announcement.resume.dto.ResumeAnnouncementRequest;
 import com.example.eumserver.domain.resume.entity.Resume;

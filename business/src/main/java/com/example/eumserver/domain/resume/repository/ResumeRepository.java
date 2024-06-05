@@ -1,4 +1,4 @@
-package com.example.eumserver.domain.resume;
+package com.example.eumserver.domain.resume.repository;
 
 import com.example.eumserver.domain.announcement.resume.repository.ResumeAnnouncementCustomRepository;
 import com.example.eumserver.domain.resume.entity.Resume;
@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ResumeRepository extends JpaRepository<Resume, Long>, ResumeAnnouncementCustomRepository {
-    Optional<Resume> findById(Long resumeId);
-    List<Resume> findByUserId(Long userId);
+    Optional<Resume> findByIdAndTimeStampIsDeletedFalse(Long resumeId);
+    List<Resume> findByUserIdAndTimeStampIsDeletedFalse(Long userId);
 }

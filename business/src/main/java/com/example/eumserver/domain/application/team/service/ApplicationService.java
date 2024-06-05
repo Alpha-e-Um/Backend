@@ -6,7 +6,7 @@ import com.example.eumserver.domain.application.team.dto.MyTeamApplicationRespon
 import com.example.eumserver.domain.application.team.entity.TeamApplicationState;
 import com.example.eumserver.domain.application.team.entity.TeamApplication;
 import com.example.eumserver.domain.application.team.repository.TeamApplicationRepository;
-import com.example.eumserver.domain.resume.ResumeRepository;
+import com.example.eumserver.domain.resume.repository.ResumeRepository;
 import com.example.eumserver.domain.resume.entity.Resume;
 import com.example.eumserver.domain.team.participant.Participant;
 import com.example.eumserver.domain.team.participant.ParticipantRole;
@@ -72,7 +72,7 @@ public class ApplicationService {
         TeamApplication application = TeamApplication.builder()
                 .announcement(announcement)
                 .user(user)
-                .resume(resume)
+                .resumeId(resumeId)
                 .state(TeamApplicationState.PENDING)
                 .build();
 

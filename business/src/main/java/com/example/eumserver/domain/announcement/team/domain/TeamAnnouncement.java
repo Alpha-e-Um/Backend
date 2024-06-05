@@ -51,6 +51,9 @@ public class TeamAnnouncement extends Post {
     @JoinColumn(name = "team_id")
     private Team team;
 
+    @Embedded
+    private TimeStamp timeStamp;
+
     @Column(name = "date_expired", nullable = false)
     private LocalDateTime expiredDate;
 

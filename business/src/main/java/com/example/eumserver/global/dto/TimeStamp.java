@@ -18,4 +18,11 @@ public class TimeStamp {
     @UpdateTimestamp
     @Column(name = "update_at", nullable = false)
     private LocalDateTime updateAt;
+
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
+
+    public void setDeleted(boolean isDeleted){
+        this.isDeleted = isDeleted;
+    }
 }

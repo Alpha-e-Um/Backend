@@ -2,6 +2,7 @@ package com.example.eumserver.domain.resume;
 
 import com.example.eumserver.domain.resume.dto.ResumeRequest;
 import com.example.eumserver.domain.resume.entity.Resume;
+import com.example.eumserver.domain.resume.repository.ResumeRepository;
 import com.example.eumserver.domain.user.domain.User;
 import com.example.eumserver.domain.user.UserRepository;
 import com.example.eumserver.global.error.exception.CustomException;
@@ -58,17 +59,19 @@ public class ResumeService {
         if (resume.getUser().getId() != userId) {
             throw new CustomException("You do not have permission to delete a resume.", ErrorCode.ACCESS_DENIED);
         }
-        resumeRepository.deleteById(resumeId);
+
+        resume.getTimeStamp().setDeleted(true);
+        resumeRepository.save(resume);
     }
 
     public List<Resume> getAllResumeByUserId(long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        return resumeRepository.findByUserId(userId);
+        return resumeRepository.findByUserIdAndTimeStampIsDeletedFalse(userId);
     }
 
     public Resume getResume(long userId, long resumeId) {
-        Resume resume = resumeRepository.findById(resumeId)
+        Resume resume = resumeRepository.findByIdAndTimeStampIsDeletedFalse(resumeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESUME_NOT_FOUND));
 
         if (userId == 0 || userId != resume.getUser().getId()) {
