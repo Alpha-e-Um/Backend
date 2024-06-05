@@ -20,13 +20,12 @@ public class ResumeHomepage {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "resume_id")
     private Resume resume;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private HomepageType homepageType;
-
+    
     @Column(name = "homepage_url", length = 255, nullable = false)
     private String homepageUrl;
+
+    @Column(length = 255)
+    private String description;
 
     public void setResume(Resume resume) {
         this.resume = resume;

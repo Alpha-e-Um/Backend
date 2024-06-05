@@ -30,9 +30,8 @@ public class TeamApplication {
     @JoinColumn(name = "team_announcement_id")
     private TeamAnnouncement announcement;
 
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
-    private Resume resume;
+    @Column(name = "resume_id")
+    private Long resumeId;
 
     @Enumerated(EnumType.STRING)
     private TeamApplicationState state;
