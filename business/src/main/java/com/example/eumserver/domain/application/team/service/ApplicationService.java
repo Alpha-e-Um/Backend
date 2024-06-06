@@ -3,7 +3,7 @@ package com.example.eumserver.domain.application.team.service;
 import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
 import com.example.eumserver.domain.announcement.team.repository.TeamAnnouncementRepository;
 import com.example.eumserver.domain.application.team.dto.MyTeamApplicationResponse;
-import com.example.eumserver.domain.application.team.entity.TeamApplicationState;
+import com.example.eumserver.domain.application.team.entity.ApplicationState;
 import com.example.eumserver.domain.application.team.entity.TeamApplication;
 import com.example.eumserver.domain.application.team.repository.TeamApplicationRepository;
 import com.example.eumserver.domain.resume.repository.ResumeRepository;
@@ -37,7 +37,7 @@ public class ApplicationService {
     final private UserRepository userRepository;
     final private ResumeRepository resumeRepository;
 
-    public Page<MyTeamApplicationResponse> getMyApplications(Long user_id, TeamApplicationState state, Integer page) {
+    public Page<MyTeamApplicationResponse> getMyApplications(Long user_id, ApplicationState state, Integer page) {
         Pageable paging = PageRequest.of(page, 10);
         return applicationRepository
                 .getMyApplicationsWithPaging(user_id, state, paging);
@@ -73,7 +73,7 @@ public class ApplicationService {
                 .announcement(announcement)
                 .user(user)
                 .resumeId(resumeId)
-                .state(TeamApplicationState.PENDING)
+                .state(ApplicationState.PENDING)
                 .build();
 
         applicationRepository.save(application);
@@ -83,7 +83,7 @@ public class ApplicationService {
 
     @Transactional
     public TeamApplication cancelApplication(Long userId, Long applicationId) {
-        TeamApplication application = applicationRepository.getApplicationWithState(userId, applicationId, TeamApplicationState.PENDING);
+        TeamApplication application = applicationRepository.getApplicationWithState(userId, applicationId, ApplicationState.PENDING);
 
         if (application == null) throw new CustomException(ErrorCode.TEAM_APPLICATION_CANT_CANCEL);
 
@@ -141,7 +141,7 @@ public class ApplicationService {
     }
 
     private void checkState(TeamApplication teamApplication) {
-        if (teamApplication.getState() != TeamApplicationState.PENDING) {
+        if (teamApplication.getState() != ApplicationState.PENDING) {
             throw new CustomException(ErrorCode.TEAM_APPLICATION_CANT_REJECTED);
         }
     }

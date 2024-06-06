@@ -49,7 +49,6 @@ public class Resume {
     @Column(name = "tech_stack")
     private List<String> techStacks = new ArrayList<>();
 
-
     @Builder.Default
     @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ResumeCareer> careers = new ArrayList<>();
@@ -72,7 +71,8 @@ public class Resume {
 
 
     @Embedded
-    private TimeStamp timeStamp;
+    @Builder.Default
+    private TimeStamp timeStamp = new TimeStamp();
 
     public void setUser(User user) {
         this.user = user;

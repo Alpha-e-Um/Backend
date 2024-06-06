@@ -37,6 +37,7 @@ public class TeamAnnouncement extends Post {
     @Column(nullable = false)
     private int vacancies;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean closed = false;
 

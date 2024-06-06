@@ -1,7 +1,6 @@
 package com.example.eumserver.domain.application.team.entity;
 
 import com.example.eumserver.domain.announcement.team.domain.TeamAnnouncement;
-import com.example.eumserver.domain.resume.entity.Resume;
 import com.example.eumserver.domain.user.domain.User;
 import com.example.eumserver.global.dto.TimeStamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -34,20 +33,20 @@ public class TeamApplication {
     private Long resumeId;
 
     @Enumerated(EnumType.STRING)
-    private TeamApplicationState state;
+    private ApplicationState state;
 
     @Embedded
     private TimeStamp timeStamp;
 
     public void cancel() {
-        this.state = TeamApplicationState.WITHDRAWN;
+        this.state = ApplicationState.WITHDRAWN;
     }
 
     public void accept() {
-        this.state = TeamApplicationState.ACCEPTED;
+        this.state = ApplicationState.ACCEPTED;
     }
 
     public void reject() {
-        this.state = TeamApplicationState.REJECTED;
+        this.state = ApplicationState.REJECTED;
     }
 }

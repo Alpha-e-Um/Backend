@@ -24,6 +24,7 @@ public interface TeamAnnouncementMapper {
     @Mapping(target = "team", ignore = true)
     @Mapping(target = "applications", ignore = true)
     @Mapping(target = "views", ignore = true)
+    @Mapping(target = "closed", ignore = true)
     TeamAnnouncement requestToEntity(TeamAnnouncementRequest announcementRequest);
 
     @Mapping(target = "createDate", source = "timeStamp.createDate")

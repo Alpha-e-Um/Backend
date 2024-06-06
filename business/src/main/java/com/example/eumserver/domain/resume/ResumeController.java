@@ -2,6 +2,7 @@ package com.example.eumserver.domain.resume;
 
 import com.example.eumserver.domain.jwt.PrincipalDetails;
 import com.example.eumserver.domain.resume.dto.ResumeRequest;
+import com.example.eumserver.domain.resume.dto.ResumeResponse;
 import com.example.eumserver.domain.resume.entity.Resume;
 import com.example.eumserver.global.dto.ApiResult;
 import io.swagger.v3.oas.annotations.Operation;
@@ -81,11 +82,11 @@ public class ResumeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이력서 받아오기 성공")
     })
-    public ResponseEntity<ApiResult<List<Resume>>> getAllMyResume(
+    public ResponseEntity<ApiResult<List<ResumeResponse>>> getAllMyResume(
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
         long userId = principalDetails.getUserId();
-        List<Resume> resumes = resumeService.getAllResumeByUserId(userId);
+        List<ResumeResponse> resumes = resumeService.getAllResumeByUserId(userId);
         return ResponseEntity
                 .ok(new ApiResult<>("내 이력서 전부 받아오기 성공", resumes));
     }
@@ -95,10 +96,10 @@ public class ResumeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이력서 받아오기 성공")
     })
-    public ResponseEntity<ApiResult<List<Resume>>> getAllMyResume(
+    public ResponseEntity<ApiResult<List<ResumeResponse>>> getAllMyResume(
             @PathVariable("userId") long userId
     ) {
-        List<Resume> resumes = resumeService.getAllResumeByUserId(userId);
+        List<ResumeResponse> resumes = resumeService.getAllResumeByUserId(userId);
         return ResponseEntity
                 .ok(new ApiResult<>("타인 이력서 전부 받아오기 성공", resumes));
     }
@@ -108,13 +109,13 @@ public class ResumeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이력서 받아오기 성공")
     })
-    public ResponseEntity<ApiResult<Resume>> getResume(
+    public ResponseEntity<ApiResult<ResumeResponse>> getResume(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable("resumeId") long resumeId
     ) {
         long userId = 0;
         if (principalDetails != null) userId = principalDetails.getUserId();
-        Resume resume = resumeService.getResume(userId, resumeId);
+        ResumeResponse resume = resumeService.getResume(userId, resumeId);
         return ResponseEntity
                 .ok(new ApiResult<>("특정 이력서 받아오기 성공", resume));
     }

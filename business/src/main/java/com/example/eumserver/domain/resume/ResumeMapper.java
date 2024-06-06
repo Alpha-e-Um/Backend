@@ -1,6 +1,7 @@
 package com.example.eumserver.domain.resume;
 
 import com.example.eumserver.domain.resume.dto.ResumeRequest;
+import com.example.eumserver.domain.resume.dto.ResumeResponse;
 import com.example.eumserver.domain.resume.entity.Resume;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -15,10 +16,20 @@ public interface ResumeMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "timeStamp", ignore = true)
     @Mapping(target = "user", ignore = true)
+    @Mapping(target = "careers", source = "careers")
+    @Mapping(target = "activities", source = "activities")
+    @Mapping(target = "certificates", source = "certificates")
+    @Mapping(target = "projects", source = "projects")
+    @Mapping(target = "homepages", source = "homepages")
     Resume resumeRequestToResume(ResumeRequest resumeRequest);
 
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "timeStamp.createDate", target = "createDate")
+    @Mapping(source = "timeStamp.updateAt", target = "updateAt")
+    ResumeResponse resumeToResumeResponse(Resume resume);
+
     @AfterMapping
-    default void linkResume(ResumeRequest resumeRequest, @MappingTarget Resume resume) {
+    default void linkResume(@MappingTarget Resume resume) {
         if (resume.getActivities() != null) {
             resume.getActivities().forEach(resumeActivity -> resumeActivity.setResume(resume));
         }

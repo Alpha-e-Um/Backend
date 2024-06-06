@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 /**
  * 지원 상태를 나타내는 Enum 클래스입니다.
  */
-public enum TeamApplicationState {
+public enum ApplicationState {
     ALL("all"),
     PENDING("pending"),
     UNDER_REVIEW("under_review"),
@@ -16,13 +16,13 @@ public enum TeamApplicationState {
 
     private final String value;
 
-    TeamApplicationState(String value) {
+    ApplicationState(String value) {
         this.value = value;
     }
 
     @JsonCreator
-    public static TeamApplicationState from(String value) {
-        for (TeamApplicationState state : TeamApplicationState.values()) {
+    public static ApplicationState from(String value) {
+        for (ApplicationState state : ApplicationState.values()) {
             if (state.getValue().equals(value)) {
                 return state;
             }

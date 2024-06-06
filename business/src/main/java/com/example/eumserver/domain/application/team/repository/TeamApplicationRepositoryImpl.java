@@ -2,8 +2,8 @@ package com.example.eumserver.domain.application.team.repository;
 
 import com.example.eumserver.domain.announcement.team.domain.QTeamAnnouncement;
 import com.example.eumserver.domain.application.team.dto.MyTeamApplicationResponse;
+import com.example.eumserver.domain.application.team.entity.ApplicationState;
 import com.example.eumserver.domain.application.team.entity.QTeamApplication;
-import com.example.eumserver.domain.application.team.entity.TeamApplicationState;
 import com.example.eumserver.domain.application.team.entity.TeamApplication;
 import com.example.eumserver.domain.application.team.mapper.TeamApplicationMapper;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -23,7 +23,7 @@ public class TeamApplicationRepositoryImpl implements TeamApplicationCustomRepos
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<MyTeamApplicationResponse> getMyApplicationsWithPaging(Long userId, TeamApplicationState state,
+    public Page<MyTeamApplicationResponse> getMyApplicationsWithPaging(Long userId, ApplicationState state,
                                                                        Pageable pageable) {
         QTeamApplication application = QTeamApplication.teamApplication;
         QTeamAnnouncement announcement = QTeamAnnouncement.teamAnnouncement;
@@ -32,7 +32,7 @@ public class TeamApplicationRepositoryImpl implements TeamApplicationCustomRepos
 
         predicate = predicate.and(application.user.id.eq(userId));
 
-        if (state != TeamApplicationState.ALL) {
+        if (state != ApplicationState.ALL) {
             predicate = predicate.and(application.state.eq(state));
         }
 
@@ -61,7 +61,7 @@ public class TeamApplicationRepositoryImpl implements TeamApplicationCustomRepos
         BooleanExpression predicate = application.isNotNull();
         predicate = predicate.and(application.user.id.eq(userId));
         predicate = predicate.and(application.announcement.id.eq(announcementId));
-        predicate = predicate.and(application.state.ne(TeamApplicationState.WITHDRAWN));
+        predicate = predicate.and(application.state.ne(ApplicationState.WITHDRAWN));
 
         long count = jpaQueryFactory
                 .select(application)
@@ -74,7 +74,7 @@ public class TeamApplicationRepositoryImpl implements TeamApplicationCustomRepos
     }
 
     @Override
-    public TeamApplication getApplicationWithState(Long userId, Long applicationId, TeamApplicationState state) {
+    public TeamApplication getApplicationWithState(Long userId, Long applicationId, ApplicationState state) {
         QTeamApplication application = QTeamApplication.teamApplication;
 
         BooleanExpression predicate = application.isNotNull();

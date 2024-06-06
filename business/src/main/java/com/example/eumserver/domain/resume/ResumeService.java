@@ -1,6 +1,7 @@
 package com.example.eumserver.domain.resume;
 
 import com.example.eumserver.domain.resume.dto.ResumeRequest;
+import com.example.eumserver.domain.resume.dto.ResumeResponse;
 import com.example.eumserver.domain.resume.entity.Resume;
 import com.example.eumserver.domain.resume.repository.ResumeRepository;
 import com.example.eumserver.domain.user.domain.User;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -64,20 +66,29 @@ public class ResumeService {
         resumeRepository.save(resume);
     }
 
-    public List<Resume> getAllResumeByUserId(long userId) {
+    public List<ResumeResponse> getAllResumeByUserId(long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        return resumeRepository.findByUserIdAndTimeStampIsDeletedFalse(userId);
+
+        List<ResumeResponse> resumeList = resumeRepository.findByUserIdAndTimeStampIsDeletedFalse(userId)
+                .stream().map(ResumeMapper.INSTANCE::resumeToResumeResponse).collect(Collectors.toList());
+
+        return resumeList;
     }
 
-    public Resume getResume(long userId, long resumeId) {
+    public ResumeResponse getResume(long userId, long resumeId) {
         Resume resume = resumeRepository.findByIdAndTimeStampIsDeletedFalse(resumeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESUME_NOT_FOUND));
 
         if (userId == 0 || userId != resume.getUser().getId()) {
             throw new CustomException(ErrorCode.ACCESS_DENIED);
         }
-        return resume;
+
+        ResumeResponse resumeResponse = ResumeMapper.INSTANCE.resumeToResumeResponse(resume);
+
+        System.out.println(resumeResponse.getProjects().get(0).getId());
+
+        return resumeResponse;
     }
 
 }
