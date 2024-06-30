@@ -87,7 +87,7 @@ https://e-um.site
 ## 서비스 아키택처
 
 <br>
-<img src="https://github.com/Alpha-e-Um/Backend/assets/55117706/332aa6d0-828a-43f4-8d96-6ba68f32d9a3" width=800>
+![이음 drawio](https://github.com/Alpha-e-Um/Backend/assets/55117706/dcae3ccf-5994-4eda-8cd1-6cc35c7ca366)
 
 ## 사용법
 
